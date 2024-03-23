@@ -1,7 +1,7 @@
 #ifndef PARK_H
 #define PARK_H
 
-#include "iostream" 
+#include "iostream"
 
 int sum(int a, int b);
 
