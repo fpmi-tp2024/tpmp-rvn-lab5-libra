@@ -3,7 +3,8 @@
 
 #include <string>
 
-class Car {
+class Car
+{
 private:
     std::string number;
     std::string brand;
@@ -11,7 +12,7 @@ private:
     int carryingCapacity;
 
 public:
-    Car(const std::string& number, const std::string& brand, int mileage, int carryingCapacity);
+    Car(const std::string &number, const std::string &brand, int mileage, int carryingCapacity);
 
     std::string getNumber() const;
     std::string getBrand() const;

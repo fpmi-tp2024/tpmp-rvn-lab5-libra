@@ -3,7 +3,8 @@
 
 #include <string>
 
-class Driver {
+class Driver
+{
 private:
     int id;
     std::string name;
@@ -14,8 +15,8 @@ private:
     int birthYear;
 
 public:
-    Driver(int id, const std::string& name, const std::string& login, const std::string& category,
-           long startWorkDate, const std::string& address, int birthYear);
+    Driver(int id, const std::string &name, const std::string &login, const std::string &category,
+           long startWorkDate, const std::string &address, int birthYear);
 
     int getId() const;
     std::string getName() const;

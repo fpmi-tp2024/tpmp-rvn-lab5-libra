@@ -1,29 +1,35 @@
 #include "../include/order.h"
 
-Order::Order(long date, int driverId, const std::string& carNumber, int mileage, int cargoMass, int cost)
+Order::Order(long date, int driverId, const std::string &carNumber, int mileage, int cargoMass, int cost)
     : date(date), driverId(driverId), carNumber(carNumber), mileage(mileage), cargoMass(cargoMass),
       cost(cost) {}
 
-long Order::getDate() const {
+long Order::getDate() const
+{
     return date;
 }
 
-int Order::getDriverId() const {
+int Order::getDriverId() const
+{
     return driverId;
 }
 
-std::string Order::getCarNumber() const {
+std::string Order::getCarNumber() const
+{
     return carNumber;
 }
 
-int Order::getMileage() const {
+int Order::getMileage() const
+{
     return mileage;
 }
 
-int Order::getCargoMass() const {
+int Order::getCargoMass() const
+{
     return cargoMass;
 }
 
-int Order::getCost() const {
+int Order::getCost() const
+{
     return cost;
 }

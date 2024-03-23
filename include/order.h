@@ -3,7 +3,8 @@
 
 #include <string>
 
-class Order {
+class Order
+{
 private:
     long date;
     int driverId;
@@ -13,7 +14,7 @@ private:
     int cost;
 
 public:
-    Order(long date, int driverId, const std::string& carNumber, int mileage, int cargoMass, int cost);
+    Order(long date, int driverId, const std::string &carNumber, int mileage, int cargoMass, int cost);
 
     long getDate() const;
     int getDriverId() const;
