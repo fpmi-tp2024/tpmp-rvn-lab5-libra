@@ -2,6 +2,7 @@
 #define CAR_H
 
 #include <string>
+#include <sqlite3.h>
 
 class Car
 {
@@ -13,6 +14,7 @@ private:
 
 public:
     Car(const std::string &number, const std::string &brand, int mileage, int carryingCapacity);
+    Car(sqlite3_stmt *statement);
 
     std::string getNumber() const;
     std::string getBrand() const;

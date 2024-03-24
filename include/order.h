@@ -2,6 +2,7 @@
 #define ORDER_H
 
 #include <string>
+#include <sqlite3.h>
 
 class Order
 {
@@ -15,6 +16,7 @@ private:
 
 public:
     Order(long date, int driverId, const std::string &carNumber, int mileage, int cargoMass, int cost);
+    Order(sqlite3_stmt *statement);
 
     long getDate() const;
     int getDriverId() const;
