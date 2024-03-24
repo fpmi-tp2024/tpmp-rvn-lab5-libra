@@ -8,8 +8,8 @@ class Driver
 {
 private:
     int id;
-    std::string name;
     std::string login;
+    std::string name;
     std::string category;
     long startWorkDate;
     std::string address;
