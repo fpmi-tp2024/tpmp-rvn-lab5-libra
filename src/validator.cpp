@@ -1,88 +1,58 @@
-#include "Validator.h"
+#include "../include/validator.h"
 
 const std::regex Validator::NUMBER_PLATE_REGEX("^[0-9]{4}[A-Z]{2}-[1-7]$");
-const std::regex Validator::BRAND_REGEX("^[A-Za-z\\s]{1,}$");
+const std::regex Validator::BRAND_REGEX("^[A-Za-z\\s-]{1,}$");
 const std::regex Validator::NAME_REGEX("^[A-Za-z\\s]{1,}$");
 const std::regex Validator::LOGIN_REGEX("^[A-Za-z0-9_]{1,}$");
 const std::regex Validator::CATEGORY_REGEX("^(?:A|B|C|D|BE|CE|DE)$");
 const std::regex Validator::ADDRESS_REGEX("^[A-Za-z0-9\\s,./-]{1,}$");
 
-void Validator::validateNumberPlate(const std::string &numberPlate)
+bool Validator::isValidNumberPlate(const std::string &numberPlate)
 {
-    if (!std::regex_match(numberPlate, NUMBER_PLATE_REGEX))
-    {
-        throw std::invalid_argument("Invalid number plate format");
-    }
+    return std::regex_match(numberPlate, NUMBER_PLATE_REGEX);
 }
 
-void Validator::validateBrand(const std::string &brand)
+bool Validator::isValidBrand(const std::string &brand)
 {
-    if (!std::regex_match(brand, BRAND_REGEX))
-    {
-        throw std::invalid_argument("Invalid brand format");
-    }
+    return std::regex_match(brand, BRAND_REGEX);
 }
 
-void Validator::validateName(const std::string &name)
+bool Validator::isValidName(const std::string &name)
 {
-    if (!std::regex_match(name, NAME_REGEX))
-    {
-        throw std::invalid_argument("Invalid name format");
-    }
+    return std::regex_match(name, NAME_REGEX);
 }
 
-void Validator::validateLogin(const std::string &login)
+bool Validator::isValidLogin(const std::string &login)
 {
-    if (!std::regex_match(login, LOGIN_REGEX))
-    {
-        throw std::invalid_argument("Invalid login format");
-    }
+    return std::regex_match(login, LOGIN_REGEX);
 }
 
-void Validator::validateCategory(const std::string &category)
+bool Validator::isValidCategory(const std::string &category)
 {
-    if (!std::regex_match(category, CATEGORY_REGEX))
-    {
-        throw std::invalid_argument("Invalid category format");
-    }
+    return std::regex_match(category, CATEGORY_REGEX);
 }
 
-void Validator::validateAddress(const std::string &address)
+bool Validator::isValidAddress(const std::string &address)
 {
-    if (!std::regex_match(address, ADDRESS_REGEX))
-    {
-        throw std::invalid_argument("Invalid address format");
-    }
+    return std::regex_match(address, ADDRESS_REGEX);
 }
 
-void Validator::validateMileage(int mileage)
+bool Validator::isValidMileage(int mileage)
 {
-    if (mileage < 0)
-    {
-        throw std::invalid_argument("Invalid mileage value");
-    }
+    return mileage >= 0;
 }
 
-void Validator::validateCarryingCapacity(int carryingCapacity)
+bool Validator::isValidCarryingCapacity(int carryingCapacity)
 {
-    if (carryingCapacity < 0)
-    {
-        throw std::invalid_argument("Invalid carrying capacity value");
-    }
+    return carryingCapacity > 0;
 }
 
-void Validator::validateCargoMass(int cargoMass)
+bool Validator::isValidCargoMass(int cargoMass)
 {
-    if (cargoMass < 0)
-    {
-        throw std::invalid_argument("Invalid cargo mass value");
-    }
+    return cargoMass >= 0;
 }
 
-void Validator::validateCost(int cost)
+bool Validator::isValidCost(int cost)
 {
-    if (cost < 0)
-    {
-        throw std::invalid_argument("Invalid cost value");
-    }
+    return cost > 0;
 }

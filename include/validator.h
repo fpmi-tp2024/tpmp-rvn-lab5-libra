@@ -3,7 +3,6 @@
 
 #include <regex>
 #include <string>
-#include <stdexcept>
 
 class Validator
 {
@@ -15,16 +14,16 @@ public:
     static const std::regex CATEGORY_REGEX;
     static const std::regex ADDRESS_REGEX;
 
-    static void validateNumberPlate(const std::string &numberPlate);
-    static void validateBrand(const std::string &brand);
-    static void validateName(const std::string &name);
-    static void validateLogin(const std::string &login);
-    static void validateCategory(const std::string &category);
-    static void validateAddress(const std::string &address);
-    static void validateMileage(int mileage);
-    static void validateCarryingCapacity(int carryingCapacity);
-    static void validateCargoMass(int cargoMass);
-    static void validateCost(int cost);
+    static bool isValidNumberPlate(const std::string &numberPlate);
+    static bool isValidBrand(const std::string &brand);
+    static bool isValidName(const std::string &name);
+    static bool isValidLogin(const std::string &login);
+    static bool isValidCategory(const std::string &category);
+    static bool isValidAddress(const std::string &address);
+    static bool isValidMileage(int mileage);
+    static bool isValidCarryingCapacity(int carryingCapacity);
+    static bool isValidCargoMass(int cargoMass);
+    static bool isValidCost(int cost);
 };
 
 #endif // VALIDATOR_H
