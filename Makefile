@@ -1,27 +1,42 @@
 compiler = g++
 flags = 
+# sudo apt-get install libsqlite3-dev
+LDFLAGS = -lsqlite3
 
-obj/main.o: obj src/main.cpp
-	$(compiler) $(flags) -c src/main.cpp -o obj/main.o
+OBJ_DIR = obj
+BIN_DIR = bin
 
-obj/park.o: obj src/park.cpp
-	$(compiler) $(flags) -c src/park.cpp -o obj/park.o
+SRC_DIR = src
+TEST_DIR = tests
 
-bin:
-	mkdir bin
+SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
+TEST_OBJ_FILES = $(filter-out $(OBJ_DIR)/main.o,$(OBJ_FILES))
 
-obj:
-	mkdir obj
+TARGET = $(BIN_DIR)/program
+TEST_TARGET = $(BIN_DIR)/tests
 
-build: bin obj/main.o obj/park.o
-	$(compiler) $(flags) obj/main.o obj/park.o -o bin/program
+all: $(TARGET) $(TEST_TARGET)
 
-run: build test
-	./bin/program
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(compiler) $(flags) -c $< -o $@ $(LDFLAGS)
 
-test: obj/park.o
-	$(compiler) $(flags) -o bin/tests tests/tests.cpp obj/park.o
-	./bin/tests
+$(BIN_DIR)/program: $(OBJ_FILES) | $(BIN_DIR)
+	$(compiler) $(flags) $^ -o $@ $(LDFLAGS)
+
+$(BIN_DIR)/tests: $(TEST_DIR)/tests.cpp $(TEST_OBJ_FILES) | $(BIN_DIR)
+	$(compiler) $(flags) $^ -o $@ $(LDFLAGS)
+
+$(OBJ_DIR) $(BIN_DIR):
+	mkdir -p $@
+
+run: $(TARGET) test
+	./$(TARGET)
+
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
 
 clean:
-	rm -rf obj/*.o bin/*
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*
+
+.PHONY: all clean run test
