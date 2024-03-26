@@ -1,0 +1,2 @@
+admine_password=nigga
+commission_fees=20
