@@ -3,7 +3,7 @@
 
 #include <string>
 #include <sqlite3.h>
-#include "Validator.h"
+#include "validator.h"
 
 class Order
 {
