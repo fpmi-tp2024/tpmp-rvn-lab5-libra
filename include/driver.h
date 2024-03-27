@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sqlite3.h>
+#include "Validator.h"
 
 class Driver
 {
@@ -27,6 +28,11 @@ public:
     long getStartWorkDate() const;
     std::string getAddress() const;
     int getBirthYear() const;
+
+    void setName(const std::string &name);
+    void setLogin(const std::string &login);
+    void setCategory(const std::string &category);
+    void setAddress(const std::string &address);
 };
 
 #endif // DRIVER_H

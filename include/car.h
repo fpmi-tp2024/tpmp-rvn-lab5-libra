@@ -3,6 +3,7 @@
 
 #include <string>
 #include <sqlite3.h>
+#include "Validator.h"
 
 class Car
 {
@@ -20,6 +21,11 @@ public:
     std::string getBrand() const;
     int getMileage() const;
     int getCarryingCapacity() const;
+
+    void setNumber(const std::string &number);
+    void setBrand(const std::string &brand);
+    void setMileage(int mileage);
+    void setCarryingCapacity(int carryingCapacity);
 };
 
 #endif // CAR_H

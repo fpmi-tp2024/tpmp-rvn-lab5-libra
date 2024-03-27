@@ -3,10 +3,12 @@
 
 #include <string>
 #include <sqlite3.h>
+#include "Validator.h"
 
 class Order
 {
 private:
+    int id;
     long date;
     int driverId;
     std::string carNumber;
@@ -15,15 +17,23 @@ private:
     int cost;
 
 public:
-    Order(long date, int driverId, const std::string &carNumber, int mileage, int cargoMass, int cost);
+    Order(int id, long date, int driverId, const std::string &carNumber, int mileage, int cargoMass, int cost);
     Order(sqlite3_stmt *statement);
 
+    int getId() const;
     long getDate() const;
     int getDriverId() const;
     std::string getCarNumber() const;
     int getMileage() const;
     int getCargoMass() const;
     int getCost() const;
+
+    void setDate(long date);
+    void setDriverId(int driverId);
+    void setCarNumber(const std::string &carNumber);
+    void setMileage(int mileage);
+    void setCargoMass(int cargoMass);
+    void setCost(int cost);
 };
 
 #endif // ORDER_H

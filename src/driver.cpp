@@ -1,20 +1,23 @@
 #include "../include/driver.h"
 
 Driver::Driver(int id, const std::string &name, const std::string &login, const std::string &category,
-               long startWorkDate, const std::string &address, int birthYear)
-    : id(id), name(name), login(login), category(category), startWorkDate(startWorkDate),
-      address(address), birthYear(birthYear) {}
+               long startWorkDate, const std::string &address, int birthYear) : id(id), startWorkDate(startWorkDate), birthYear(birthYear)
+{
+    setName(name);
+    setLogin(login);
+    setCategory(category);
+    setAddress(address);
+}
 
 Driver::Driver(sqlite3_stmt *statement)
-{
-    id = sqlite3_column_int(statement, 0);
-    name = std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1)));
-    login = std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2)));
-    category = std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 3)));
-    startWorkDate = sqlite3_column_int64(statement, 4);
-    address = std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 5)));
-    birthYear = sqlite3_column_int(statement, 6);
-}
+    : Driver(
+          sqlite3_column_int(statement, 0),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1))),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 3))),
+          sqlite3_column_int64(statement, 4),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 5))),
+          sqlite3_column_int(statement, 6)) {}
 
 int Driver::getId() const
 {
@@ -49,4 +52,52 @@ std::string Driver::getAddress() const
 int Driver::getBirthYear() const
 {
     return birthYear;
+}
+
+void Driver::setName(const std::string &name)
+{
+    if (Validator::isValidName(name))
+    {
+        this->name = name;
+    }
+    else
+    {
+        throw std::invalid_argument("Invalid name format.");
+    }
+}
+
+void Driver::setLogin(const std::string &login)
+{
+    if (Validator::isValidLogin(login))
+    {
+        this->login = login;
+    }
+    else
+    {
+        throw std::invalid_argument("Invalid login format.");
+    }
+}
+
+void Driver::setCategory(const std::string &category)
+{
+    if (Validator::isValidCategory(category))
+    {
+        this->category = category;
+    }
+    else
+    {
+        throw std::invalid_argument("Invalid category format.");
+    }
+}
+
+void Driver::setAddress(const std::string &address)
+{
+    if (Validator::isValidAddress(address))
+    {
+        this->address = address;
+    }
+    else
+    {
+        throw std::invalid_argument("Invalid address format.");
+    }
 }
