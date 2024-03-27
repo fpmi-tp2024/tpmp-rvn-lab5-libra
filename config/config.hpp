@@ -27,7 +27,6 @@ private:
             std::string key, value;
             if (std::getline(iss, key, '=') && std::getline(iss, value))
             {
-                value.pop_back();
                 config[key] = value;
             }
         }
@@ -49,7 +48,15 @@ public:
         auto it = instance.config.find(key);
         if (it != instance.config.end())
         {
-            return it->second;
+
+            size_t start = it->second.find('\'') + 1;
+            size_t end = it->second.find('\'', start);
+            if (start == -1 || end == -1)
+            {
+                throw std::runtime_error("Invalid value for key in config file: " + key);
+            }
+
+            return it->second.substr(start, end - start);
         }
         else
         {
