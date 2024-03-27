@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "dev-classes", "cicd"]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: install dependencies
+      run: sudo apt-get install libsqlite3-dev
+    - name: make build
+      run: make build
+  
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: install dependencies
+      run: sudo apt-get install libsqlite3-dev
+    - name: make test
+      run: make test

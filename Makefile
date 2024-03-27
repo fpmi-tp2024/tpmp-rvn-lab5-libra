@@ -30,13 +30,15 @@ $(BIN_DIR)/tests: $(TEST_DIR)/tests.cpp $(TEST_OBJ_FILES) | $(BIN_DIR)
 $(OBJ_DIR) $(BIN_DIR):
 	mkdir -p $@
 
-run: $(TARGET) test
-	./$(TARGET)
+build: $(TARGET)
 
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
 
+run: build test
+	./$(TARGET)
+
 clean:
 	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*
 
-.PHONY: all clean run test
+.PHONY: all clean run test build
