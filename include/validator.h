@@ -3,6 +3,7 @@
 
 #include <regex>
 #include <string>
+#include "../config/config.hpp"
 
 class Validator
 {

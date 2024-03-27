@@ -27,6 +27,7 @@ private:
             std::string key, value;
             if (std::getline(iss, key, '=') && std::getline(iss, value))
             {
+                value.pop_back();
                 config[key] = value;
             }
         }

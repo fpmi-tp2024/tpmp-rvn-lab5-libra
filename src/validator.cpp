@@ -1,11 +1,11 @@
 #include "../include/validator.h"
 
-const std::regex Validator::NUMBER_PLATE_REGEX("^[0-9]{4}[A-Z]{2}-[1-7]$");
-const std::regex Validator::BRAND_REGEX("^[A-Za-z\\s-]{1,}$");
-const std::regex Validator::NAME_REGEX("^[A-Za-z\\s]{1,}$");
-const std::regex Validator::LOGIN_REGEX("^[A-Za-z0-9_]{1,}$");
-const std::regex Validator::CATEGORY_REGEX("^(?:A|B|C|D|BE|CE|DE)$");
-const std::regex Validator::ADDRESS_REGEX("^[A-Za-z0-9\\s,./-]{1,}$");
+const std::regex Validator::NUMBER_PLATE_REGEX(Config::getString("NUMBER_PLATE_REGEX"));
+const std::regex Validator::BRAND_REGEX(Config::getString("BRAND_REGEX"));
+const std::regex Validator::NAME_REGEX(Config::getString("NAME_REGEX"));
+const std::regex Validator::LOGIN_REGEX(Config::getString("LOGIN_REGEX"));
+const std::regex Validator::CATEGORY_REGEX(Config::getString("CATEGORY_REGEX"));
+const std::regex Validator::ADDRESS_REGEX(Config::getString("ADDRESS_REGEX"));
 
 bool Validator::isValidNumberPlate(const std::string &numberPlate)
 {
@@ -39,20 +39,20 @@ bool Validator::isValidAddress(const std::string &address)
 
 bool Validator::isValidMileage(int mileage)
 {
-    return mileage >= 0;
+    return mileage >= Config::getInt("MIN_MILEAGE") && mileage <= Config::getInt("MAX_MILEAGE");
 }
 
 bool Validator::isValidCarryingCapacity(int carryingCapacity)
 {
-    return carryingCapacity > 0;
+    return carryingCapacity >= Config::getInt("MIN_CARRYING_CAPACITY") && carryingCapacity <= Config::getInt("MAX_CARRYING_CAPACITY");
 }
 
 bool Validator::isValidCargoMass(int cargoMass)
 {
-    return cargoMass >= 0;
+    return cargoMass >= Config::getInt("MIN_CARGO_MASS") && cargoMass <= Config::getInt("MAX_CARGO_MASS");
 }
 
 bool Validator::isValidCost(int cost)
 {
-    return cost > 0;
+    return cost >= Config::getInt("MIN_COST") && cost <= Config::getInt("MAX_COST");
 }
