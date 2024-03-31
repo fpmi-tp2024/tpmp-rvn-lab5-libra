@@ -3,13 +3,13 @@
 
 #include <string>
 #include <iostream>
-#include "../include/UtilFunctions.h"
+#include "driverinterface.h"
 
-using std::string;
 using std::cin;
 using std::cout;
+using std::string;
 
 void startAdmin();
-bool tryLogInAdmin(const string&, const string&);
+bool tryLogInAdmin(const string &, const string &);
 
 #endif

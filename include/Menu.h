@@ -4,13 +4,13 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
-#include "../include/Admin.h"
-#include "../include/Driver.h"
-#include "../include/UtilFunctions.h"
+#include "admin.h"
+#include "driverinterface.h"
+#include "utilfuntions.h"
 
-using std::string;
 using std::cin;
 using std::cout;
+using std::string;
 
 void startMenu();
 

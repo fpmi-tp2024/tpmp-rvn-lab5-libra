@@ -1,4 +1,4 @@
-#include "../include/Admin.h"
+#include "../include/admin.h"
 
 void startAdmin()
 {
@@ -15,12 +15,14 @@ void startAdmin()
 	trim(uName);
 	trim(password);
 
-	while (!tryLogInAdmin(uName, password)) {
+	while (!tryLogInAdmin(uName, password))
+	{
 		cout << "||\tUsername or password are not valid. Try again\n";
 		cout << "||\tIf you want to quit, type \"q\"\n";
 		std::getline(cin, quitStr);
 		trim(quitStr);
-		if (tryQuit(quitStr)) {
+		if (tryQuit(quitStr))
+		{
 			return;
 		}
 		cout << "||\tUsername: ";
@@ -36,29 +38,34 @@ void startAdmin()
 	string input;
 	int option;
 
-	while (true) {
+	while (true)
+	{
 		cout << "||\tSelect operation:\n";
 		cout << "||\t1: <Some_Operation>\n";
-		//TODO: Add more operations
+		// TODO: Add more operations
 		cout << "||\n";
 		cout << "||\tOr type \"q\" to quit\n";
 		std::getline(cin, input);
 		trim(input);
 
-		if (tryQuit(input)) {
+		if (tryQuit(input))
+		{
 			return;
 		}
 
-		if (!tryParseString(input, option)) {
+		if (!tryParseString(input, option))
+		{
 			cout << "||\tYour input is not valid. Try again\n";
 		}
-		else {
-			switch (option) {
+		else
+		{
+			switch (option)
+			{
 			case 1:
-				//TODO: Add function
+				// TODO: Add function
 				break;
 
-				//TODO: Add more functions
+				// TODO: Add more functions
 
 			default:
 				cout << "||\tYour input is not valid. Try again\n";
@@ -68,8 +75,8 @@ void startAdmin()
 	}
 }
 
-bool tryLogInAdmin(const string& uName, const string& password)
+bool tryLogInAdmin(const string &uName, const string &password)
 {
-	//TODO: Implement LogIn System
+	// TODO: Implement LogIn System
 	return true;
 }

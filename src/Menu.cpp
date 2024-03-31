@@ -1,4 +1,4 @@
-#include "../include/Menu.h"
+#include "../include/menu.h"
 
 void startMenu()
 {
@@ -13,8 +13,10 @@ void startMenu()
 	std::getline(cin, input);
 	trim(input);
 
-	while (!tryParseString(input, option) || (option != 1 && option != 2)) {
-		if (tryQuit(input)) {
+	while (!tryParseString(input, option) || (option != 1 && option != 2))
+	{
+		if (tryQuit(input))
+		{
 			return;
 		}
 
@@ -23,10 +25,12 @@ void startMenu()
 		trim(input);
 	}
 
-	if (option == 1) {
+	if (option == 1)
+	{
 		startAdmin();
 	}
-	else {
+	else
+	{
 		startDriver();
 	}
 }
