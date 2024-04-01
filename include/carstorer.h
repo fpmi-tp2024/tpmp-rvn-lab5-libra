@@ -4,6 +4,7 @@
 #include <string>
 #include <sqlite3.h>
 #include "car.h"
+#include "databaseHelper.h"
 
 class CarStorer
 {
@@ -11,7 +12,7 @@ private:
     sqlite3 *db;
 
 public:
-    CarStorer(std::string dbName);
+    CarStorer(const std::string& dbName);
 
     // TODO : различный get
 

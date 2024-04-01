@@ -4,6 +4,7 @@
 #include <string>
 #include <sqlite3.h>
 #include "order.h"
+#include "databaseHelper.h"
 
 class OrderStorer
 {
@@ -11,7 +12,7 @@ private:
     sqlite3 *db;
 
 public:
-    OrderStorer(std::string dbName);
+    OrderStorer(const std::string& dbName);
 
     // TODO : различный get
 

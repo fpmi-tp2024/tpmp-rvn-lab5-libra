@@ -6,6 +6,7 @@
 #include <vector>
 #include "order.h"
 #include "driver.h"
+#include "../include/databaseHelper.h"
 
 class DriverStorer
 {
@@ -13,7 +14,7 @@ private:
     sqlite3 *db;
 
 public:
-    DriverStorer(std::string dbName);
+    DriverStorer(const std::string& dbName);
 
     // TODO : различный get
 
