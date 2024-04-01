@@ -1,5 +1,5 @@
-#ifndef ADMIN_H
-#define ADMIN_H
+#ifndef ADMININTERFACE_H
+#define ADMININTERFACE_H
 
 #include <string>
 #include <iostream>

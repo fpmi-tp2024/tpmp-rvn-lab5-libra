@@ -1,5 +1,5 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef MENUINTERFACE_H
+#define MENUINTERFACE_H
 
 #include <string>
 #include <iostream>

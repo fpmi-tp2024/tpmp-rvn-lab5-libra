@@ -1,5 +1,5 @@
-#ifndef DRIVER_H
-#define DRIVER_H
+#ifndef DRIVERINTERFACE_H
+#define DRIVERINTERFACE_H
 
 #include <string>
 #include <iostream>
