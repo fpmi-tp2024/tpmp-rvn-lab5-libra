@@ -10,6 +10,7 @@ class Car
 private:
     std::string number;
     std::string brand;
+    std::string model;
     int mileage;
     int carryingCapacity;
 

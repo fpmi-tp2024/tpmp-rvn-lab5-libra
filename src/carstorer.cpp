@@ -1,4 +1,5 @@
 #include "../include/carstorer.h"
+#include<iostream>
 
 CarStorer::CarStorer(const std::string& dbName)
 {
@@ -51,3 +52,33 @@ CarStorer::CarStorer(const std::string& dbName)
 
 
 }
+
+std::pair <int, int> CarStorer::getCarTotalMileageAndMass(std::string carNumber)
+{
+    std::pair <int, int> result;
+    char* err_msg = nullptr;
+    std::string SQLQuery = "SELECT SUM(kilometrage), SUM(cargo_weight) FROM Orders WHERE car_number = '" + carNumber + "';";
+
+    int resultSQL = sqlite3_exec(this->db, SQLQuery.c_str(), &CarStorer::callbackForTotalMileageAndMass, &result, &err_msg);
+    if (resultSQL != SQLITE_OK) {
+        std::string error_message = "Can't get car total kilometrage and cargo_weight: " + std::string(err_msg);
+        sqlite3_free(err_msg);
+        throw std::runtime_error(error_message);
+    }   
+
+    return result;                  
+}
+
+int CarStorer::callbackForTotalMileageAndMass(void* data, int colCount, char** columns, char** colNames)
+{
+    auto result = static_cast<std::pair<int, int>*>(data);
+    // Первоначально задаем пару {0,0}, которая будет возращаться, если на машине не выполнялись заказы
+    result->first = 0;
+    result->second = 0;
+    if (columns[0]!=nullptr && columns[1]!=nullptr){
+        result->first = std::stoi(columns[0]);
+        result->second = std::stoi(columns[1]);
+    }
+    return 0;
+}
+

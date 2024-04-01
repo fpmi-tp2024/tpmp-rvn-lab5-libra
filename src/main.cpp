@@ -12,7 +12,6 @@ int main()
     std::cout << Config::getString("admine_password") << std::endl;
     std::cout << Config::getInt("commission_fees") << std::endl;
     std::cout << Config::getInt("MAX_COST") << std::endl;
-
     
     return 0;
 }

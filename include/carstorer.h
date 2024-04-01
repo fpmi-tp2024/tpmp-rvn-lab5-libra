@@ -11,19 +11,21 @@ class CarStorer
 private:
     sqlite3 *db;
 
+    static int callbackForTotalMileageAndMass(void*, int, char**, char**);
+
 public:
     CarStorer(const std::string& dbName);
 
     // TODO : различный get
 
     // Получить общий пробег и общую массу перевезенных грузов для указанной машины
-    std::pair<int, int> getCarTotalMileageAndMass(int carId);
+    std::pair<int, int> getCarTotalMileageAndMass(std::string carNumber);
 
     // Получить все сведения о машине с наибольшим общим пробегом
     Car getCarWithMaximumMileage();
 
     // Обновить информацию о машине
-    void updateCar(int carId, const Car &car);
+    void updateCar(std::string, const Car &car);
 
     // Добавить новую машину
     void addCar(const Car &car);
