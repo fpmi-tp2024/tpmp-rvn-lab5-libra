@@ -1,7 +1,8 @@
 #include "../include/driver.h"
+#include<iostream>
 
-Driver::Driver(int id, const std::string &name, const std::string &login, const std::string &category,
-               long startWorkDate, const std::string &address, int birthYear) : id(id), startWorkDate(startWorkDate), birthYear(birthYear)
+Driver::Driver(int id, const std::string &name,const std::string &category,const std::string& startWorkDate,const std::string password,
+                int birthYear,const std::string &login,const std::string &address) : id(id), startWorkDate(startWorkDate), birthYear(birthYear),password(password)
 {
     setName(name);
     setLogin(login);
@@ -15,9 +16,10 @@ Driver::Driver(sqlite3_stmt *statement)
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 3))),
-          sqlite3_column_int64(statement, 4),
-          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 5))),
-          sqlite3_column_int(statement, 6)) {}
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 4))),
+          sqlite3_column_int(statement, 5),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 6))),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 7)))) {}
 
 int Driver::getId() const
 {
@@ -39,9 +41,14 @@ std::string Driver::getCategory() const
     return category;
 }
 
-long Driver::getStartWorkDate() const
+std::string Driver::getStartWorkDate() const
 {
     return startWorkDate;
+}
+
+std::string Driver::getPassword() const
+{
+    return password;
 }
 
 std::string Driver::getAddress() const
@@ -92,6 +99,7 @@ void Driver::setCategory(const std::string &category)
 
 void Driver::setAddress(const std::string &address)
 {
+    std::cout<<address<<std::endl;
     if (Validator::isValidAddress(address))
     {
         this->address = address;

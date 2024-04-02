@@ -22,17 +22,21 @@ public:
     std::vector<Order> getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate);
 
     // Получить все сведения о водителе, выполнившем наименьшее количество поездок, и количество полученных денег
-    Driver getDriverWithMinimumTrips();
+    std::pair<Driver,int> getDriverWithMinimumTripsAndMoney();
 
-    // Обновить информацию о водителе
-    void updateDriver(int driverId, const Driver &driver);
+    // Обновить адрес водителя
+    void updateAddress(int driverId, const std::string& address);
+
+    // Обновить логин водителя
+    void updateLogin(int driverId, const std::string& login);
+
+    void updatePassword(int driverId, const std::string& password);
 
     // Добавить нового водителя
     void addDriver(const Driver &driver);
 
     // Удалить водителя
-    void removeDriver(int driverId);
-    void removeDriver(const Driver &driver);
+    void removeDriver(int driverId);;
 };
 
 #endif // DRIVERSTORER_H

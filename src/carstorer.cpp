@@ -116,6 +116,29 @@ Car CarStorer::getCarWithMaximumMileage()
     return result;
 }
 
+std::vector<Car> CarStorer::getAllCars()
+{
+    std::vector<Car> result;
+    std::string SQLQuery = "SELECT number,brand,model,capacity,purchase_mileage FROM Cars;";
+
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, 0) == SQLITE_OK)
+    {
+        while (sqlite3_step(stmt) == SQLITE_ROW) 
+        {
+            result.push_back(Car(stmt));
+        }
+    } else 
+    {
+        std::string error_message = "Can't get all cars: " + std::string(sqlite3_errmsg(this->db));
+        throw std::runtime_error(error_message);
+    }
+
+    sqlite3_finalize(stmt);
+
+    return result;
+}
+
 void CarStorer::updateCar(std::string carNumber,const Car& car)
 {
     std::string SQLQuery =
@@ -165,4 +188,9 @@ void CarStorer::removeCar(std::string carNumber)
         sqlite3_free(err_msg);
         throw std::runtime_error(error_message);
     }
+}
+
+CarStorer::~CarStorer()
+{
+    sqlite3_close(db);
 }

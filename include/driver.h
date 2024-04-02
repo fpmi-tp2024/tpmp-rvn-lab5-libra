@@ -9,24 +9,26 @@ class Driver
 {
 private:
     int id;
-    std::string login;
     std::string name;
     std::string category;
-    long startWorkDate;
-    std::string address;
+    std::string startWorkDate;
+    std::string password;
     int birthYear;
+    std::string login;
+    std::string address;
 
 public:
-    Driver(int id, const std::string &name, const std::string &login, const std::string &category,
-           long startWorkDate, const std::string &address, int birthYear);
+    Driver(int id, const std::string &name,const std::string &category,const std::string& startWorkDate,const std::string password,
+                int birthYear,const std::string &login,const std::string &address);
     Driver(sqlite3_stmt *statement);
 
     int getId() const;
     std::string getName() const;
     std::string getLogin() const;
     std::string getCategory() const;
-    long getStartWorkDate() const;
+    std::string getStartWorkDate() const;
     std::string getAddress() const;
+    std::string getPassword() const;
     int getBirthYear() const;
 
     void setName(const std::string &name);

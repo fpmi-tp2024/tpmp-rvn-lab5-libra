@@ -14,7 +14,7 @@ OrderStorer::OrderStorer(const std::string& dbName)
     const char* SQLQuery =
         "CREATE TABLE IF NOT EXISTS Orders ("
         "id integer NOT NULL PRIMARY KEY AUTOINCREMENT,"
-        "date text NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+        "date text NOT NULL DEFAULT (strftime('%d-%m-%Y', 'now')),"
         "kilometrage integer NOT NULL,"
         "cargo_weight integer NOT NULL,"
         "transport_cost integer NOT NULL,"

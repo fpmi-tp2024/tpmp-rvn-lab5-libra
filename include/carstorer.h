@@ -5,6 +5,7 @@
 #include <sqlite3.h>
 #include "car.h"
 #include "databaseHelper.h"
+#include <vector>
 
 class CarStorer
 {
@@ -26,6 +27,9 @@ public:
     // Получить все сведения о машине с наибольшим общим пробегом
     Car getCarWithMaximumMileage();
 
+    // Получить все машины
+    std::vector<Car> getAllCars();
+
     // Обновить информацию о машине
     void updateCar(std::string carNumber, const Car &car);
 
@@ -34,6 +38,8 @@ public:
 
     // Удалить машину
     void removeCar(std::string carNumber);
+
+    ~CarStorer();
 };
 
 #endif // CARSTORER_H
