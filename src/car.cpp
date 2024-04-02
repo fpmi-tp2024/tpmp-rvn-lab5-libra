@@ -1,9 +1,13 @@
 #include "../include/car.h"
+#include<iostream>
 
-Car::Car(const std::string &number, const std::string &brand, int mileage, int carryingCapacity)
+Car::Car() : number(""), brand(""),model(""), mileage(0), carryingCapacity(0) {}
+
+Car::Car(const std::string &number, const std::string &brand,const std::string& model,int mileage, int carryingCapacity)
 {
     setNumber(number);
     setBrand(brand);
+    setModel(model);
     setMileage(mileage);
     setCarryingCapacity(carryingCapacity);
 }
@@ -12,8 +16,10 @@ Car::Car(sqlite3_stmt *statement)
     : Car(
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 0))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1))),
-          sqlite3_column_int(statement, 2),
-          sqlite3_column_int(statement, 3)) {}
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
+          sqlite3_column_int(statement, 3),
+          sqlite3_column_int(statement, 4)) {
+          }
 
 std::string Car::getNumber() const
 {
@@ -23,6 +29,11 @@ std::string Car::getNumber() const
 std::string Car::getBrand() const
 {
     return brand;
+}
+
+std::string Car::getModel() const
+{
+    return model;
 }
 
 int Car::getMileage() const
@@ -81,4 +92,9 @@ void Car::setCarryingCapacity(int carryingCapacity)
     {
         throw std::invalid_argument("Invalid carrying capacity value.");
     }
+}
+
+void Car::setModel(const std::string &model)
+{
+    this->model = model;
 }

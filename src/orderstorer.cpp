@@ -34,9 +34,9 @@ OrderStorer::OrderStorer(const std::string& dbName)
     SQLQuery =
         "INSERT INTO Orders(kilometrage,cargo_weight,transport_cost,driver_login,car_number)"
         "VALUES"
-        "(100,1000,1000,'ivanov','A123BC'),"
-        "(200,2000,2000,'petrov','B456CD'),"
-        "(300,3000,3000,'sidorov','C789EF');";
+        "(100,1000,1000,'ivanov','9101HB-3'),"
+        "(200,2000,2000,'petrov','1213PP-4'),"
+        "(300,3000,3000,'sidorov','1415XO-5');";
 
     // Заполняем таблицу Orders первоначальными данными
     if(DatabaseHelper::isTableEmpty(this->db, "Orders")) {

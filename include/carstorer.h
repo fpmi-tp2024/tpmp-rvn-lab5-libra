@@ -13,6 +13,8 @@ private:
 
     static int callbackForTotalMileageAndMass(void*, int, char**, char**);
 
+    static int callbackForMaxMileage(void*, int, char**, char**);
+
 public:
     CarStorer(const std::string& dbName);
 
@@ -25,14 +27,13 @@ public:
     Car getCarWithMaximumMileage();
 
     // Обновить информацию о машине
-    void updateCar(std::string, const Car &car);
+    void updateCar(std::string carNumber, const Car &car);
 
     // Добавить новую машину
     void addCar(const Car &car);
 
     // Удалить машину
-    void removeCar(int carId);
-    void removeCar(const Car &car);
+    void removeCar(std::string carNumber);
 };
 
 #endif // CARSTORER_H
