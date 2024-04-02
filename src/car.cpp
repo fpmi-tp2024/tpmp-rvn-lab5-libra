@@ -18,8 +18,8 @@ Car::Car(sqlite3_stmt *statement)
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
           sqlite3_column_int(statement, 3),
-          sqlite3_column_int(statement, 4)) {
-          }
+          sqlite3_column_int(statement, 4))
+    {}
 
 std::string Car::getNumber() const
 {

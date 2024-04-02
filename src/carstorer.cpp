@@ -8,7 +8,8 @@ CarStorer::CarStorer(const std::string& dbName)
 
     // Открываем базу данных 
     int result = sqlite3_open(dbName.c_str(), &this->db);
-    if (result != SQLITE_OK) {
+    if (result != SQLITE_OK) 
+    {
         sqlite3_close(db);
         throw std::runtime_error("Can't open database,try to restart application " + std::string(sqlite3_errmsg(db)));
     }
@@ -41,9 +42,11 @@ CarStorer::CarStorer(const std::string& dbName)
         "('1415XO-5','Toyota','Land Cruiser',4500,50000);";
 
     // Заполняем таблицу Cars первоначальными данными
-    if(DatabaseHelper::isTableEmpty(this->db, "Cars")) {
+    if(DatabaseHelper::isTableEmpty(this->db, "Cars")) 
+    {
         result = sqlite3_exec(this->db, SQLQuery, 0, 0, &err_msg);
-        if (result != SQLITE_OK) {
+        if (result != SQLITE_OK) 
+        {
             std::string error_message = "Can't insert data into Cars: " + std::string(err_msg);
             sqlite3_free(err_msg);
             sqlite3_close(db);
@@ -61,7 +64,8 @@ std::pair <int, int> CarStorer::getCarTotalMileageAndMass(std::string carNumber)
     std::string SQLQuery = "SELECT SUM(kilometrage), SUM(cargo_weight) FROM Orders WHERE car_number = '" + carNumber + "';";
 
     int resultSQL = sqlite3_exec(this->db, SQLQuery.c_str(), &CarStorer::callbackForTotalMileageAndMass, &result, &err_msg);
-    if (resultSQL != SQLITE_OK) {
+    if (resultSQL != SQLITE_OK) 
+    {
         std::string error_message = "Can't get car total kilometrage and cargo_weight: " + std::string(err_msg);
         sqlite3_free(err_msg);
         throw std::runtime_error(error_message);
@@ -76,7 +80,8 @@ int CarStorer::callbackForTotalMileageAndMass(void* data, int colCount, char** c
     // Первоначально задаем пару {0,0}, которая будет возращаться, если на машине не выполнялись заказы
     result->first = 0;
     result->second = 0;
-    if (columns[0]!=nullptr && columns[1]!=nullptr){
+    if (columns[0]!=nullptr && columns[1]!=nullptr)
+    {
         result->first = std::stoi(columns[0]);
         result->second = std::stoi(columns[1]);
     }
@@ -94,11 +99,14 @@ Car CarStorer::getCarWithMaximumMileage()
         "LIMIT 1);";
 
     sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, 0) == SQLITE_OK) {
-        if (sqlite3_step(stmt) == SQLITE_ROW) {
+    if (sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, 0) == SQLITE_OK)
+    {
+        if (sqlite3_step(stmt) == SQLITE_ROW) 
+        {
             result = Car(stmt); 
         }
-    } else {
+    } else 
+    {
         std::string error_message = "Can't get car with maximum mileage: " + std::string(sqlite3_errmsg(this->db));
         throw std::runtime_error(error_message);
     }
@@ -108,7 +116,8 @@ Car CarStorer::getCarWithMaximumMileage()
     return result;
 }
 
-void CarStorer::updateCar(std::string carNumber,const Car& car){
+void CarStorer::updateCar(std::string carNumber,const Car& car)
+{
     std::string SQLQuery =
         "UPDATE Cars SET brand = '" + car.getBrand() + "',"
         "model='" + car.getModel() + "',capacity='" + std::to_string(car.getCarryingCapacity()) +"',"
@@ -125,7 +134,8 @@ void CarStorer::updateCar(std::string carNumber,const Car& car){
     }
 }
 
-void CarStorer::addCar(const Car& car){
+void CarStorer::addCar(const Car& car)
+{
     std::string SQLQuery =
         "INSERT INTO Cars(number,brand,model,capacity,purchase_mileage)"
         "VALUES('" + car.getNumber() + "','" + car.getBrand() + "','" + car.getModel() + "',"

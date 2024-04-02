@@ -14,11 +14,5 @@ int main()
     std::cout << Config::getInt("commission_fees") << std::endl;
     std::cout << Config::getInt("MAX_COST") << std::endl;
 
-    CarStorer carStorer("data/park.db");
-    OrderStorer orderStorer("data/park.db");
-
-
-    carStorer.removeCar("1234AB-7");
-
     return 0;
 }
