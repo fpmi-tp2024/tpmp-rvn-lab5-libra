@@ -36,7 +36,9 @@ public:
     void addDriver(const Driver &driver);
 
     // Удалить водителя
-    void removeDriver(int driverId);;
+    void removeDriver(int driverId);
+
+    ~DriverStorer();
 };
 
 #endif // DRIVERSTORER_H

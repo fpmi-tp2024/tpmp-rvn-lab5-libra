@@ -152,3 +152,38 @@ void DriverStorer::updatePassword(int driverId, const std::string& password)
         throw std::runtime_error(error_message);
     }
 }
+
+void DriverStorer::addDriver(const Driver &driver)
+{
+    char* err_msg = nullptr;
+    std::string SQLQuery = 
+        "INSERT INTO Drivers(name,category,start_work_date,password_hash,birth_year,login,address) "
+        "VALUES('" + driver.getName() + "','" + driver.getCategory() + "','" + driver.getStartWorkDate() + "','" + driver.getPassword() + "'," + std::to_string(driver.getBirthYear()) + ",'" + driver.getLogin() + "','" + driver.getAddress() + "');";
+
+    int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
+    if (result != SQLITE_OK) {
+        std::string error_message = "Can't add driver: " + std::string(err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        throw std::runtime_error(error_message);
+    }
+}
+
+void DriverStorer::removeDriver(int driverId)
+{
+    char* err_msg = nullptr;
+    std::string SQLQuery = "DELETE FROM Drivers WHERE id = " + std::to_string(driverId) + ";";
+
+    int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
+    if (result != SQLITE_OK) {
+        std::string error_message = "Can't remove driver: " + std::string(err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+        throw std::runtime_error(error_message);
+    }
+}
+
+DriverStorer::~DriverStorer()
+{
+    sqlite3_close(db);
+}
