@@ -1,8 +1,0 @@
-title: Автопарк
-author: Барановский Максим, Ладик Алина, Сергиенко Лев, Шейнин Василий
-description: > # this means to ignore newlines until "baseurl:"
-  Проект "Автопарк"
-
-show_excerpts: true # set to false to remove excerpts on the homepage
-
-theme: jekyll-theme-slate
