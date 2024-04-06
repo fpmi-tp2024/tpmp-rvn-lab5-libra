@@ -18,8 +18,8 @@ private:
     std::string address;
 
 public:
-    Driver(int id, const std::string &name,const std::string &category,const std::string& startWorkDate,const std::string password,
-                int birthYear,const std::string &login,const std::string &address);
+    Driver(int id, const std::string &name, const std::string &category, const std::string &startWorkDate, const std::string password,
+           int birthYear, const std::string &login, const std::string &address);
     Driver(sqlite3_stmt *statement);
 
     int getId() const;

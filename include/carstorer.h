@@ -12,12 +12,12 @@ class CarStorer
 private:
     sqlite3 *db;
 
-    static int callbackForTotalMileageAndMass(void*, int, char**, char**);
+    static int callbackForTotalMileageAndMass(void *, int, char **, char **);
 
-    static int callbackForMaxMileage(void*, int, char**, char**);
+    static int callbackForMaxMileage(void *, int, char **, char **);
 
 public:
-    CarStorer(const std::string& dbName);
+    CarStorer(const std::string &dbName);
 
     // TODO : различный get
 

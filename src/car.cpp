@@ -1,9 +1,9 @@
 #include "../include/car.h"
-#include<iostream>
+#include <iostream>
 
-Car::Car() : number(""), brand(""),model(""), mileage(0), carryingCapacity(0) {}
+Car::Car() : number(""), brand(""), model(""), mileage(0), carryingCapacity(0) {}
 
-Car::Car(const std::string &number, const std::string &brand,const std::string& model,int mileage, int carryingCapacity)
+Car::Car(const std::string &number, const std::string &brand, const std::string &model, int mileage, int carryingCapacity)
 {
     setNumber(number);
     setBrand(brand);
@@ -19,7 +19,8 @@ Car::Car(sqlite3_stmt *statement)
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
           sqlite3_column_int(statement, 3),
           sqlite3_column_int(statement, 4))
-    {}
+{
+}
 
 std::string Car::getNumber() const
 {

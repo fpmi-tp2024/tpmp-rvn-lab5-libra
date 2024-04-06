@@ -16,7 +16,7 @@ private:
 
 public:
     Car();
-    Car(const std::string &number, const std::string &brand,const std::string& model,int mileage, int carryingCapacity);
+    Car(const std::string &number, const std::string &brand, const std::string &model, int mileage, int carryingCapacity);
     Car(sqlite3_stmt *statement);
 
     std::string getNumber() const;
@@ -24,7 +24,6 @@ public:
     std::string getModel() const;
     int getMileage() const;
     int getCarryingCapacity() const;
-
 
     void setNumber(const std::string &number);
     void setBrand(const std::string &brand);

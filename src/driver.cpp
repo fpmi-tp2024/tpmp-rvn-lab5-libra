@@ -1,8 +1,8 @@
 #include "../include/driver.h"
-#include<iostream>
+#include <iostream>
 
-Driver::Driver(int id, const std::string &name,const std::string &category,const std::string& startWorkDate,const std::string password,
-                int birthYear,const std::string &login,const std::string &address) : id(id), startWorkDate(startWorkDate), birthYear(birthYear),password(password)
+Driver::Driver(int id, const std::string &name, const std::string &category, const std::string &startWorkDate, const std::string password,
+               int birthYear, const std::string &login, const std::string &address) : id(id), startWorkDate(startWorkDate), birthYear(birthYear), password(password)
 {
     setName(name);
     setLogin(login);
@@ -99,7 +99,7 @@ void Driver::setCategory(const std::string &category)
 
 void Driver::setAddress(const std::string &address)
 {
-    std::cout<<address<<std::endl;
+    std::cout << address << std::endl;
     if (Validator::isValidAddress(address))
     {
         this->address = address;

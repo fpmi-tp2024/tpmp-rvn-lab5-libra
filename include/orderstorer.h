@@ -12,7 +12,7 @@ private:
     sqlite3 *db;
 
 public:
-    OrderStorer(const std::string& dbName);
+    OrderStorer(const std::string &dbName);
 
     // TODO : различный get
 

@@ -14,7 +14,7 @@ private:
     sqlite3 *db;
 
 public:
-    DriverStorer(const std::string& dbName);
+    DriverStorer(const std::string &dbName);
 
     // TODO : различный get
 
@@ -22,15 +22,15 @@ public:
     std::vector<Order> getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate);
 
     // Получить все сведения о водителе, выполнившем наименьшее количество поездок, и количество полученных денег
-    std::pair<Driver,int> getDriverWithMinimumTripsAndMoney();
+    std::pair<Driver, int> getDriverWithMinimumTripsAndMoney();
 
     // Обновить адрес водителя
-    void updateAddress(int driverId, const std::string& address);
+    void updateAddress(int driverId, const std::string &address);
 
     // Обновить логин водителя
-    void updateLogin(int driverId, const std::string& login);
+    void updateLogin(int driverId, const std::string &login);
 
-    void updatePassword(int driverId, const std::string& password);
+    void updatePassword(int driverId, const std::string &password);
 
     // Добавить нового водителя
     void addDriver(const Driver &driver);
