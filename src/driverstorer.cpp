@@ -15,12 +15,12 @@ DriverStorer::DriverStorer(const std::string &dbName)
     std::string SQLQuery =
         "CREATE TABLE IF NOT EXISTS Drivers ("
         "id integer NOT NULL PRIMARY KEY AUTOINCREMENT,"
+        "login text NOT NULL UNIQUE,"
+        "password_hash text NOT NULL,"
         "name varchar(30) NOT NULL,"
         "category varchar(5) NOT NULL,"
         "start_work_date text NOT NULL DEFAULT (strftime('%d-%m-%Y', 'now')),"
-        "password_hash text NOT NULL UNIQUE,"
         "birth_year integer NOT NULL,"
-        "login text NOT NULL,"
         "address text NOT NULL"
         ");";
 
@@ -33,28 +33,6 @@ DriverStorer::DriverStorer(const std::string &dbName)
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
-
-    SQLQuery =
-        "INSERT INTO Drivers(name,category,start_work_date,password_hash,birth_year,login,address)"
-        "VALUES"
-        "('Alexei','A','02.12.2015','123456',1990,'ivanov','123 Main St'),"
-        "('Vasya','B','02.12.2015','12345632',1995,'petrov','123 Main St'),"
-        "('Ivan','C','02.12.2015','1234562332',2000,'sidorov','123 Main St'),"
-        "('Petr','D','02.12.2015','1',1998,'kuznecov','123 Main St'),"
-        "('Alexandr','A','02.12.2015','12345689898',1992,'smirnov','123 Main St');";
-
-    // Заполняем таблицу Drivers первоначальными данными
-    if (DatabaseHelper::isTableEmpty(this->db, "Drivers"))
-    {
-        result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
-        if (result != SQLITE_OK)
-        {
-            std::string error_message = "Can't insert data into Drivers: " + std::string(err_msg);
-            sqlite3_free(err_msg);
-            sqlite3_close(db);
-            throw std::runtime_error(error_message);
-        }
-    }
 }
 
 // #TODO : возможно стоит переделать, чтобы возращался вектор
@@ -62,8 +40,8 @@ std::pair<Driver, int> DriverStorer::getDriverWithMinimumTripsAndMoney()
 {
     char *err_msg = nullptr;
     std::string SQLQuery =
-        "SELECT Dr.id,Dr.name,Dr.category,Dr.start_work_date, "
-        "Dr.password_hash,Dr.birth_year,Dr.login,Dr.address "
+        "SELECT Dr.id,Dr.login,Dr.name,Dr.category,Dr.start_work_date, "
+        "Dr.birth_year,Dr.address "
         "FROM "
         "Drivers AS Dr "
         "LEFT JOIN "
@@ -165,9 +143,9 @@ void DriverStorer::addDriver(const Driver &driver)
 {
     char *err_msg = nullptr;
     std::string SQLQuery =
-        "INSERT INTO Drivers(name,category,start_work_date,password_hash,birth_year,login,address) "
+        "INSERT INTO Drivers(login,name,category,start_work_date,birth_year,address) "
         "VALUES('" +
-        driver.getName() + "','" + driver.getCategory() + "','" + driver.getStartWorkDate() + "','" + driver.getPassword() + "'," + std::to_string(driver.getBirthYear()) + ",'" + driver.getLogin() + "','" + driver.getAddress() + "');";
+        driver.getLogin() + "','" + driver.getName() + "','" + driver.getCategory() + "','" + driver.getStartWorkDate() + "'," + std::to_string(driver.getBirthYear()) + "','" + driver.getAddress() + "');";
 
     int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
     if (result != SQLITE_OK)

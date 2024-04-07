@@ -32,24 +32,4 @@ OrderStorer::OrderStorer(const std::string &dbName)
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
-
-    SQLQuery =
-        "INSERT INTO Orders(kilometrage,cargo_weight,transport_cost,driver_login,car_number)"
-        "VALUES"
-        "(100,1000,1000,'ivanov','9101HB-3'),"
-        "(200,2000,2000,'petrov','1213PP-4'),"
-        "(300,3000,3000,'sidorov','1415XO-5');";
-
-    // Заполняем таблицу Orders первоначальными данными
-    if (DatabaseHelper::isTableEmpty(this->db, "Orders"))
-    {
-        result = sqlite3_exec(this->db, SQLQuery, 0, 0, &err_msg);
-        if (result != SQLITE_OK)
-        {
-            std::string error_message = "Can't insert data into Orders: " + std::string(err_msg);
-            sqlite3_free(err_msg);
-            sqlite3_close(db);
-            throw std::runtime_error(error_message);
-        }
-    }
 }

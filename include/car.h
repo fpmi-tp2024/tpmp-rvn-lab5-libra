@@ -30,6 +30,8 @@ public:
     void setModel(const std::string &model);
     void setMileage(int mileage);
     void setCarryingCapacity(int carryingCapacity);
+
+    std::string toString() const;
 };
 
 #endif // CAR_H

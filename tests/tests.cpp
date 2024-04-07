@@ -1,6 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "../include/validator.h"
+#include "../include/carstorer.h"
+#include "../config/config.hpp"
 
 TEST_CASE("Validator tests", "[Validator]")
 {
@@ -101,5 +103,116 @@ TEST_CASE("Validator tests", "[Validator]")
         REQUIRE(Validator::isValidCost(maxCost - 1));
         REQUIRE_FALSE(Validator::isValidCost(minCost - 1));
         REQUIRE_FALSE(Validator::isValidCost(maxCost + 1));
+    }
+}
+
+TEST_CASE("CarStorer")
+{
+    CarStorer carStorer("data/test.db");
+
+    SECTION("Init")
+    {
+        carStorer.addCar(Car("1234AB-7", "Volvo", "XC90", 2500, 10000));
+        carStorer.addCar(Car("5678KM-2", "BMW", "X5", 3000, 20000));
+        carStorer.addCar(Car("9101HB-3", "Audi", "Q7", 35000, 30000));
+        carStorer.addCar(Car("1213PP-4", "Mercedes", "GLE", 4000, 40000));
+        carStorer.addCar(Car("1415XO-5", "Toyota", "Land Cruiser", 4500, 50000));
+    }
+
+    // SECTION("getCarTotalMileageAndMass")
+    // {
+    //     std::pair<int, int> result = carStorer.getCarTotalMileageAndMass("1234AB-7");
+    //     REQUIRE(result.first == 49000);
+    //     REQUIRE(result.second == 150000);
+    // }
+
+    // SECTION("getCarWithMaximumMileage")
+    // {
+    //     Car result = carStorer.getCarWithMaximumMileage();
+    //     REQUIRE(result.getNumber() == "9101HB-3");
+    //     REQUIRE(result.getBrand() == "Audi");
+    //     REQUIRE(result.getModel() == "Q7");
+    //     REQUIRE(result.getMileage() == 35000);
+    //     REQUIRE(result.getCarryingCapacity() == 30000);
+    // }
+
+    SECTION("getAllCars")
+    {
+        std::vector<Car> result = carStorer.getAllCars();
+        REQUIRE(result.size() == 5);
+
+        REQUIRE(result[0].getNumber() == "1234AB-7");
+        REQUIRE(result[0].getBrand() == "Volvo");
+        REQUIRE(result[0].getModel() == "XC90");
+        REQUIRE(result[0].getCarryingCapacity() == 2500);
+        REQUIRE(result[0].getMileage() == 10000);
+
+        REQUIRE(result[1].getNumber() == "5678KM-2");
+        REQUIRE(result[1].getBrand() == "BMW");
+        REQUIRE(result[1].getModel() == "X5");
+        REQUIRE(result[1].getCarryingCapacity() == 3000);
+        REQUIRE(result[1].getMileage() == 20000);
+
+        REQUIRE(result[2].getNumber() == "9101HB-3");
+        REQUIRE(result[2].getBrand() == "Audi");
+        REQUIRE(result[2].getModel() == "Q7");
+        REQUIRE(result[2].getCarryingCapacity() == 35000);
+        REQUIRE(result[2].getMileage() == 30000);
+
+        REQUIRE(result[3].getNumber() == "1213PP-4");
+        REQUIRE(result[3].getBrand() == "Mercedes");
+        REQUIRE(result[3].getModel() == "GLE");
+        REQUIRE(result[3].getCarryingCapacity() == 4000);
+        REQUIRE(result[3].getMileage() == 40000);
+
+        REQUIRE(result[4].getNumber() == "1415XO-5");
+        REQUIRE(result[4].getBrand() == "Toyota");
+        REQUIRE(result[4].getModel() == "Land Cruiser");
+        REQUIRE(result[4].getCarryingCapacity() == 4500);
+        REQUIRE(result[4].getMileage() == 50000);
+    }
+
+    // SECTION("updateCar")
+    // {
+    //     carStorer.updateCar("1234AB-7", Car("1234AB-7", "Volvo", "XC90", 2500, 11000));
+
+    //     Car result = carStorer.getCarWithMaximumMileage();
+    //     REQUIRE(result.getNumber() == "1234AB-7");
+    //     REQUIRE(result.getBrand() == "Volvo");
+    //     REQUIRE(result.getModel() == "XC90");
+    //     REQUIRE(result.getCarryingCapacity() == 2500);
+    //     REQUIRE(result.getMileage() == 11000);
+    // }
+
+    SECTION("removeCar")
+    {
+        carStorer.removeCar("1234AB-7");
+
+        std::vector<Car> result = carStorer.getAllCars();
+        REQUIRE(result.size() == 4);
+
+        REQUIRE(result[0].getNumber() == "5678KM-2");
+        REQUIRE(result[0].getBrand() == "BMW");
+        REQUIRE(result[0].getModel() == "X5");
+        REQUIRE(result[0].getCarryingCapacity() == 3000);
+        REQUIRE(result[0].getMileage() == 20000);
+
+        REQUIRE(result[1].getNumber() == "9101HB-3");
+        REQUIRE(result[1].getBrand() == "Audi");
+        REQUIRE(result[1].getModel() == "Q7");
+        REQUIRE(result[1].getCarryingCapacity() == 35000);
+        REQUIRE(result[1].getMileage() == 30000);
+
+        REQUIRE(result[2].getNumber() == "1213PP-4");
+        REQUIRE(result[2].getBrand() == "Mercedes");
+        REQUIRE(result[2].getModel() == "GLE");
+        REQUIRE(result[2].getCarryingCapacity() == 4000);
+        REQUIRE(result[2].getMileage() == 40000);
+
+        REQUIRE(result[3].getNumber() == "1415XO-5");
+        REQUIRE(result[3].getBrand() == "Toyota");
+        REQUIRE(result[3].getModel() == "Land Cruiser");
+        REQUIRE(result[3].getCarryingCapacity() == 4500);
+        REQUIRE(result[3].getMileage() == 50000);
     }
 }

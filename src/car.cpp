@@ -3,13 +3,13 @@
 
 Car::Car() : number(""), brand(""), model(""), mileage(0), carryingCapacity(0) {}
 
-Car::Car(const std::string &number, const std::string &brand, const std::string &model, int mileage, int carryingCapacity)
+Car::Car(const std::string &number, const std::string &brand, const std::string &model, int carryingCapacity, int mileage)
 {
     setNumber(number);
     setBrand(brand);
     setModel(model);
-    setMileage(mileage);
     setCarryingCapacity(carryingCapacity);
+    setMileage(mileage);
 }
 
 Car::Car(sqlite3_stmt *statement)
@@ -98,4 +98,15 @@ void Car::setCarryingCapacity(int carryingCapacity)
 void Car::setModel(const std::string &model)
 {
     this->model = model;
+}
+
+std::string Car::toString() const
+{
+    std::stringstream ss;
+    ss << "||\tNumber: " << number << std::endl;
+    ss << "||\tBrand: " << brand << std::endl;
+    ss << "||\tModel: " << model << std::endl;
+    ss << "||\tMileage: " << mileage << std::endl;
+    ss << "||\tCarrying capacity: " << carryingCapacity << std::endl;
+    return ss.str();
 }

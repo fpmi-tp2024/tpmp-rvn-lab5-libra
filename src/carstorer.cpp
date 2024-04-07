@@ -32,28 +32,6 @@ CarStorer::CarStorer(const std::string &dbName)
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
-
-    SQLQuery =
-        "INSERT INTO Cars(number,brand,model,capacity,purchase_mileage)"
-        "VALUES"
-        "('1234AB-7','Volvo','XC90',2500,10000),"
-        "('5678KM-2','BMW','X5',3000,20000),"
-        "('9101HB-3','Audi','Q7',35000,30000),"
-        "('1213PP-4','Mercedes','GLE',4000,40000),"
-        "('1415XO-5','Toyota','Land Cruiser',4500,50000);";
-
-    // Заполняем таблицу Cars первоначальными данными
-    if (DatabaseHelper::isTableEmpty(this->db, "Cars"))
-    {
-        result = sqlite3_exec(this->db, SQLQuery, 0, 0, &err_msg);
-        if (result != SQLITE_OK)
-        {
-            std::string error_message = "Can't insert data into Cars: " + std::string(err_msg);
-            sqlite3_free(err_msg);
-            sqlite3_close(db);
-            throw std::runtime_error(error_message);
-        }
-    }
 }
 
 std::pair<int, int> CarStorer::getCarTotalMileageAndMass(std::string carNumber)
@@ -119,7 +97,7 @@ Car CarStorer::getCarWithMaximumMileage()
 std::vector<Car> CarStorer::getAllCars()
 {
     std::vector<Car> result;
-    std::string SQLQuery = "SELECT number,brand,model,capacity,purchase_mileage FROM Cars;";
+    std::string SQLQuery = "SELECT * FROM Cars;";
 
     sqlite3_stmt *stmt;
     if (sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, 0) == SQLITE_OK)
@@ -144,10 +122,9 @@ void CarStorer::updateCar(std::string carNumber, const Car &car)
 {
     std::string SQLQuery =
         "UPDATE Cars SET brand = '" + car.getBrand() + "',"
-                                                       "model='" +
-        car.getModel() + "',capacity='" + std::to_string(car.getCarryingCapacity()) + "',"
-                                                                                      "purchase_mileage='" +
-        std::to_string(car.getMileage()) + "'WHERE number='" + carNumber + "';";
+        "model='" + car.getModel() + 
+        "',capacity='" + std::to_string(car.getCarryingCapacity()) + "',"
+        "purchase_mileage='" + std::to_string(car.getMileage()) + "'WHERE number='" + carNumber + "';";
 
     char *err_msg = nullptr;
 

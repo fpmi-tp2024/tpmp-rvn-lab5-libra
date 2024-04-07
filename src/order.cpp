@@ -108,3 +108,16 @@ void Order::setCost(int cost)
         throw std::invalid_argument("Invalid cost value.");
     }
 }
+
+std::string Order::toString() const
+{
+    std::stringstream ss;
+    ss << "||\tOrder ID: " << id << std::endl;
+    ss << "||\tDate: " << date << std::endl;
+    ss << "||\tDriver ID: " << driverId << std::endl;
+    ss << "||\tCar number: " << carNumber << std::endl;
+    ss << "||\tMileage: " << mileage << std::endl;
+    ss << "||\tCargo mass: " << cargoMass << std::endl;
+    ss << "||\tCost: " << cost << std::endl;
+    return ss.str();
+}

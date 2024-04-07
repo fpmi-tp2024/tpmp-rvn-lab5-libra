@@ -34,6 +34,8 @@ public:
     void setMileage(int mileage);
     void setCargoMass(int cargoMass);
     void setCost(int cost);
+
+    std::string toString() const;
 };
 
 #endif // ORDER_H
