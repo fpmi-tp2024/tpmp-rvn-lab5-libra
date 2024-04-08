@@ -125,11 +125,11 @@ double OrderStorer::getTotalMoney(const int driverID, long start, long end)
 
     if (start == -1 && end == -1)
     {
-        SQLQuery = "SELECT SUM(transport_cost) FROM Orders WHERE driver_id = " + std::to_string(driverID) + ";";
+        SQLQuery = "SELECT SUM(cost) FROM Orders WHERE driver_id = " + std::to_string(driverID) + ";";
     }
     else
     {
-        SQLQuery = "SELECT SUM(transport_cost) FROM Orders WHERE driver_id = " +
+        SQLQuery = "SELECT SUM(cost) FROM Orders WHERE driver_id = " +
                    std::to_string(driverID) + " AND date >= " + std::to_string(start) + " AND date <= " + std::to_string(end) + ";";
     }
 

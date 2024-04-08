@@ -36,34 +36,21 @@ DriverStorer::DriverStorer(const std::string &dbName)
     }
 }
 
-// #TODO : возможно стоит переделать, чтобы возращался вектор
 std::pair<Driver, double> DriverStorer::getDriverWithMinimumTripsAndMoney()
 {
-    std::cout<<"Hello";
     char *err_msg = nullptr;
-    std::string SQLQuery =
-        "SELECT Dr.id,Dr.login,Dr.name,Dr.category,Dr.start_work_date, "
-        "Dr.birth_year,Dr.address "
-        "FROM "
-        "Drivers AS Dr "
-        "LEFT JOIN "
-        "Orders AS Ord "
-        "ON Dr.id = Ord.driver_id "
-        "GROUP BY Dr.login "
-        "ORDER BY Count(Ord.date) ASC "
-        "LIMIT 1; ";
+    std::string SQLQuery = "SELECT * FROM Drivers WHERE id = (SELECT driver_id FROM Orders GROUP BY driver_id ORDER BY COUNT(driver_id) ASC LIMIT 1);";
 
     sqlite3_stmt *stmt;
-    int result = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
-    if (result != SQLITE_OK)
+    int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
+    if (res != SQLITE_OK)
     {
         std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
 
-    result = sqlite3_step(stmt);
-    if (result != SQLITE_ROW)
+    if (sqlite3_step(stmt) != SQLITE_ROW)
     {
         sqlite3_finalize(stmt);
         throw std::runtime_error("Can't get driver with minimum trips");
@@ -74,25 +61,24 @@ std::pair<Driver, double> DriverStorer::getDriverWithMinimumTripsAndMoney()
 
     SQLQuery = "SELECT SUM(cost) FROM Orders WHERE driver_id = " + std::to_string(driver.getId()) + ";";
 
-    result = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
-    if (result != SQLITE_OK)
+    res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
+    if (res != SQLITE_OK)
     {
         std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
 
-    result = sqlite3_step(stmt);
-    if (result != SQLITE_ROW)
+    if (sqlite3_step(stmt) != SQLITE_ROW)
     {
         sqlite3_finalize(stmt);
-        throw std::runtime_error("Can't get driver with minimum trips");
+        throw std::runtime_error("Can't get money of driver with minimum trips");
     }
 
-    double sum = sqlite3_column_int(stmt, 0) * Config::getInt("commission_fees") / 100.0;
+    double money = sqlite3_column_double(stmt, 0) * Config::getInt("commission_fees") / 100.0;
     sqlite3_finalize(stmt);
 
-    return std::make_pair(driver, sum);
+    return std::make_pair(driver, money);
 }
 
 void DriverStorer::updateAddress(int driverId, const std::string &address)
