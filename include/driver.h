@@ -29,6 +29,8 @@ public:
     std::string getAddress() const;
     int getBirthYear() const;
 
+
+    void setId(int id);
     void setName(const std::string &name);
     void setLogin(const std::string &login);
     void setCategory(const std::string &category);

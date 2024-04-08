@@ -28,7 +28,7 @@ public:
     double getTotalMoney(const int driverID, long start = -1, long end = -1);
 
     // Добавить новый заказ
-    void addOrder(const Order &order);
+    void addOrder(Order &order);
 
     // Удалить заказ
     void removeOrder(int orderId);

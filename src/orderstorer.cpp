@@ -12,12 +12,20 @@ OrderStorer::OrderStorer(const std::string &dbName)
         throw std::runtime_error("Can't open database,try to restart application " + std::string(sqlite3_errmsg(db)));
     }
 
+    // Включаем поддержку внешних ключей
+    char *errMsg = nullptr;
+    if (sqlite3_exec(db, "PRAGMA foreign_keys = ON;", 0, 0, &errMsg) != SQLITE_OK)
+    {
+        sqlite3_close(db);
+        throw std::runtime_error("Can't enable foreign keys: " + std::string(errMsg));
+    }
+
     const char *SQLQuery =
         "CREATE TABLE IF NOT EXISTS Orders ("
         "id integer NOT NULL PRIMARY KEY AUTOINCREMENT,"
         "date integer NOT NULL DEFAULT (strftime('%s', 'now')),"
-        "driver_id integer NOT NULL UNIQUE REFERENCES Drivers(id),"
-        "car_number varchar(10) NOT NULL UNIQUE REFERENCES Cars(number),"
+        "driver_id integer NOT NULL UNIQUE REFERENCES Drivers(id) ON DELETE CASCADE ,"
+        "car_number varchar(10) NOT NULL UNIQUE REFERENCES Cars(number) ON DELETE CASCADE,"
         "mileage integer NOT NULL,"
         "cargo_weight integer NOT NULL,"
         "cost integer NOT NULL"
@@ -34,10 +42,10 @@ OrderStorer::OrderStorer(const std::string &dbName)
     }
 }
 
-void OrderStorer::addOrder(const Order &order)
+void OrderStorer::addOrder(Order &order)
 {
     char *err_msg = nullptr;
-    std::string SQLQuery = "INSERT INTO Orders (date, kilometrage, cargo_weight, transport_cost, driver_id, car_number) VALUES (" + std::to_string(order.getDate()) + ", " + std::to_string(order.getMileage()) + ", " + std::to_string(order.getCargoWeight()) + ", " + std::to_string(order.getCost()) + ", '" + std::to_string(order.getDriverId()) + "', '" + order.getCarNumber() + "');";
+    std::string SQLQuery = "INSERT INTO Orders (date, mileage, cargo_weight, cost, driver_id, car_number) VALUES (" + std::to_string(order.getDate()) + ", " + std::to_string(order.getMileage()) + ", " + std::to_string(order.getCargoWeight()) + ", " + std::to_string(order.getCost()) + ", '" + std::to_string(order.getDriverId()) + "', '" + order.getCarNumber() + "');";
 
     int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
     if (result != SQLITE_OK)
@@ -47,6 +55,8 @@ void OrderStorer::addOrder(const Order &order)
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
+
+    order.setID(sqlite3_last_insert_rowid(db));
 }
 
 OrderStorer::~OrderStorer()

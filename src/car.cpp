@@ -1,7 +1,7 @@
 #include "../include/car.h"
 #include <iostream>
 
-Car::Car() : number(""), brand(""), model(""), mileage(0), carryingCapacity(0) {}
+Car::Car() : number(""), brand(""), model(""), purchaseMileage(0), carryingCapacity(0) {}
 
 Car::Car(const std::string &number, const std::string &brand, const std::string &model, int carryingCapacity, int mileage)
 {
@@ -37,9 +37,9 @@ std::string Car::getModel() const
     return model;
 }
 
-int Car::getMileage() const
+int Car::getPurchaseMileage() const
 {
-    return mileage;
+    return purchaseMileage;
 }
 
 int Car::getCarryingCapacity() const
@@ -71,11 +71,11 @@ void Car::setBrand(const std::string &brand)
     }
 }
 
-void Car::setMileage(int mileage)
+void Car::setMileage(int purchaseMileage)
 {
-    if (Validator::isValidMileage(mileage))
+    if (Validator::isValidMileage(purchaseMileage))
     {
-        this->mileage = mileage;
+        this->purchaseMileage = purchaseMileage;
     }
     else
     {
@@ -106,7 +106,7 @@ std::string Car::toString() const
     ss << "||\tNumber: " << number << std::endl;
     ss << "||\tBrand: " << brand << std::endl;
     ss << "||\tModel: " << model << std::endl;
-    ss << "||\tMileage: " << mileage << std::endl;
+    ss << "||\tPurchase mileage: " << purchaseMileage << std::endl;
     ss << "||\tCarrying capacity: " << carryingCapacity << std::endl;
     return ss.str();
 }

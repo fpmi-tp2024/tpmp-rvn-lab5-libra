@@ -14,11 +14,11 @@ Driver::Driver(sqlite3_stmt *statement)
     : Driver(
           sqlite3_column_int(statement, 0),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1))),
-          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 3))),
-          sqlite3_column_int(statement, 4),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 4))),
           sqlite3_column_int(statement, 5),
-          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 6)))) {}
+          sqlite3_column_int(statement, 6),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 7)))) {}
 
 int Driver::getId() const
 {
@@ -93,7 +93,6 @@ void Driver::setCategory(const std::string &category)
 
 void Driver::setAddress(const std::string &address)
 {
-    std::cout << address << std::endl;
     if (Validator::isValidAddress(address))
     {
         this->address = address;
@@ -102,6 +101,13 @@ void Driver::setAddress(const std::string &address)
     {
         throw std::invalid_argument("Invalid address format.");
     }
+}
+
+void Driver::setId(int id){
+    if (this->id != -1){
+        throw std::invalid_argument("Id is already set");
+    }
+    this->id = id;
 }
 
 std::string Driver::toString() const

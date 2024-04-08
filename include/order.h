@@ -28,6 +28,7 @@ public:
     int getCargoWeight() const;
     int getCost() const;
 
+    void setID(int id);
     void setDate(long date);
     void setDriverId(int driverId);
     void setCarNumber(const std::string &carNumber);

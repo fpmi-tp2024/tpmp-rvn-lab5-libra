@@ -42,7 +42,7 @@ public:
     void updatePassword(int driverId, const std::string &password);
 
     // Добавить нового водителя
-    void addDriver(const Driver &driver, std::string passwordHash);
+    void addDriver(Driver &driver, std::string passwordHash);
 
     // Удалить водителя
     void removeDriver(int driverId);

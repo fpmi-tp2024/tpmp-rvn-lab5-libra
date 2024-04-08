@@ -1,4 +1,5 @@
 #include "../include/driverstorer.h"
+#include <iostream>
 
 DriverStorer::DriverStorer(const std::string &dbName)
 {
@@ -38,6 +39,7 @@ DriverStorer::DriverStorer(const std::string &dbName)
 // #TODO : возможно стоит переделать, чтобы возращался вектор
 std::pair<Driver, double> DriverStorer::getDriverWithMinimumTripsAndMoney()
 {
+    std::cout<<"Hello";
     char *err_msg = nullptr;
     std::string SQLQuery =
         "SELECT Dr.id,Dr.login,Dr.name,Dr.category,Dr.start_work_date, "
@@ -46,7 +48,7 @@ std::pair<Driver, double> DriverStorer::getDriverWithMinimumTripsAndMoney()
         "Drivers AS Dr "
         "LEFT JOIN "
         "Orders AS Ord "
-        "ON Dr.login = Ord.driver_login "
+        "ON Dr.id = Ord.driver_id "
         "GROUP BY Dr.login "
         "ORDER BY Count(Ord.date) ASC "
         "LIMIT 1; ";
@@ -70,7 +72,7 @@ std::pair<Driver, double> DriverStorer::getDriverWithMinimumTripsAndMoney()
     Driver driver(stmt);
     sqlite3_finalize(stmt);
 
-    SQLQuery = "SELECT SUM(transport_cost) FROM Orders WHERE driver_login = '" + driver.getLogin() + "';";
+    SQLQuery = "SELECT SUM(cost) FROM Orders WHERE driver_id = " + std::to_string(driver.getId()) + ";";
 
     result = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
     if (result != SQLITE_OK)
@@ -139,7 +141,7 @@ void DriverStorer::updatePassword(int driverId, const std::string &password)
     }
 }
 
-void DriverStorer::addDriver(const Driver &driver,std::string passwordHash)
+void DriverStorer::addDriver(Driver &driver,std::string passwordHash)
 {
     char *err_msg = nullptr;
     std::string SQLQuery =
@@ -155,6 +157,8 @@ void DriverStorer::addDriver(const Driver &driver,std::string passwordHash)
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
+
+    driver.setId(sqlite3_last_insert_rowid(db));
 }
 
 void DriverStorer::removeDriver(int driverId)
