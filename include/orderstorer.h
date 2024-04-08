@@ -14,11 +14,18 @@ private:
 public:
     OrderStorer(const std::string &dbName);
 
-    // TODO : различный get
+    // Получить заказ по его ID
+    Order getOrderById(const int orderId);
+
+    // Получить все заказы
+    std::vector<Order> getAllOrders();
+
     int getTotalNumberOfOrders(const int driverID);
+
     int getTotalCargoMass(const int driverID);
+
     // Получить общую сумму денег, заработанную водителем за определенный период
-    int getTotalMoney(const int driverID,long start = -1,long end = -1);
+    int getTotalMoney(const int driverID, long start = -1, long end = -1);
 
     // Добавить новый заказ
     void addOrder(const Order &order);

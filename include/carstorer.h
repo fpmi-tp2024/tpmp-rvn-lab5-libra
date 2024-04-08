@@ -19,7 +19,8 @@ private:
 public:
     CarStorer(const std::string &dbName);
 
-    // TODO : различный get
+    // Получить машину по ее номеру
+    Car getCarByNumber(std::string carNumber);
 
     // Получить общий пробег и общую массу перевезенных грузов для указанной машины
     std::pair<int, int> getCarTotalMileageAndMass(std::string carNumber);

@@ -16,7 +16,14 @@ private:
 public:
     DriverStorer(const std::string &dbName);
 
-    // TODO : различный get
+    // Получить водителя по его ID
+    Driver getDriverById(const int driverId);
+
+    // Получить водителя по его логину
+    Driver getDriverByLogin(const std::string &login);
+
+    // Получить водителя по его логину и паролю
+    Driver getDriverByLoginAndPassword(const std::string &login, const std::string &password);
 
     // Получить перечень выполненных заказов водителем за указанный период
     std::vector<Order> getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate);

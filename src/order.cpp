@@ -1,4 +1,5 @@
 #include "../include/order.h"
+#include "order.h"
 
 Order::Order(int id, long date, int driverId, const std::string &carNumber, int mileage, int cargoMass, int cost)
     : id(id)
@@ -19,6 +20,11 @@ Order::Order(sqlite3_stmt *statement)
     mileage = sqlite3_column_int(statement, 3);
     cargoMass = sqlite3_column_int(statement, 4);
     cost = sqlite3_column_int(statement, 5);
+}
+
+int Order::getId() const
+{
+    return id;
 }
 
 long Order::getDate() const
