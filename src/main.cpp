@@ -8,6 +8,18 @@
 #include <iostream>
 #include <vector>
 
+long dateToYear(int year,int month,int day){
+    tm *ltm = new tm;
+    ltm->tm_mon=month - 1;
+    ltm->tm_year = year - 1900;
+    ltm->tm_mday = day;
+    ltm->tm_hour = 0;
+    ltm->tm_min = 0;
+    ltm->tm_sec = 0;
+
+    return mktime(ltm);
+}
+
 int main()
 {
     std::cout << Config::getString("admine_password") << std::endl;
@@ -20,11 +32,9 @@ int main()
 
     Car car("1234AB-7", "Volvo", "XC90", 2500, 10000);
     Order order(1, 123456789, 1, "1234AB-7", 1000, 1000, 1000);
-    Driver driver(1, "login", "name", "B", "11.10.2004", 2000, "address");
+    Driver driver(1, "login", "name", "B", dateToYear(2024,4,8), 2000, "address");
 
-    std::cout << car.toString() << std::endl;
-    std::cout << order.toString() << std::endl;
-    std::cout << driver.toString() << std::endl;
+    std::cout<<driverStorer.getDrivers().size();
 
     return 0;
 }

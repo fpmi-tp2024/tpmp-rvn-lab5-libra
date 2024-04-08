@@ -1,7 +1,7 @@
 #include "../include/driver.h"
 #include <iostream>
 
-Driver::Driver(int id, const std::string &login, const std::string &name, const std::string &category, const std::string &startWorkDate,
+Driver::Driver(int id, const std::string &login, const std::string &name, const std::string &category, const long &startWorkDate,
                int birthYear, const std::string &address) : id(id), startWorkDate(startWorkDate), birthYear(birthYear)
 {
     setName(name);
@@ -16,7 +16,7 @@ Driver::Driver(sqlite3_stmt *statement)
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 3))),
-          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 4))),
+          sqlite3_column_int(statement, 4),
           sqlite3_column_int(statement, 5),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 6)))) {}
 
@@ -40,7 +40,7 @@ std::string Driver::getCategory() const
     return category;
 }
 
-std::string Driver::getStartWorkDate() const
+long Driver::getStartWorkDate() const
 {
     return startWorkDate;
 }

@@ -15,19 +15,18 @@ public:
     OrderStorer(const std::string &dbName);
 
     // TODO : различный get
-
-    // Получить общее количество поездок, общую массу перевезенных грузов и сумму заработанных денег для указанного водителя
-    std::tuple<int, int, int> getDriverTotalTripsAndMassAndMoney(int driverId);
-
-    // Обновить информацию о заказе
-    void updateOrder(int orderId, const Order &order);
+    int getTotalNumberOfOrders(const int driverID);
+    int getTotalCargoMass(const int driverID);
+    // Получить общую сумму денег, заработанную водителем за определенный период
+    int getTotalMoney(const int driverID,long start = -1,long end = -1);
 
     // Добавить новый заказ
     void addOrder(const Order &order);
 
     // Удалить заказ
     void removeOrder(int orderId);
-    void removeOrder(const Order &order);
+
+    ~OrderStorer();
 };
 
 #endif //  ORDERSTORER_H

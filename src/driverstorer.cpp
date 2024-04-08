@@ -139,13 +139,13 @@ void DriverStorer::updatePassword(int driverId, const std::string &password)
     }
 }
 
-void DriverStorer::addDriver(const Driver &driver)
+void DriverStorer::addDriver(const Driver &driver,std::string passwordHash)
 {
     char *err_msg = nullptr;
     std::string SQLQuery =
-        "INSERT INTO Drivers(login,name,category,start_work_date,birth_year,address) "
+        "INSERT INTO Drivers(login,name,category,start_work_date,birth_year,address,password_hash) "
         "VALUES('" +
-        driver.getLogin() + "','" + driver.getName() + "','" + driver.getCategory() + "','" + driver.getStartWorkDate() + "'," + std::to_string(driver.getBirthYear()) + "','" + driver.getAddress() + "');";
+        driver.getLogin() + "','" + driver.getName() + "','" + driver.getCategory() + "'," + std::to_string(driver.getStartWorkDate()) + "," + std::to_string(driver.getBirthYear()) + ",'" + driver.getAddress() + "','" + passwordHash + "');";
 
     int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
     if (result != SQLITE_OK)
@@ -175,4 +175,50 @@ void DriverStorer::removeDriver(int driverId)
 DriverStorer::~DriverStorer()
 {
     sqlite3_close(db);
+}
+
+std::vector<Order> DriverStorer::getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate){
+    std::vector<Order> result;
+    char *err_msg = nullptr;
+
+    std::string SQLQuery = "SELECT * FROM Orders WHERE driver_id = " + std::to_string(driverId) + " AND date BETWEEN " + std::to_string(startDate) + " AND " + std::to_string(endDate) + ";";
+
+    sqlite3_stmt *stmt;
+    int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
+    if (res != SQLITE_OK)
+    {
+        std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
+        sqlite3_close(db);
+        throw std::runtime_error(error_message);
+    }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        result.push_back(Order(stmt));
+    }
+
+    return result;
+}
+
+std::vector<Driver> DriverStorer::getDrivers(){
+    std::vector<Driver> result;
+    char *err_msg = nullptr;
+
+    std::string SQLQuery = "SELECT * FROM Drivers;";
+
+    sqlite3_stmt *stmt;
+    int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
+    if (res != SQLITE_OK)
+    {
+        std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
+        sqlite3_close(db);
+        throw std::runtime_error(error_message);
+    }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        result.push_back(Driver(stmt));
+    }
+
+    return result;
 }

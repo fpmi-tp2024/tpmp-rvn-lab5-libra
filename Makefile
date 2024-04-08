@@ -12,6 +12,7 @@ TEST_DIR = tests
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 TEST_OBJ_FILES = $(filter-out $(OBJ_DIR)/main.o,$(OBJ_FILES))
+TEST_BD = data/test.db
 
 TARGET = $(BIN_DIR)/program
 TEST_TARGET = $(BIN_DIR)/tests
@@ -30,9 +31,12 @@ $(BIN_DIR)/tests: $(TEST_DIR)/tests.cpp $(TEST_OBJ_FILES) | $(BIN_DIR)
 $(OBJ_DIR) $(BIN_DIR):
 	mkdir -p $@
 
+$(TEST_BD):
+	touch $@
+
 build: $(TARGET)
 
-test: $(TEST_TARGET)
+test: $(TEST_TARGET) $(TEST_BD)
 	rm data/test.db	
 	./$(TEST_TARGET)
 
