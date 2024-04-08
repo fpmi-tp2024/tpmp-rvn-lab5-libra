@@ -29,7 +29,7 @@ public:
     std::vector<Order> getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate);
 
     // Получить все сведения о водителе, выполнившем наименьшее количество поездок, и количество полученных денег
-    std::pair<Driver, int> getDriverWithMinimumTripsAndMoney();
+    std::pair<Driver, double> getDriverWithMinimumTripsAndMoney();
 
     std::vector<Driver> getDrivers();
 

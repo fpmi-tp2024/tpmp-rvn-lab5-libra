@@ -108,7 +108,7 @@ int OrderStorer::getTotalCargoMass(const int driverID)
     return result;
 }
 
-int OrderStorer::getTotalMoney(const int driverID, long start, long end)
+double OrderStorer::getTotalMoney(const int driverID, long start, long end)
 {
     char *err_msg = nullptr;
     std::string SQLQuery;
@@ -139,7 +139,7 @@ int OrderStorer::getTotalMoney(const int driverID, long start, long end)
         throw std::runtime_error("Can't get total number of orders");
     }
 
-    int result = sqlite3_column_int(stmt, 0);
+    double result = sqlite3_column_int(stmt, 0) * Config::getInt("commission_fees") / 100.0;
     sqlite3_finalize(stmt);
 
     return result;

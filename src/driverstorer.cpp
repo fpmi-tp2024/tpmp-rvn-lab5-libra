@@ -36,7 +36,7 @@ DriverStorer::DriverStorer(const std::string &dbName)
 }
 
 // #TODO : возможно стоит переделать, чтобы возращался вектор
-std::pair<Driver, int> DriverStorer::getDriverWithMinimumTripsAndMoney()
+std::pair<Driver, double> DriverStorer::getDriverWithMinimumTripsAndMoney()
 {
     char *err_msg = nullptr;
     std::string SQLQuery =
@@ -87,7 +87,7 @@ std::pair<Driver, int> DriverStorer::getDriverWithMinimumTripsAndMoney()
         throw std::runtime_error("Can't get driver with minimum trips");
     }
 
-    int sum = sqlite3_column_int(stmt, 0);
+    double sum = sqlite3_column_int(stmt, 0) * Config::getInt("commission_fees") / 100.0;
     sqlite3_finalize(stmt);
 
     return std::make_pair(driver, sum);
