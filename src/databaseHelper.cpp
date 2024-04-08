@@ -19,3 +19,22 @@ bool DatabaseHelper::isTableEmpty(sqlite3 *db, const std::string &tableName)
 
     return count == 0;
 }
+
+long DatabaseHelper::dateToSec(int year, int month, int day)
+{
+    std::tm t = {};
+    t.tm_mon = month - 1;
+    t.tm_year = year - 1900;
+    t.tm_mday = day;
+    t.tm_hour = 0;
+    t.tm_min = 0;
+    t.tm_sec = 0;
+    t.tm_isdst = -1;
+    if (std::mktime(&t) == -1)
+    {
+        std::cerr << "Error: unable to make time using mktime\n";
+        return -1;
+    }
+
+    return std::mktime(&t);
+}
