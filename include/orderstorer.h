@@ -25,7 +25,7 @@ public:
     int getTotalCargoMass(const int driverID);
 
     // Получить общую сумму денег, заработанную водителем за определенный период
-    int getTotalMoney(const int driverID, long start = -1, long end = -1);
+    double getTotalMoney(const int driverID, long start = -1, long end = -1);
 
     // Добавить новый заказ
     void addOrder(const Order &order);

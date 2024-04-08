@@ -9,11 +9,11 @@ class Driver
 {
 private:
     int id;
+    std::string login;
     std::string name;
     std::string category;
     long startWorkDate;
     int birthYear;
-    std::string login;
     std::string address;
 
 public:

@@ -16,11 +16,11 @@ OrderStorer::OrderStorer(const std::string &dbName)
         "CREATE TABLE IF NOT EXISTS Orders ("
         "id integer NOT NULL PRIMARY KEY AUTOINCREMENT,"
         "date integer NOT NULL DEFAULT (strftime('%s', 'now')),"
-        "kilometrage integer NOT NULL,"
-        "cargo_weight integer NOT NULL,"
-        "transport_cost integer NOT NULL,"
         "driver_id integer NOT NULL UNIQUE REFERENCES Drivers(id),"
-        "car_number varchar(10) NOT NULL UNIQUE REFERENCES Cars(number)"
+        "car_number varchar(10) NOT NULL UNIQUE REFERENCES Cars(number),"
+        "mileage integer NOT NULL,"
+        "cargo_weight integer NOT NULL,"
+        "cost integer NOT NULL"
         ");";
 
     // Создаем таблицу Orders
@@ -37,7 +37,7 @@ OrderStorer::OrderStorer(const std::string &dbName)
 void OrderStorer::addOrder(const Order &order)
 {
     char *err_msg = nullptr;
-    std::string SQLQuery = "INSERT INTO Orders (date, kilometrage, cargo_weight, transport_cost, driver_id, car_number) VALUES (" + std::to_string(order.getDate()) + ", " + std::to_string(order.getMileage()) + ", " + std::to_string(order.getCargoMass()) + ", " + std::to_string(order.getCost()) + ", '" + std::to_string(order.getDriverId()) + "', '" + order.getCarNumber() + "');";
+    std::string SQLQuery = "INSERT INTO Orders (date, kilometrage, cargo_weight, transport_cost, driver_id, car_number) VALUES (" + std::to_string(order.getDate()) + ", " + std::to_string(order.getMileage()) + ", " + std::to_string(order.getCargoWeight()) + ", " + std::to_string(order.getCost()) + ", '" + std::to_string(order.getDriverId()) + "', '" + order.getCarNumber() + "');";
 
     int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
     if (result != SQLITE_OK)

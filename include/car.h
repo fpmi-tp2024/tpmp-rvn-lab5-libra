@@ -11,18 +11,18 @@ private:
     std::string number;
     std::string brand;
     std::string model;
-    int mileage;
+    int purchaseMileage;
     int carryingCapacity;
 
 public:
     Car();
-    Car(const std::string &number, const std::string &brand, const std::string &model, int mileage, int carryingCapacity);
+    Car(const std::string &number, const std::string &brand, const std::string &model, int purchaseMileage, int carryingCapacity);
     Car(sqlite3_stmt *statement);
 
     std::string getNumber() const;
     std::string getBrand() const;
     std::string getModel() const;
-    int getMileage() const;
+    int getPurchaseMileage() const;
     int getCarryingCapacity() const;
 
     void setNumber(const std::string &number);
