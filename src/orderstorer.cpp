@@ -32,20 +32,12 @@ OrderStorer::OrderStorer(const std::string &dbName)
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
-
-
-
 }
 
-void OrderStorer::addOrder(const Order& order){
+void OrderStorer::addOrder(const Order &order)
+{
     char *err_msg = nullptr;
-    std::string SQLQuery = "INSERT INTO Orders (date, kilometrage, cargo_weight, transport_cost, driver_id, car_number) VALUES ("
-    + std::to_string(order.getDate()) + ", "
-    + std::to_string(order.getMileage()) + ", "
-    + std::to_string(order.getCargoMass()) + ", "
-    + std::to_string(order.getCost()) + ", '"
-    + std::to_string(order.getDriverId()) + "', '"
-    + order.getCarNumber() + "');";
+    std::string SQLQuery = "INSERT INTO Orders (date, kilometrage, cargo_weight, transport_cost, driver_id, car_number) VALUES (" + std::to_string(order.getDate()) + ", " + std::to_string(order.getMileage()) + ", " + std::to_string(order.getCargoMass()) + ", " + std::to_string(order.getCost()) + ", '" + std::to_string(order.getDriverId()) + "', '" + order.getCarNumber() + "');";
 
     int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
     if (result != SQLITE_OK)
@@ -55,16 +47,15 @@ void OrderStorer::addOrder(const Order& order){
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
-
 }
-
 
 OrderStorer::~OrderStorer()
 {
     sqlite3_close(db);
 }
 
-int OrderStorer::getTotalNumberOfOrders(const int driverID){
+int OrderStorer::getTotalNumberOfOrders(const int driverID)
+{
     char *err_msg = nullptr;
     std::string SQLQuery = "SELECT COUNT(*) FROM Orders WHERE driver_id = " + std::to_string(driverID) + ";";
 
@@ -90,7 +81,8 @@ int OrderStorer::getTotalNumberOfOrders(const int driverID){
     return result;
 }
 
-int OrderStorer::getTotalCargoMass(const int driverID){
+int OrderStorer::getTotalCargoMass(const int driverID)
+{
     char *err_msg = nullptr;
     std::string SQLQuery = "SELECT SUM(cargo_weight) FROM Orders WHERE driver_id = " + std::to_string(driverID) + ";";
 
@@ -116,14 +108,19 @@ int OrderStorer::getTotalCargoMass(const int driverID){
     return result;
 }
 
-int OrderStorer::getTotalMoney(const int driverID,long start,long end){
+int OrderStorer::getTotalMoney(const int driverID, long start, long end)
+{
     char *err_msg = nullptr;
     std::string SQLQuery;
-    
-    if (start==-1 && end==-1){
-        SQLQuery = "SELECT SUM(transport_cost) FROM Orders WHERE driver_id = " + std::to_string(driverID)+ ";";
-    }else{
-        SQLQuery = "SELECT SUM(transport_cost) FROM Orders WHERE driver_id = " + std::to_string(driverID) + " AND date >= " + std::to_string(start) + " AND date <= " + std::to_string(end) + ";";
+
+    if (start == -1 && end == -1)
+    {
+        SQLQuery = "SELECT SUM(transport_cost) FROM Orders WHERE driver_id = " + std::to_string(driverID) + ";";
+    }
+    else
+    {
+        SQLQuery = "SELECT SUM(transport_cost) FROM Orders WHERE driver_id = " +
+                   std::to_string(driverID) + " AND date >= " + std::to_string(start) + " AND date <= " + std::to_string(end) + ";";
     }
 
     sqlite3_stmt *stmt;
@@ -148,7 +145,8 @@ int OrderStorer::getTotalMoney(const int driverID,long start,long end){
     return result;
 }
 
-void OrderStorer::removeOrder(int orderId){
+void OrderStorer::removeOrder(int orderId)
+{
     std::string SQLQuery = "DELETE FROM Orders WHERE id = " + std::to_string(orderId) + ";";
 
     char *err_msg = nullptr;
@@ -161,4 +159,3 @@ void OrderStorer::removeOrder(int orderId){
         throw std::runtime_error(error_message);
     }
 }
-

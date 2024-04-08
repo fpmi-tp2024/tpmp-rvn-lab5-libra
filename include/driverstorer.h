@@ -26,7 +26,6 @@ public:
 
     std::vector<Driver> getDrivers();
 
-
     // Обновить адрес водителя
     void updateAddress(int driverId, const std::string &address);
 
@@ -36,7 +35,7 @@ public:
     void updatePassword(int driverId, const std::string &password);
 
     // Добавить нового водителя
-    void addDriver(const Driver &driver,std::string passwordHash);
+    void addDriver(const Driver &driver, std::string passwordHash);
 
     // Удалить водителя
     void removeDriver(int driverId);
