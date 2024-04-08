@@ -2,6 +2,8 @@
 #include "catch.hpp"
 #include "../include/validator.h"
 #include "../include/carstorer.h"
+#include "../include/driverstorer.h"
+#include "../include/orderstorer.h"
 #include "../config/config.hpp"
 
 TEST_CASE("Validator tests", "[Validator]")
@@ -106,11 +108,34 @@ TEST_CASE("Validator tests", "[Validator]")
     }
 }
 
-TEST_CASE("CarStorer")
+TEST_CASE("Make dataset")
 {
     CarStorer carStorer("data/test.db");
+    DriverStorer driverStorer("data/test.db");
+    OrderStorer orderStorer("data/test.db");
 
-    SECTION("Init")
+    SECTION("Add drivers")
+    {
+        Driver driver1(-1, "ivanov_ivan", "Ivan Ivanov", "A", 0, 1990, "Moscow, Lenina st., 15");
+        Driver driver2(-1, "johnsmith123", "John Smith", "BE", 0, 1995, "New York, 10th Avenue, 30");
+        Driver driver3(-1, "petrov_petr", "Petr Petrov", "C", 0, 1985, "London, Oxford st., 5");
+        Driver driver4(-1, "sidorov_sidr", "Sidor Sidorov", "D", 0, 1980, "Paris, Champs-Elysees st., 10");
+        Driver driver5(-1, "smith_john", "John Smith", "A", 0, 1990, "Berlin, Alexanderplatz st., 20");
+
+        driverStorer.addDriver(driver1, "12345");
+        driverStorer.addDriver(driver2, "qwerty");
+        driverStorer.addDriver(driver3, "password");
+        driverStorer.addDriver(driver4, "word");
+        driverStorer.addDriver(driver5, "1234");
+
+        REQUIRE(driver1.getId() == 1);
+        REQUIRE(driver2.getId() == 2);
+        REQUIRE(driver3.getId() == 3);
+        REQUIRE(driver4.getId() == 4);
+        REQUIRE(driver5.getId() == 5);
+    }
+
+    SECTION("Add cars")
     {
         carStorer.addCar(Car("1234AB-7", "Volvo", "XC90", 2500, 10000));
         carStorer.addCar(Car("5678KM-2", "BMW", "X5", 3000, 20000));
@@ -118,6 +143,60 @@ TEST_CASE("CarStorer")
         carStorer.addCar(Car("1213PP-4", "Mercedes", "GLE", 4000, 40000));
         carStorer.addCar(Car("1415XO-5", "Toyota", "Land Cruiser", 4500, 50000));
     }
+
+    SECTION("Add orders")
+    {
+        Order order1(-1, 0, 1, "1234AB-7", 100, 50, 1000);
+        Order order2(-1, 0, 1, "5678KM-2", 450, 100, 3500);
+        Order order3(-1, 0, 1, "5678KM-2", 100, 75, 300);
+        Order order4(-1, 0, 1, "1415XO-5", 500, 100, 4000);
+
+        Order order5(-1, 0, 2, "5678KM-2", 200, 100, 2000);
+        Order order6(-1, 0, 2, "9101HB-3", 300, 200, 3000);
+        Order order7(-1, 0, 2, "1213PP-4", 400, 500, 4000);
+
+        Order order8(-1, 0, 3, "9101HB-3", 300, 20, 3000);
+        Order order9(-1, 0, 3, "1213PP-4", 400, 50, 4000);
+        Order order10(-1, 0, 3, "1415XO-5", 500, 30, 5000);
+
+        Order order11(-1, 0, 4, "1213PP-4", 400, 100, 4000);
+        Order order12(-1, 0, 4, "1415XO-5", 500, 100, 5000);
+
+        Order order13(-1, 0, 5, "1415XO-5", 500, 100, 5000);
+
+        orderStorer.addOrder(order1);
+        orderStorer.addOrder(order2);
+        orderStorer.addOrder(order3);
+        orderStorer.addOrder(order4);
+        orderStorer.addOrder(order5);
+        orderStorer.addOrder(order6);
+        orderStorer.addOrder(order7);
+        orderStorer.addOrder(order8);
+        orderStorer.addOrder(order9);
+        orderStorer.addOrder(order10);
+        orderStorer.addOrder(order11);
+        orderStorer.addOrder(order12);
+        orderStorer.addOrder(order13);
+
+        REQUIRE(order1.getId() == 1);
+        REQUIRE(order2.getId() == 2);
+        REQUIRE(order3.getId() == 3);
+        REQUIRE(order4.getId() == 4);
+        REQUIRE(order5.getId() == 5);
+        REQUIRE(order6.getId() == 6);
+        REQUIRE(order7.getId() == 7);
+        REQUIRE(order8.getId() == 8);
+        REQUIRE(order9.getId() == 9);
+        REQUIRE(order10.getId() == 10);
+        REQUIRE(order11.getId() == 11);
+        REQUIRE(order12.getId() == 12);
+        REQUIRE(order13.getId() == 13);
+    }
+}
+
+TEST_CASE("CarStorer")
+{
+    CarStorer carStorer("data/test.db");
 
     // SECTION("getCarTotalMileageAndMass")
     // {
