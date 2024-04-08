@@ -222,3 +222,78 @@ std::vector<Driver> DriverStorer::getDrivers(){
 
     return result;
 }
+
+Driver DriverStorer::getDriverById(const int driverID){
+    char *err_msg = nullptr;
+    std::string SQLQuery = "SELECT * FROM Drivers WHERE id = " + std::to_string(driverID) + ";";
+
+    sqlite3_stmt *stmt;
+    int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
+    if (res != SQLITE_OK)
+    {
+        std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
+        sqlite3_close(db);
+        throw std::runtime_error(error_message);
+    }
+
+    if (sqlite3_step(stmt) != SQLITE_ROW)
+    {
+        sqlite3_finalize(stmt);
+        throw std::runtime_error("Can't get driver by id");
+    }
+
+    Driver driver(stmt);
+    sqlite3_finalize(stmt);
+
+    return driver;
+}
+
+Driver DriverStorer::getDriverByLogin(const std::string& login){
+    char *err_msg = nullptr;
+    std::string SQLQuery = "SELECT * FROM Drivers WHERE login = '" + login + "';";
+
+    sqlite3_stmt *stmt;
+    int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
+    if (res != SQLITE_OK)
+    {
+        std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
+        sqlite3_close(db);
+        throw std::runtime_error(error_message);
+    }
+
+    if (sqlite3_step(stmt) != SQLITE_ROW)
+    {
+        sqlite3_finalize(stmt);
+        throw std::runtime_error("Can't get driver by login");
+    }
+
+    Driver driver(stmt);
+    sqlite3_finalize(stmt);
+
+    return driver;
+}
+
+Driver DriverStorer::getDriverByLoginAndPassword(const std::string &login, const std::string &password){
+    char *err_msg = nullptr;
+    std::string SQLQuery = "SELECT * FROM Drivers WHERE login = '" + login + "' AND password_hash = '" + password + "';";
+
+    sqlite3_stmt *stmt;
+    int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
+    if (res != SQLITE_OK)
+    {
+        std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
+        sqlite3_close(db);
+        throw std::runtime_error(error_message);
+    }
+
+    if (sqlite3_step(stmt) != SQLITE_ROW)
+    {
+        sqlite3_finalize(stmt);
+        throw std::runtime_error("Can't get driver by login and password");
+    }
+
+    Driver driver(stmt);
+    sqlite3_finalize(stmt);
+
+    return driver;
+}

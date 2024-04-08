@@ -174,3 +174,27 @@ CarStorer::~CarStorer()
 {
     sqlite3_close(db);
 }
+
+Car CarStorer::getCarByNumber(std::string carNumber)
+{
+    Car result = Car();
+    std::string SQLQuery = "SELECT * FROM Cars WHERE number = '" + carNumber + "';";
+
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, 0) == SQLITE_OK)
+    {
+        if (sqlite3_step(stmt) == SQLITE_ROW)
+        {
+            result = Car(stmt);
+        }
+    }
+    else
+    {
+        std::string error_message = "Can't get car by number: " + std::string(sqlite3_errmsg(this->db));
+        throw std::runtime_error(error_message);
+    }
+
+    sqlite3_finalize(stmt);
+
+    return result;
+}

@@ -159,3 +159,54 @@ void OrderStorer::removeOrder(int orderId)
         throw std::runtime_error(error_message);
     }
 }
+
+
+Order OrderStorer::getOrderById(int orderId)
+{
+    char *err_msg = nullptr;
+    std::string SQLQuery = "SELECT * FROM Orders WHERE id = " + std::to_string(orderId) + ";";
+
+    sqlite3_stmt *stmt;
+    int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
+    if (res != SQLITE_OK)
+    {
+        std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
+        sqlite3_close(db);
+        throw std::runtime_error(error_message);
+    }
+
+    res = sqlite3_step(stmt);
+    if (res != SQLITE_ROW)
+    {
+        sqlite3_finalize(stmt);
+        throw std::runtime_error("Can't get order by id");
+    }
+
+    Order result = Order(stmt);
+    sqlite3_finalize(stmt);
+
+    return result;
+}   
+
+std::vector<Order> OrderStorer::getAllOrders(){
+    std::vector<Order> result;
+    char *err_msg = nullptr;
+
+    std::string SQLQuery = "SELECT * FROM Orders;";
+
+    sqlite3_stmt *stmt;
+    int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
+    if (res != SQLITE_OK)
+    {
+        std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
+        sqlite3_close(db);
+        throw std::runtime_error(error_message);
+    }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        result.push_back(Order(stmt));
+    }
+
+    return result;
+}

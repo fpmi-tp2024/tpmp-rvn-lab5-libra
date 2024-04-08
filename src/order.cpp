@@ -1,5 +1,4 @@
 #include "../include/order.h"
-#include "order.h"
 
 Order::Order(int id, long date, int driverId, const std::string &carNumber, int mileage, int cargoMass, int cost)
     : id(id)
