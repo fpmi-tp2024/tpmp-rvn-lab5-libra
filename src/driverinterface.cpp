@@ -1,63 +1,80 @@
 #include "../include/driverinterface.h"
 
-std::map<int, void (*)()> commands = {
-	{1, handleSomeAction1},
-	{2, handleSomeAction2},
-	// TODO: Add more functions
-};
-
-void startDriver()
+DriverInterface::DriverInterface() 
 {
-	string uName;
-	string password;
-	string quitStr;
+	driverId = -1;
 
-	cout << "||\tYou selected Driver account\n";
-	cout << "||\tEnter Username and Password to proceed\n";
-	cout << "||\tUsername: ";
-	std::getline(cin, uName);
-	cout << "||\tPassword: ";
-	std::getline(cin, password);
-	trim(uName);
+	commands = {
+        {1, &DriverInterface::getListOfCompletedOrdersByTime},
+        {2, &DriverInterface::getTotalOrdersCount},
+        {3, &DriverInterface::getTotalWeightOfTransportedGoods},
+        {4, &DriverInterface::getMoneyEarnedByTime},
+        {5, &DriverInterface::getMoneyEarned},
+        {6, &DriverInterface::changeAddress},
+        {7, &DriverInterface::changeLogin},
+        {8, &DriverInterface::changePassword},
+    };
+}
+
+DriverInterface::~DriverInterface() {}
+
+void DriverInterface::run()
+{
+	std::string login;
+	std::string password;
+	std::string quitStr;
+
+	std::cout << "||\tYou selected Driver account\n";
+	std::cout << "||\tEnter Username and Password to proceed\n";
+	std::cout << "||\tUsername: ";
+	std::getline(std::cin, login);
+	std::cout << "||\tPassword: ";
+	std::getline(std::cin, password);
+	trim(login);
 	trim(password);
 
-	while (!tryLogInDriver(uName, password))
+	while (!tryLogInDriver(login, password))
 	{
-		cout << "||\tUsername or password are not valid. Try again\n";
-		cout << "||\tIf you want to quit, type \"q\"\n";
-		std::getline(cin, quitStr);
+		std::cout << "||\tUsername or password are not valid. Try again\n";
+		std::cout << "||\tIf you want to quit, type \"q\"\n";
+		std::getline(std::cin, quitStr);
 		trim(quitStr);
 		if (tryQuit(quitStr))
 		{
 			return;
 		}
-		cout << "||\tUsername: ";
-		std::getline(cin, uName);
-		cout << "||\tPassword: ";
-		std::getline(cin, password);
-		trim(uName);
+		std::cout << "||\tUsername: ";
+		std::getline(std::cin, login);
+		std::cout << "||\tPassword: ";
+		std::getline(std::cin, password);
+		trim(login);
 		trim(password);
 	}
 
-	cout << "||\tSuccessfully logged in\n";
+	std::cout << "||\tSuccessfully logged in\n";
 
-	string input;
+	std::string input;
 	int option;
 
-	// TODO: Add more operations
-	string commandsList = "||\tSelect operation:\n"
-						  "||\t1: <Some_Operation>\n"
-						  "||\t2: <Some_Operation>\n"
+	std::string commandsList = "||\tSelect operation:\n"
+						  "||\t1: <Get list of completed orders by time interval>\n"
+						  "||\t2: <Get count of all completed orders >\n"
+						  "||\t3: <Get total weight of transported goods>\n"
+						  "||\t4: <Get money earned by time interval>\n"
+						  "||\t5: <Get total money earned>\n"
+						  "||\t6: <Change address>\n"
+						  "||\t7: <Change login>\n"
+						  "||\t8: <Change password>\n"
 						  "||\n"
 						  "||\tOr type \"q\" to quit\n";
 
-	string invalidInputError = "||\tYour input is not valid. Try again\n";
+	std::string invalidInputError = "||\tYour input is not valid. Try again\n";
 
 	while (true)
 	{
-		cout << commandsList;
+		std::cout << commandsList;
 
-		std::getline(cin, input);
+		std::getline(std::cin, input);
 		trim(input);
 
 		if (tryQuit(input))
@@ -67,7 +84,7 @@ void startDriver()
 
 		if (!tryParseString(input, option))
 		{
-			cout << invalidInputError;
+			std::cout << invalidInputError;
 		}
 		else
 		{
@@ -75,30 +92,102 @@ void startDriver()
 
 			if (it != commands.end())
 			{
-				it->second();
+				it->second;
 			}
 			else
 			{
-				cout << invalidInputError;
+				std::cout << invalidInputError;
 			}
 		}
 	}
 }
 
-bool tryLogInDriver(const string &uName, const string &password)
+bool DriverInterface::tryLogInDriver(const std::string &login, const std::string &password)
 {
-	// TODO: Implement LogIn System
+	driverId = driverStorer.getDriverByLoginAndPassword(login, password).getId();
 	return true;
 }
 
-void handleSomeAction1()
+void DriverInterface::getListOfCompletedOrdersByTime()
 {
-	// TODO: Replace
-	cout << "First Action\n";
+	int startDay, startMonth, startYear;
+	int endDay, endMonth, endYear;
+
+	std::cout << "||\tEnter start date: DD MM YYYY\n";
+	std::cin >> startDay >> startMonth >> startYear;
+
+	std::cout << "||\tEnter end date: DD MM YYYY\n";
+	std::cin >> endDay >> endMonth >> endYear;
+
+	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
+	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
+
+	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driverId, startDate, endDate));
+
+	for (Order order : orders) 
+	{
+		std::cout << order.toString();
+	}
 }
 
-void handleSomeAction2()
+void DriverInterface::getTotalOrdersCount()
 {
-	// TODO: Replace
-	cout << "Second Action\n";
+	std::cout << "||\t" << orderStorer.getTotalNumberOfOrders(driverId) << "\n";
+}
+
+void DriverInterface::getTotalWeightOfTransportedGoods()
+{
+	std::cout << "||\t" << orderStorer.getTotalCargoMass(driverId) << "\n";
+}
+
+void DriverInterface::getMoneyEarnedByTime()
+{
+	int startDay, startMonth, startYear;
+	int endDay, endMonth, endYear;
+
+	std::cout << "||\tEnter start date: DD MM YYYY\n";
+	std::cin >> startDay >> startMonth >> startYear;
+
+	std::cout << "||\tEnter end date: DD MM YYYY\n";
+	std::cin >> endDay >> endMonth >> endYear;
+
+	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
+	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
+
+	std::cout << "||\t" << orderStorer.getTotalMoney(driverId, startDate, endDate) << "\n";
+}
+
+void DriverInterface::getMoneyEarned()
+{
+	std::cout << "||\t" << orderStorer.getTotalMoney(driverId) << "\n";
+}
+
+void DriverInterface::changeAddress()
+{
+	std::string newAddress;
+
+	std::cout << "||\tEnter new address\n";
+	std::cin >> newAddress;
+
+	driverStorer.updatePassword(driverId, newAddress);
+}
+
+void DriverInterface::changeLogin()
+{
+	std::string newLogin;
+
+	std::cout << "||\tEnter new login\n";
+	std::cin >> newLogin;
+
+	driverStorer.updatePassword(driverId, newLogin);
+}
+
+void DriverInterface::changePassword()
+{
+	std::string newPassword;
+
+	std::cout << "||\tEnter new password\n";
+	std::cin >> newPassword;
+
+	driverStorer.updatePassword(driverId, newPassword);
 }

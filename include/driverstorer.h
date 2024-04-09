@@ -39,6 +39,7 @@ public:
     // Обновить логин водителя
     void updateLogin(int driverId, const std::string &login);
 
+    // Обновить пароль водителя
     void updatePassword(int driverId, const std::string &password);
 
     // Добавить нового водителя

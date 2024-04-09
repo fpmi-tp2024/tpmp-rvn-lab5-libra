@@ -1,17 +1,16 @@
 #ifndef MENUINTERFACE_H
 #define MENUINTERFACE_H
 
-#include <string>
-#include <iostream>
-#include <algorithm>
-#include "admininterface.h"
-#include "driverinterface.h"
-#include "utilfuntions.h"
+#include "../include/interface.h"
 
-using std::cin;
-using std::cout;
-using std::string;
+class MenuInterface : Interface
+{
+public:
+    MenuInterface();
 
-void startMenu();
+    void run() override;
+
+    ~MenuInterface();
+};
 
 #endif

@@ -1,19 +1,31 @@
 #ifndef DRIVERINTERFACE_H
 #define DRIVERINTERFACE_H
 
-#include <string>
-#include <iostream>
-#include <map>
-#include "utilfuntions.h"
+#include "../include/interface.h"
 
-using std::cin;
-using std::cout;
-using std::string;
+class DriverInterface : public Interface
+{
+public:
+    DriverInterface();
 
-void startDriver();
-bool tryLogInDriver(const string &, const string &);
+    void run() override;
 
-void handleSomeAction1();
-void handleSomeAction2();
+    ~DriverInterface();
+
+private:
+    std::map<int, void (DriverInterface::*)()> commands;
+    int driverId;
+    
+    bool tryLogInDriver(const std::string &login, const std::string &password);
+    void getListOfCompletedOrdersByTime();
+    void getTotalOrdersCount();
+    void getTotalWeightOfTransportedGoods();
+    void getMoneyEarnedByTime();
+    void getMoneyEarned();
+    void changeAddress();
+    void changeLogin();
+    void changePassword();
+
+};
 
 #endif

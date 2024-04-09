@@ -6,12 +6,8 @@
 #include <sstream>
 #include <algorithm>
 
-using std::cin;
-using std::cout;
-using std::string;
-
-void trim(string &);
-bool tryParseString(const string &, int &);
-bool tryQuit(const string &);
+void trim(std::string &);
+bool tryParseString(const std::string &, int &);
+bool tryQuit(const std::string &);
 
 #endif

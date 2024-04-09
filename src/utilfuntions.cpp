@@ -1,6 +1,6 @@
 #include "../include/utilfuntions.h"
 
-void trim(string &str)
+void trim(std::string &str)
 {
     str.erase(str.begin(), std::find_if(str.begin(), str.end(), [](unsigned char ch)
                                         { return !std::isspace(ch); }));
@@ -11,7 +11,7 @@ void trim(string &str)
               str.end());
 }
 
-bool tryParseString(const string &str, int &parsedVal)
+bool tryParseString(const std::string &str, int &parsedVal)
 {
     std::istringstream iss(str);
     int val = 0;
@@ -30,7 +30,7 @@ bool tryParseString(const string &str, int &parsedVal)
     }
 }
 
-bool tryQuit(const string &str)
+bool tryQuit(const std::string &str)
 {
     if (str == "q")
     {

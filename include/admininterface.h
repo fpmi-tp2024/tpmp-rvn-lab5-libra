@@ -1,15 +1,34 @@
 #ifndef ADMININTERFACE_H
 #define ADMININTERFACE_H
 
-#include <string>
-#include <iostream>
-#include "driverinterface.h"
+#include "../include/interface.h"
 
-using std::cin;
-using std::cout;
-using std::string;
+class AdminInterface : public Interface
+{
+public:
+    AdminInterface();
 
-void startAdmin();
-bool tryLogInAdmin(const string &, const string &);
+    void run() override;
+
+    ~AdminInterface();
+
+private:
+    std::map<int, void (AdminInterface::*)()> commands;
+
+    bool tryLogInAdmin(const std::string &login, const std::string &password);
+    
+    void getTotalOrdersByDriver();
+    void getTotalWeightByDriver();
+    void getTotalMoneyByDriver();
+    void getTotalMileageAndWeightByCar();
+    void getOrdersListByDriver();
+    void getAllInfoByDriverWithLeastOrders();
+    void getMoneyByEachDriver();
+    void getAllInfoByCarWithHighestMileage();
+    void addDriver();
+    void addCar();
+    void addOrder();
+
+};
 
 #endif

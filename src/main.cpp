@@ -5,16 +5,15 @@
 #include "../include/driver.h"
 #include "../include/car.h"
 #include "../include/order.h"
+#include "../include/menuinterface.h"
 #include <iostream>
 #include <vector>
 
 int main()
 {
-    std::cout << Config::getString("admine_password") << std::endl;
+    MenuInterface menuInterface;
     
-    CarStorer carStorer("data/park.db");
-    DriverStorer driverStorer("data/park.db");
-    OrderStorer orderStorer("data/park.db");
+    menuInterface.run();
 
     return 0;
 }
