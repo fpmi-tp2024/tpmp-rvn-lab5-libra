@@ -28,7 +28,7 @@ $(BIN_DIR)/tests: $(TEST_DIR)/tests.cpp $(TEST_OBJ_FILES) | $(BIN_DIR)
 	$(compiler) $(flags) $^ -o $@ $(LDFLAGS)
 
 $(OBJ_DIR) $(BIN_DIR):
-	mkdir -p $@
+	mkdir $@
 
 build: $(TARGET)
 
