@@ -132,8 +132,8 @@ double OrderStorer::getTotalMoney(const int driverID, long start, long end)
     }
     else
     {
-        SQLQuery = "SELECT SUM(cost) FROM Orders WHERE driver_id = " +
-                   std::to_string(driverID) + " AND date >= " + std::to_string(start) + " AND date <= " + std::to_string(end) + ";";
+        SQLQuery = "SELECT SUM(cost) FROM Orders WHERE driver_id = " + std::to_string(driverID) +
+                   " AND date >= " + std::to_string(start) + " AND date <= " + std::to_string(end) + ";";
     }
 
     sqlite3_stmt *stmt;

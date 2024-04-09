@@ -146,23 +146,23 @@ TEST_CASE("Make dataset")
 
     SECTION("Add orders")
     {
-        Order order1(-1, 0, 1, "1234AB-7", 100, 50, 1000);
-        Order order2(-1, 0, 1, "5678KM-2", 450, 100, 3500);
-        Order order3(-1, 0, 1, "5678KM-2", 100, 75, 300);
-        Order order4(-1, 0, 1, "1415XO-5", 500, 100, 4000);
+        Order order1(-1, DatabaseHelper::dateToSec(2000, 1, 15), 1, "1234AB-7", 100, 50, 1000);
+        Order order2(-1, DatabaseHelper::dateToSec(2000, 2, 15), 1, "5678KM-2", 450, 100, 3500);
+        Order order3(-1, DatabaseHelper::dateToSec(2000, 3, 15), 1, "5678KM-2", 100, 75, 300);
+        Order order4(-1, DatabaseHelper::dateToSec(2000, 4, 15), 1, "1415XO-5", 500, 100, 4000);
 
-        Order order5(-1, 0, 2, "5678KM-2", 200, 100, 2000);
-        Order order6(-1, 0, 2, "9101HB-3", 300, 200, 3000);
-        Order order7(-1, 0, 2, "1213PP-4", 400, 500, 4000);
+        Order order5(-1, DatabaseHelper::dateToSec(2000, 5, 15), 2, "5678KM-2", 200, 100, 2000);
+        Order order6(-1, DatabaseHelper::dateToSec(2000, 6, 15), 2, "9101HB-3", 300, 200, 3000);
+        Order order7(-1, DatabaseHelper::dateToSec(2000, 7, 15), 2, "1213PP-4", 400, 500, 4000);
 
-        Order order8(-1, 0, 3, "9101HB-3", 300, 20, 3000);
-        Order order9(-1, 0, 3, "1213PP-4", 400, 50, 4000);
-        Order order10(-1, 0, 3, "1415XO-5", 500, 30, 5000);
+        Order order8(-1, DatabaseHelper::dateToSec(2000, 8, 15), 3, "9101HB-3", 300, 20, 3000);
+        Order order9(-1, DatabaseHelper::dateToSec(2000, 9, 15), 3, "1213PP-4", 400, 50, 4000);
+        Order order10(-1, DatabaseHelper::dateToSec(2000, 10, 15), 3, "1415XO-5", 500, 30, 5000);
 
-        Order order11(-1, 0, 4, "1213PP-4", 400, 100, 4000);
-        Order order12(-1, 0, 4, "1415XO-5", 500, 100, 5000);
+        Order order11(-1, DatabaseHelper::dateToSec(2000, 11, 15), 4, "1213PP-4", 400, 100, 4000);
+        Order order12(-1, DatabaseHelper::dateToSec(2000, 12, 15), 4, "1415XO-5", 500, 100, 5000);
 
-        Order order13(-1, 0, 5, "1415XO-5", 500, 100, 5000);
+        Order order13(-1, DatabaseHelper::dateToSec(2000, 1, 15), 5, "1415XO-5", 500, 100, 5000);
 
         orderStorer.addOrder(order1);
         orderStorer.addOrder(order2);
@@ -370,6 +370,26 @@ TEST_CASE("OrderStorer tests", "[OrderStorer]")
         REQUIRE(orderStorer.getTotalMoney(driverId3, start, end) == 12000 * Config::getInt("commission_fees") / 100.0);
         REQUIRE(orderStorer.getTotalMoney(driverId4, start, end) == 9000 * Config::getInt("commission_fees") / 100.0);
         REQUIRE(orderStorer.getTotalMoney(driverId5, start, end) == 5000 * Config::getInt("commission_fees") / 100.0);
+
+        start = DatabaseHelper::dateToSec(2000, 1, 1);
+        end = DatabaseHelper::dateToSec(2000, 2, 1);
+
+        REQUIRE(orderStorer.getTotalMoney(driverId1, start, end) == 1000 * Config::getInt("commission_fees") / 100.0);
+
+        start = DatabaseHelper::dateToSec(2000, 1, 1);
+        end = DatabaseHelper::dateToSec(2000, 3, 1);
+
+        REQUIRE(orderStorer.getTotalMoney(driverId1, start, end) == 4500 * Config::getInt("commission_fees") / 100.0);
+
+        start = DatabaseHelper::dateToSec(2000, 1, 1);
+        end = DatabaseHelper::dateToSec(2000, 4, 1);
+
+        REQUIRE(orderStorer.getTotalMoney(driverId1, start, end) == 4800 * Config::getInt("commission_fees") / 100.0);
+
+        start = DatabaseHelper::dateToSec(2000, 1, 1);
+        end = DatabaseHelper::dateToSec(2000, 5, 1);
+
+        REQUIRE(orderStorer.getTotalMoney(driverId1, start, end) == 8800 * Config::getInt("commission_fees") / 100.0);
     }
 
     SECTION("getOrderById")
@@ -377,7 +397,7 @@ TEST_CASE("OrderStorer tests", "[OrderStorer]")
         Order result = orderStorer.getOrderById(2);
 
         REQUIRE(result.getId() == 2);
-        REQUIRE(result.getDate() == 0);
+        REQUIRE(result.getDate() == DatabaseHelper::dateToSec(2000, 2, 15));
         REQUIRE(result.getDriverId() == 1);
         REQUIRE(result.getCarNumber() == "5678KM-2");
         REQUIRE(result.getMileage() == 450);
@@ -392,7 +412,7 @@ TEST_CASE("OrderStorer tests", "[OrderStorer]")
         REQUIRE(result.size() == 13);
 
         REQUIRE(result[0].getId() == 1);
-        REQUIRE(result[0].getDate() == 0);
+        REQUIRE(result[0].getDate() == DatabaseHelper::dateToSec(2000, 1, 15));
         REQUIRE(result[0].getDriverId() == 1);
         REQUIRE(result[0].getCarNumber() == "1234AB-7");
         REQUIRE(result[0].getMileage() == 100);
@@ -400,7 +420,7 @@ TEST_CASE("OrderStorer tests", "[OrderStorer]")
         REQUIRE(result[0].getCost() == 1000);
 
         REQUIRE(result[12].getId() == 13);
-        REQUIRE(result[12].getDate() == 0);
+        REQUIRE(result[12].getDate() == DatabaseHelper::dateToSec(2000, 1, 15));
         REQUIRE(result[12].getDriverId() == 5);
         REQUIRE(result[12].getCarNumber() == "1415XO-5");
         REQUIRE(result[12].getMileage() == 500);
@@ -412,12 +432,180 @@ TEST_CASE("OrderStorer tests", "[OrderStorer]")
     {
         int orderId = 1;
 
-        Order order1(-1, 0, 1, "1234AB-7", 100, 50, 1000);
+        Order order1(-1, DatabaseHelper::dateToSec(2000, 1, 15), 1, "1234AB-7", 100, 50, 1000);
 
         orderStorer.removeOrder(orderId);
 
         REQUIRE_THROWS_WITH(orderStorer.getOrderById(orderId), "Can't get order by id");
 
         orderStorer.addOrder(order1);
+    }
+}
+
+TEST_CASE("DriverStorer tests", "[DriverStorer]")
+{
+    DriverStorer driverStorer("data/test.db");
+
+    SECTION("getDriverById")
+    {
+        Driver result = driverStorer.getDriverById(1);
+
+        REQUIRE(result.getId() == 1);
+        REQUIRE(result.getLogin() == "ivanov_ivan");
+        REQUIRE(result.getName() == "Ivan Ivanov");
+        REQUIRE(result.getCategory() == "A");
+        REQUIRE(result.getStartWorkDate() == 0);
+        REQUIRE(result.getBirthYear() == 1990);
+        REQUIRE(result.getAddress() == "Moscow, Lenina st., 15");
+
+        REQUIRE_THROWS_WITH(driverStorer.getDriverById(20), "Can't get driver by id");
+    }
+
+    SECTION("getDriverByLogin")
+    {
+        Driver result = driverStorer.getDriverByLogin("ivanov_ivan");
+
+        REQUIRE(result.getId() == 1);
+        REQUIRE(result.getLogin() == "ivanov_ivan");
+        REQUIRE(result.getName() == "Ivan Ivanov");
+        REQUIRE(result.getCategory() == "A");
+        REQUIRE(result.getStartWorkDate() == 0);
+        REQUIRE(result.getBirthYear() == 1990);
+        REQUIRE(result.getAddress() == "Moscow, Lenina st., 15");
+
+        REQUIRE_THROWS_WITH(driverStorer.getDriverByLogin("ivanov"), "Can't get driver by login");
+    }
+
+    SECTION("getDriverByLoginAndPassword")
+    {
+        Driver result = driverStorer.getDriverByLoginAndPassword("ivanov_ivan", "12345");
+
+        REQUIRE(result.getId() == 1);
+        REQUIRE(result.getLogin() == "ivanov_ivan");
+        REQUIRE(result.getName() == "Ivan Ivanov");
+        REQUIRE(result.getCategory() == "A");
+        REQUIRE(result.getStartWorkDate() == 0);
+        REQUIRE(result.getBirthYear() == 1990);
+        REQUIRE(result.getAddress() == "Moscow, Lenina st., 15");
+
+        REQUIRE_THROWS_WITH(driverStorer.getDriverByLoginAndPassword("ivanov_ivan", "1234"), "Can't get driver by login and password");
+    }
+
+    SECTION("getDriverWithMinimumTripsAndMoney")
+    {
+        std::pair<Driver, double> result = driverStorer.getDriverWithMinimumTripsAndMoney();
+
+        REQUIRE(result.first.getId() == 5);
+        REQUIRE(result.first.getLogin() == "smith_john");
+        REQUIRE(result.first.getName() == "John Smith");
+        REQUIRE(result.first.getCategory() == "A");
+        REQUIRE(result.first.getStartWorkDate() == 0);
+        REQUIRE(result.first.getBirthYear() == 1990);
+        REQUIRE(result.first.getAddress() == "Berlin, Alexanderplatz st., 20");
+
+        REQUIRE(result.second == Approx(5000 * Config::getInt("commission_fees") / 100.0));
+    }
+
+    SECTION("updateAddress")
+    {
+        driverStorer.updateAddress(1, "New address");
+
+        Driver result = driverStorer.getDriverById(1);
+        REQUIRE(result.getAddress() == "New address");
+
+        driverStorer.updateAddress(1, "Moscow, Lenina st., 15");
+
+        REQUIRE_THROWS_WITH(driverStorer.updateAddress(1, "&&&&&????"), "Invalid address");
+    }
+
+    SECTION("updateLogin")
+    {
+        driverStorer.updateLogin(1, "new_login");
+
+        Driver result = driverStorer.getDriverById(1);
+        REQUIRE(result.getLogin() == "new_login");
+
+        driverStorer.updateLogin(1, "ivanov_ivan");
+
+        REQUIRE_THROWS_WITH(driverStorer.updateLogin(1, "./,../.& ivan"), "Invalid login");
+    }
+
+    SECTION("updatePassword")
+    {
+        driverStorer.updatePassword(1, "new_password");
+
+        REQUIRE_THROWS_WITH(driverStorer.getDriverByLoginAndPassword("ivanov_ivan", "12345"), "Can't get driver by login and password");
+
+        driverStorer.updatePassword(1, "12345");
+    }
+
+    SECTION("getOrdersByDriverAndPeriod")
+    {
+        std::vector<Order> result = driverStorer.getOrdersByDriverAndPeriod(2, DatabaseHelper::dateToSec(2000, 4, 1),
+                                                                            DatabaseHelper::dateToSec(2000, 6, 1));
+
+        REQUIRE(result.size() == 1);
+
+        REQUIRE(result[0].getId() == 5);
+        REQUIRE(result[0].getDate() == DatabaseHelper::dateToSec(2000, 5, 15));
+        REQUIRE(result[0].getDriverId() == 2);
+        REQUIRE(result[0].getCarNumber() == "5678KM-2");
+        REQUIRE(result[0].getMileage() == 200);
+        REQUIRE(result[0].getCargoWeight() == 100);
+        REQUIRE(result[0].getCost() == 2000);
+
+        result = driverStorer.getOrdersByDriverAndPeriod(2, DatabaseHelper::dateToSec(2000, 4, 1),
+                                                         DatabaseHelper::dateToSec(2000, 7, 1));
+
+        REQUIRE(result.size() == 2);
+
+        REQUIRE(result[0].getId() == 5);
+        REQUIRE(result[0].getDate() == DatabaseHelper::dateToSec(2000, 5, 15));
+        REQUIRE(result[0].getDriverId() == 2);
+        REQUIRE(result[0].getCarNumber() == "5678KM-2");
+        REQUIRE(result[0].getMileage() == 200);
+        REQUIRE(result[0].getCargoWeight() == 100);
+        REQUIRE(result[0].getCost() == 2000);
+
+        REQUIRE(result[1].getId() == 6);
+        REQUIRE(result[1].getDate() == DatabaseHelper::dateToSec(2000, 6, 15));
+        REQUIRE(result[1].getDriverId() == 2);
+        REQUIRE(result[1].getCarNumber() == "9101HB-3");
+        REQUIRE(result[1].getMileage() == 300);
+        REQUIRE(result[1].getCargoWeight() == 200);
+        REQUIRE(result[1].getCost() == 3000);
+    }
+
+    SECTION("getDrivers")
+    {
+        std::vector<Driver> result = driverStorer.getDrivers();
+
+        REQUIRE(result.size() == 5);
+
+        REQUIRE(result[0].getId() == 1);
+        REQUIRE(result[0].getLogin() == "ivanov_ivan");
+        REQUIRE(result[0].getName() == "Ivan Ivanov");
+        REQUIRE(result[0].getCategory() == "A");
+        REQUIRE(result[0].getStartWorkDate() == 0);
+        REQUIRE(result[0].getBirthYear() == 1990);
+        REQUIRE(result[0].getAddress() == "Moscow, Lenina st., 15");
+
+        REQUIRE(result[4].getId() == 5);
+        REQUIRE(result[4].getLogin() == "smith_john");
+        REQUIRE(result[4].getName() == "John Smith");
+        REQUIRE(result[4].getCategory() == "A");
+        REQUIRE(result[4].getStartWorkDate() == 0);
+        REQUIRE(result[4].getBirthYear() == 1990);
+        REQUIRE(result[4].getAddress() == "Berlin, Alexanderplatz st., 20");
+    }
+
+    SECTION("removeDriver")
+    {
+        driverStorer.removeDriver(1);
+
+        REQUIRE_THROWS_WITH(driverStorer.getDriverById(1), "Can't get driver by id");
+
+        Driver driver1(-1, "ivanov_ivan", "Ivan Ivanov", "A", 0, 1990, "Moscow, Lenina st., 15");
+        driverStorer.addDriver(driver1, "12345");
     }
 }
