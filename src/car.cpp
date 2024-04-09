@@ -1,19 +1,26 @@
 #include "../include/car.h"
+#include <iostream>
 
-Car::Car(const std::string &number, const std::string &brand, int mileage, int carryingCapacity)
+Car::Car() : number(""), brand(""), model(""), purchaseMileage(0), carryingCapacity(0) {}
+
+Car::Car(const std::string &number, const std::string &brand, const std::string &model, int carryingCapacity, int mileage)
 {
     setNumber(number);
     setBrand(brand);
-    setMileage(mileage);
+    setModel(model);
     setCarryingCapacity(carryingCapacity);
+    setMileage(mileage);
 }
 
 Car::Car(sqlite3_stmt *statement)
     : Car(
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 0))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1))),
-          sqlite3_column_int(statement, 2),
-          sqlite3_column_int(statement, 3)) {}
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
+          sqlite3_column_int(statement, 3),
+          sqlite3_column_int(statement, 4))
+{
+}
 
 std::string Car::getNumber() const
 {
@@ -25,9 +32,14 @@ std::string Car::getBrand() const
     return brand;
 }
 
-int Car::getMileage() const
+std::string Car::getModel() const
 {
-    return mileage;
+    return model;
+}
+
+int Car::getPurchaseMileage() const
+{
+    return purchaseMileage;
 }
 
 int Car::getCarryingCapacity() const
@@ -59,11 +71,11 @@ void Car::setBrand(const std::string &brand)
     }
 }
 
-void Car::setMileage(int mileage)
+void Car::setMileage(int purchaseMileage)
 {
-    if (Validator::isValidMileage(mileage))
+    if (Validator::isValidMileage(purchaseMileage))
     {
-        this->mileage = mileage;
+        this->purchaseMileage = purchaseMileage;
     }
     else
     {
@@ -81,4 +93,20 @@ void Car::setCarryingCapacity(int carryingCapacity)
     {
         throw std::invalid_argument("Invalid carrying capacity value.");
     }
+}
+
+void Car::setModel(const std::string &model)
+{
+    this->model = model;
+}
+
+std::string Car::toString() const
+{
+    std::stringstream ss;
+    ss << "||\tNumber: " << number << std::endl;
+    ss << "||\tBrand: " << brand << std::endl;
+    ss << "||\tModel: " << model << std::endl;
+    ss << "||\tPurchase mileage: " << purchaseMileage << std::endl;
+    ss << "||\tCarrying capacity: " << carryingCapacity << std::endl;
+    return ss.str();
 }

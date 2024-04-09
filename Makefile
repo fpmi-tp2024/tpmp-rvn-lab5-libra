@@ -33,6 +33,7 @@ $(OBJ_DIR) $(BIN_DIR):
 build: $(TARGET)
 
 test: $(TEST_TARGET)
+	rm -f data/test.db	
 	./$(TEST_TARGET)
 
 run: build test

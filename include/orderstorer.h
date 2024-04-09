@@ -4,6 +4,7 @@
 #include <string>
 #include <sqlite3.h>
 #include "order.h"
+#include "databaseHelper.h"
 
 class OrderStorer
 {
@@ -11,22 +12,28 @@ private:
     sqlite3 *db;
 
 public:
-    OrderStorer(std::string dbName);
+    OrderStorer(const std::string &dbName);
 
-    // TODO : различный get
+    // Получить заказ по его ID
+    Order getOrderById(const int orderId);
 
-    // Получить общее количество поездок, общую массу перевезенных грузов и сумму заработанных денег для указанного водителя
-    std::tuple<int, int, int> getDriverTotalTripsAndMassAndMoney(int driverId);
+    // Получить все заказы
+    std::vector<Order> getAllOrders();
 
-    // Обновить информацию о заказе
-    void updateOrder(int orderId, const Order &order);
+    int getTotalNumberOfOrders(const int driverID);
+
+    int getTotalCargoMass(const int driverID);
+
+    // Получить общую сумму денег, заработанную водителем за определенный период
+    double getTotalMoney(const int driverID, long start = -1, long end = -1);
 
     // Добавить новый заказ
-    void addOrder(const Order &order);
+    void addOrder(Order &order);
 
     // Удалить заказ
     void removeOrder(int orderId);
-    void removeOrder(const Order &order);
+
+    ~OrderStorer();
 };
 
 #endif //  ORDERSTORER_H

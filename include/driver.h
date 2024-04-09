@@ -13,12 +13,12 @@ private:
     std::string name;
     std::string category;
     long startWorkDate;
-    std::string address;
     int birthYear;
+    std::string address;
 
 public:
-    Driver(int id, const std::string &name, const std::string &login, const std::string &category,
-           long startWorkDate, const std::string &address, int birthYear);
+    Driver(int id, const std::string &login, const std::string &name, const std::string &category, const long &startWorkDate,
+           int birthYear, const std::string &address);
     Driver(sqlite3_stmt *statement);
 
     int getId() const;
@@ -29,10 +29,14 @@ public:
     std::string getAddress() const;
     int getBirthYear() const;
 
+
+    void setId(int id);
     void setName(const std::string &name);
     void setLogin(const std::string &login);
     void setCategory(const std::string &category);
     void setAddress(const std::string &address);
+
+    std::string toString() const;
 };
 
 #endif // DRIVER_H

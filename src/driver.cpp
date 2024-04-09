@@ -1,7 +1,8 @@
 #include "../include/driver.h"
+#include <iostream>
 
-Driver::Driver(int id, const std::string &name, const std::string &login, const std::string &category,
-               long startWorkDate, const std::string &address, int birthYear) : id(id), startWorkDate(startWorkDate), birthYear(birthYear)
+Driver::Driver(int id, const std::string &login, const std::string &name, const std::string &category, const long &startWorkDate,
+               int birthYear, const std::string &address) : id(id), startWorkDate(startWorkDate), birthYear(birthYear)
 {
     setName(name);
     setLogin(login);
@@ -13,11 +14,11 @@ Driver::Driver(sqlite3_stmt *statement)
     : Driver(
           sqlite3_column_int(statement, 0),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1))),
-          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 3))),
-          sqlite3_column_int64(statement, 4),
-          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 5))),
-          sqlite3_column_int(statement, 6)) {}
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 4))),
+          sqlite3_column_int(statement, 5),
+          sqlite3_column_int(statement, 6),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 7)))) {}
 
 int Driver::getId() const
 {
@@ -100,4 +101,24 @@ void Driver::setAddress(const std::string &address)
     {
         throw std::invalid_argument("Invalid address format.");
     }
+}
+
+void Driver::setId(int id){
+    if (this->id != -1){
+        throw std::invalid_argument("Id is already set");
+    }
+    this->id = id;
+}
+
+std::string Driver::toString() const
+{
+    std::stringstream ss;
+    ss << "||\tID: " << id << "\n";
+    ss << "||\tName: " << name << "\n";
+    ss << "||\tLogin: " << login << "\n";
+    ss << "||\tCategory: " << category << "\n";
+    ss << "||\tStart work date: " << startWorkDate << "\n";
+    ss << "||\tBirth year: " << birthYear << "\n";
+    ss << "||\tAddress: " << address << "\n";
+    return ss.str();
 }

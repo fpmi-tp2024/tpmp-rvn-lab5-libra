@@ -1,13 +1,13 @@
 #include "../include/order.h"
 
-Order::Order(int id, long date, int driverId, const std::string &carNumber, int mileage, int cargoMass, int cost)
+Order::Order(int id, long date, int driverId, const std::string &carNumber, int mileage, int cargoWeight, int cost)
     : id(id)
 {
     setDate(date);
     setDriverId(driverId);
     setCarNumber(carNumber);
     setMileage(mileage);
-    setCargoMass(cargoMass);
+    setCargoWeight(cargoWeight);
     setCost(cost);
 }
 
@@ -17,8 +17,13 @@ Order::Order(sqlite3_stmt *statement)
     driverId = sqlite3_column_int(statement, 1);
     carNumber = std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2)));
     mileage = sqlite3_column_int(statement, 3);
-    cargoMass = sqlite3_column_int(statement, 4);
+    cargoWeight = sqlite3_column_int(statement, 4);
     cost = sqlite3_column_int(statement, 5);
+}
+
+int Order::getId() const
+{
+    return id;
 }
 
 long Order::getDate() const
@@ -41,9 +46,9 @@ int Order::getMileage() const
     return mileage;
 }
 
-int Order::getCargoMass() const
+int Order::getCargoWeight() const
 {
-    return cargoMass;
+    return cargoWeight;
 }
 
 int Order::getCost() const
@@ -59,6 +64,14 @@ void Order::setDate(long date)
 void Order::setDriverId(int driverId)
 {
     this->driverId = driverId;
+}
+
+void Order::setID(int id)
+{
+    if (this->id != -1){
+        throw std::invalid_argument("Invalid id value.");
+    }
+    this->id = id;
 }
 
 void Order::setCarNumber(const std::string &carNumber)
@@ -85,11 +98,11 @@ void Order::setMileage(int mileage)
     }
 }
 
-void Order::setCargoMass(int cargoMass)
+void Order::setCargoWeight(int cargoWeight)
 {
-    if (Validator::isValidCargoMass(cargoMass))
+    if (Validator::isValidCargoMass(cargoWeight))
     {
-        this->cargoMass = cargoMass;
+        this->cargoWeight = cargoWeight;
     }
     else
     {
@@ -107,4 +120,17 @@ void Order::setCost(int cost)
     {
         throw std::invalid_argument("Invalid cost value.");
     }
+}
+
+std::string Order::toString() const
+{
+    std::stringstream ss;
+    ss << "||\tOrder ID: " << id << std::endl;
+    ss << "||\tDate: " << date << std::endl;
+    ss << "||\tDriver ID: " << driverId << std::endl;
+    ss << "||\tCar number: " << carNumber << std::endl;
+    ss << "||\tMileage: " << mileage << std::endl;
+    ss << "||\tCargo weight: " << cargoWeight << std::endl;
+    ss << "||\tCost: " << cost << std::endl;
+    return ss.str();
 }
