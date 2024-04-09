@@ -194,26 +194,44 @@ TEST_CASE("Make dataset")
     }
 }
 
-TEST_CASE("CarStorer")
+TEST_CASE("CarStorer tests", "[CarStorer]")
 {
     CarStorer carStorer("data/test.db");
 
-    // SECTION("getCarTotalMileageAndMass")
-    // {
-    //     std::pair<int, int> result = carStorer.getCarTotalMileageAndMass("1234AB-7");
-    //     REQUIRE(result.first == 49000);
-    //     REQUIRE(result.second == 150000);
-    // }
+    SECTION("getCarTotalMileageAndMass")
+    {
+        std::pair<int, int> result1 = carStorer.getCarTotalMileageAndMass("1234AB-7");
+        std::pair<int, int> result2 = carStorer.getCarTotalMileageAndMass("5678KM-2");
+        std::pair<int, int> result3 = carStorer.getCarTotalMileageAndMass("9101HB-3");
+        std::pair<int, int> result4 = carStorer.getCarTotalMileageAndMass("1213PP-4");
+        std::pair<int, int> result5 = carStorer.getCarTotalMileageAndMass("1415XO-5");
 
-    // SECTION("getCarWithMaximumMileage")
-    // {
-    //     Car result = carStorer.getCarWithMaximumMileage();
-    //     REQUIRE(result.getNumber() == "9101HB-3");
-    //     REQUIRE(result.getBrand() == "Audi");
-    //     REQUIRE(result.getModel() == "Q7");
-    //     REQUIRE(result.getMileage() == 35000);
-    //     REQUIRE(result.getCarryingCapacity() == 30000);
-    // }
+        REQUIRE(result1.first == 100);
+        REQUIRE(result1.second == 50);
+
+        REQUIRE(result2.first == 750);
+        REQUIRE(result2.second == 275);
+
+        REQUIRE(result3.first == 600);
+        REQUIRE(result3.second == 220);
+
+        REQUIRE(result4.first == 1200);
+        REQUIRE(result4.second == 650);
+
+        REQUIRE(result5.first == 2000);
+        REQUIRE(result5.second == 330);
+    }
+
+    SECTION("getCarWithMaximumMileage")
+    {
+        Car result = carStorer.getCarWithMaximumMileage();
+
+        REQUIRE(result.getNumber() == "1415XO-5");
+        REQUIRE(result.getBrand() == "Toyota");
+        REQUIRE(result.getModel() == "Land Cruiser");
+        REQUIRE(result.getCarryingCapacity() == 4500);
+        REQUIRE(result.getPurchaseMileage() == 50000);
+    }
 
     SECTION("getAllCars")
     {
@@ -251,20 +269,24 @@ TEST_CASE("CarStorer")
         REQUIRE(result[4].getPurchaseMileage() == 50000);
     }
 
-    // SECTION("updateCar")
-    // {
-    //     carStorer.updateCar("1234AB-7", Car("1234AB-7", "Volvo", "XC90", 2500, 11000));
+    SECTION("updateCar")
+    {
+        carStorer.updateCar("1234AB-7", Car("1234AB-7", "Volvo", "XC80", 3500, 11000));
 
-    //     Car result = carStorer.getCarWithMaximumMileage();
-    //     REQUIRE(result.getNumber() == "1234AB-7");
-    //     REQUIRE(result.getBrand() == "Volvo");
-    //     REQUIRE(result.getModel() == "XC90");
-    //     REQUIRE(result.getCarryingCapacity() == 2500);
-    //     REQUIRE(result.getMileage() == 11000);
-    // }
+        Car result = carStorer.getCarByNumber("1234AB-7");
+        REQUIRE(result.getNumber() == "1234AB-7");
+        REQUIRE(result.getBrand() == "Volvo");
+        REQUIRE(result.getModel() == "XC80");
+        REQUIRE(result.getCarryingCapacity() == 3500);
+        REQUIRE(result.getPurchaseMileage() == 11000);
+
+        carStorer.updateCar("1234AB-7", Car("1234AB-7", "Volvo", "XC90", 2500, 10000));
+    }
 
     SECTION("removeCar")
     {
+        Car car = carStorer.getCarByNumber("1234AB-7");
+
         carStorer.removeCar("1234AB-7");
 
         std::vector<Car> result = carStorer.getAllCars();
@@ -293,5 +315,109 @@ TEST_CASE("CarStorer")
         REQUIRE(result[3].getModel() == "Land Cruiser");
         REQUIRE(result[3].getCarryingCapacity() == 4500);
         REQUIRE(result[3].getPurchaseMileage() == 50000);
+
+        carStorer.addCar(car);
+    }
+}
+
+TEST_CASE("OrderStorer tests", "[OrderStorer]")
+{
+    OrderStorer orderStorer("data/test.db");
+
+    SECTION("getTotalNumberOfOrders")
+    {
+        int driverId1 = 1;
+        int driverId2 = 2;
+        int driverId3 = 3;
+        int driverId4 = 4;
+        int driverId5 = 5;
+
+        REQUIRE(orderStorer.getTotalNumberOfOrders(driverId1) == 4);
+        REQUIRE(orderStorer.getTotalNumberOfOrders(driverId2) == 3);
+        REQUIRE(orderStorer.getTotalNumberOfOrders(driverId3) == 3);
+        REQUIRE(orderStorer.getTotalNumberOfOrders(driverId4) == 2);
+        REQUIRE(orderStorer.getTotalNumberOfOrders(driverId5) == 1);
+    }
+
+    SECTION("getTotalCargoMass")
+    {
+        int driverId1 = 1;
+        int driverId2 = 2;
+        int driverId3 = 3;
+        int driverId4 = 4;
+        int driverId5 = 5;
+
+        REQUIRE(orderStorer.getTotalCargoMass(driverId1) == 325);
+        REQUIRE(orderStorer.getTotalCargoMass(driverId2) == 800);
+        REQUIRE(orderStorer.getTotalCargoMass(driverId3) == 100);
+        REQUIRE(orderStorer.getTotalCargoMass(driverId4) == 200);
+        REQUIRE(orderStorer.getTotalCargoMass(driverId5) == 100);
+    }
+
+    SECTION("getTotalMoney")
+    {
+        int driverId1 = 1;
+        int driverId2 = 2;
+        int driverId3 = 3;
+        int driverId4 = 4;
+        int driverId5 = 5;
+
+        long start = -1;
+        long end = -1;
+
+        REQUIRE(orderStorer.getTotalMoney(driverId1, start, end) == 8800 * Config::getInt("commission_fees") / 100.0);
+        REQUIRE(orderStorer.getTotalMoney(driverId2, start, end) == 9000 * Config::getInt("commission_fees") / 100.0);
+        REQUIRE(orderStorer.getTotalMoney(driverId3, start, end) == 12000 * Config::getInt("commission_fees") / 100.0);
+        REQUIRE(orderStorer.getTotalMoney(driverId4, start, end) == 9000 * Config::getInt("commission_fees") / 100.0);
+        REQUIRE(orderStorer.getTotalMoney(driverId5, start, end) == 5000 * Config::getInt("commission_fees") / 100.0);
+    }
+
+    SECTION("getOrderById")
+    {
+        Order result = orderStorer.getOrderById(2);
+
+        REQUIRE(result.getId() == 2);
+        REQUIRE(result.getDate() == 0);
+        REQUIRE(result.getDriverId() == 1);
+        REQUIRE(result.getCarNumber() == "5678KM-2");
+        REQUIRE(result.getMileage() == 450);
+        REQUIRE(result.getCargoWeight() == 100);
+        REQUIRE(result.getCost() == 3500);
+    }
+
+    SECTION("getAllOrders")
+    {
+        std::vector<Order> result = orderStorer.getAllOrders();
+
+        REQUIRE(result.size() == 13);
+
+        REQUIRE(result[0].getId() == 1);
+        REQUIRE(result[0].getDate() == 0);
+        REQUIRE(result[0].getDriverId() == 1);
+        REQUIRE(result[0].getCarNumber() == "1234AB-7");
+        REQUIRE(result[0].getMileage() == 100);
+        REQUIRE(result[0].getCargoWeight() == 50);
+        REQUIRE(result[0].getCost() == 1000);
+
+        REQUIRE(result[12].getId() == 13);
+        REQUIRE(result[12].getDate() == 0);
+        REQUIRE(result[12].getDriverId() == 5);
+        REQUIRE(result[12].getCarNumber() == "1415XO-5");
+        REQUIRE(result[12].getMileage() == 500);
+        REQUIRE(result[12].getCargoWeight() == 100);
+        REQUIRE(result[12].getCost() == 5000);
+    }
+
+    SECTION("removeOrder")
+    {
+        int orderId = 1;
+
+        Order order1(-1, 0, 1, "1234AB-7", 100, 50, 1000);
+
+        orderStorer.removeOrder(orderId);
+
+        REQUIRE_THROWS_WITH(orderStorer.getOrderById(orderId), "Can't get order by id");
+
+        orderStorer.addOrder(order1);
     }
 }

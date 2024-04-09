@@ -103,9 +103,11 @@ void Driver::setAddress(const std::string &address)
     }
 }
 
-void Driver::setId(int id){
-    if (this->id != -1){
-        throw std::invalid_argument("Id is already set");
+void Driver::setId(int id)
+{
+    if (this->id != -1)
+    {
+        throw std::invalid_argument("Id is already set.");
     }
     this->id = id;
 }
