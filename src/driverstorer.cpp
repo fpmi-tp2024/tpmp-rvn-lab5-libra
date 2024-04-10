@@ -167,7 +167,7 @@ DriverStorer::~DriverStorer()
     sqlite3_close(db);
 }
 
-std::vector<Order> DriverStorer::getOrdersByDriverAndPeriod(int driverId, long startDate = -1, long endDate = -1){
+std::vector<Order> DriverStorer::getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate){
     std::vector<Order> result;
     char *err_msg = nullptr;
 
