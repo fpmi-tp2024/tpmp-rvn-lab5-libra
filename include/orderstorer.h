@@ -20,8 +20,10 @@ public:
     // Получить все заказы
     std::vector<Order> getAllOrders();
 
+    // Получить количество заказов водителя
     int getTotalNumberOfOrders(const int driverID);
 
+    // Получить общую массу груза, перевезенного водителем
     int getTotalCargoMass(const int driverID);
 
     // Получить общую сумму денег, заработанную водителем за определенный период

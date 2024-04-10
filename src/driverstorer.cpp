@@ -83,6 +83,11 @@ std::pair<Driver, double> DriverStorer::getDriverWithMinimumTripsAndMoney()
 
 void DriverStorer::updateAddress(int driverId, const std::string &address)
 {
+    if (!Validator::isValidAddress(address))
+    {
+        throw std::runtime_error("Invalid address");
+    }
+
     char *err_msg = nullptr;
     std::string SQLQuery = "UPDATE Drivers SET address = '" + address + "' WHERE id = " + std::to_string(driverId) + ";";
 
@@ -98,6 +103,11 @@ void DriverStorer::updateAddress(int driverId, const std::string &address)
 
 void DriverStorer::updateLogin(int driverId, const std::string &login)
 {
+    if (!Validator::isValidLogin(login))
+    {
+        throw std::runtime_error("Invalid login");
+    }
+
     char *err_msg = nullptr;
     std::string SQLQuery = "UPDATE Drivers SET login = '" + login + "' WHERE id = " + std::to_string(driverId) + ";";
 
@@ -127,7 +137,7 @@ void DriverStorer::updatePassword(int driverId, const std::string &password)
     }
 }
 
-void DriverStorer::addDriver(Driver &driver,std::string passwordHash)
+void DriverStorer::addDriver(Driver &driver, std::string passwordHash)
 {
     char *err_msg = nullptr;
     std::string SQLQuery =
@@ -167,7 +177,8 @@ DriverStorer::~DriverStorer()
     sqlite3_close(db);
 }
 
-std::vector<Order> DriverStorer::getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate){
+std::vector<Order> DriverStorer::getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate)
+{
     std::vector<Order> result;
     char *err_msg = nullptr;
 
@@ -196,7 +207,8 @@ std::vector<Order> DriverStorer::getOrdersByDriverAndPeriod(int driverId, long s
     return result;
 }
 
-std::vector<Driver> DriverStorer::getDrivers(){
+std::vector<Driver> DriverStorer::getDrivers()
+{
     std::vector<Driver> result;
     char *err_msg = nullptr;
 
@@ -219,7 +231,8 @@ std::vector<Driver> DriverStorer::getDrivers(){
     return result;
 }
 
-Driver DriverStorer::getDriverById(const int driverID){
+Driver DriverStorer::getDriverById(const int driverID)
+{
     char *err_msg = nullptr;
     std::string SQLQuery = "SELECT * FROM Drivers WHERE id = " + std::to_string(driverID) + ";";
 
@@ -244,7 +257,8 @@ Driver DriverStorer::getDriverById(const int driverID){
     return driver;
 }
 
-Driver DriverStorer::getDriverByLogin(const std::string& login){
+Driver DriverStorer::getDriverByLogin(const std::string &login)
+{
     char *err_msg = nullptr;
     std::string SQLQuery = "SELECT * FROM Drivers WHERE login = '" + login + "';";
 
@@ -269,7 +283,8 @@ Driver DriverStorer::getDriverByLogin(const std::string& login){
     return driver;
 }
 
-Driver DriverStorer::getDriverByLoginAndPassword(const std::string &login, const std::string &password){
+Driver DriverStorer::getDriverByLoginAndPassword(const std::string &login, const std::string &password)
+{
     char *err_msg = nullptr;
     std::string SQLQuery = "SELECT * FROM Drivers WHERE login = '" + login + "' AND password_hash = '" + password + "';";
 

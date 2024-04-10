@@ -31,6 +31,7 @@ public:
     // Получить все сведения о водителе, выполнившем наименьшее количество поездок, и количество полученных денег
     std::pair<Driver, double> getDriverWithMinimumTripsAndMoney();
 
+    // Получить всех водителей
     std::vector<Driver> getDrivers();
 
     // Обновить адрес водителя

@@ -45,7 +45,10 @@ OrderStorer::OrderStorer(const std::string &dbName)
 void OrderStorer::addOrder(Order &order)
 {
     char *err_msg = nullptr;
-    std::string SQLQuery = "INSERT INTO Orders (date, mileage, cargo_weight, cost, driver_id, car_number) VALUES (" + std::to_string(order.getDate()) + ", " + std::to_string(order.getMileage()) + ", " + std::to_string(order.getCargoWeight()) + ", " + std::to_string(order.getCost()) + ", '" + std::to_string(order.getDriverId()) + "', '" + order.getCarNumber() + "');";
+    std::string SQLQuery = "INSERT INTO Orders (date, mileage, cargo_weight, cost, driver_id, car_number) VALUES (" +
+                           std::to_string(order.getDate()) + ", " + std::to_string(order.getMileage()) + ", " +
+                           std::to_string(order.getCargoWeight()) + ", " + std::to_string(order.getCost()) + ", '" +
+                           std::to_string(order.getDriverId()) + "', '" + order.getCarNumber() + "');";
 
     int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
     if (result != SQLITE_OK)
@@ -129,8 +132,8 @@ double OrderStorer::getTotalMoney(const int driverID, long start, long end)
     }
     else
     {
-        SQLQuery = "SELECT SUM(cost) FROM Orders WHERE driver_id = " +
-                   std::to_string(driverID) + " AND date >= " + std::to_string(start) + " AND date <= " + std::to_string(end) + ";";
+        SQLQuery = "SELECT SUM(cost) FROM Orders WHERE driver_id = " + std::to_string(driverID) +
+                   " AND date >= " + std::to_string(start) + " AND date <= " + std::to_string(end) + ";";
     }
 
     sqlite3_stmt *stmt;
@@ -170,7 +173,6 @@ void OrderStorer::removeOrder(int orderId)
     }
 }
 
-
 Order OrderStorer::getOrderById(int orderId)
 {
     char *err_msg = nullptr;
@@ -196,9 +198,10 @@ Order OrderStorer::getOrderById(int orderId)
     sqlite3_finalize(stmt);
 
     return result;
-}   
+}
 
-std::vector<Order> OrderStorer::getAllOrders(){
+std::vector<Order> OrderStorer::getAllOrders()
+{
     std::vector<Order> result;
     char *err_msg = nullptr;
 
