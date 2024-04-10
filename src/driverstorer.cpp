@@ -167,11 +167,17 @@ DriverStorer::~DriverStorer()
     sqlite3_close(db);
 }
 
-std::vector<Order> DriverStorer::getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate){
+std::vector<Order> DriverStorer::getOrdersByDriverAndPeriod(int driverId, long startDate = -1, long endDate = -1){
     std::vector<Order> result;
     char *err_msg = nullptr;
 
-    std::string SQLQuery = "SELECT * FROM Orders WHERE driver_id = " + std::to_string(driverId) + " AND date BETWEEN " + std::to_string(startDate) + " AND " + std::to_string(endDate) + ";";
+    std::string SQLQuery;
+    
+    if (endDate==-1 && startDate==-1){
+        SQLQuery = "SELECT * FROM Orders WHERE driver_id = " + std::to_string(driverId) + ";";
+    }else{
+        SQLQuery = "SELECT * FROM Orders WHERE driver_id = " + std::to_string(driverId) + " AND date BETWEEN " + std::to_string(startDate) + " AND " + std::to_string(endDate) + ";";
+    }
 
     sqlite3_stmt *stmt;
     int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);

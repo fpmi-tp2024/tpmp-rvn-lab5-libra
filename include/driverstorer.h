@@ -26,7 +26,7 @@ public:
     Driver getDriverByLoginAndPassword(const std::string &login, const std::string &password);
 
     // Получить перечень выполненных заказов водителем за указанный период
-    std::vector<Order> getOrdersByDriverAndPeriod(int driverId, long startDate, long endDate);
+    std::vector<Order> getOrdersByDriverAndPeriod(int driverId, long startDate = -1, long endDate = -1);
 
     // Получить все сведения о водителе, выполнившем наименьшее количество поездок, и количество полученных денег
     std::pair<Driver, double> getDriverWithMinimumTripsAndMoney();
