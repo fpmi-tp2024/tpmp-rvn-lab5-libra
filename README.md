@@ -8,6 +8,13 @@
   - [Validator](#validator)
 - [Использование](#использование)
   - [Сборка](#сборка)
+- [Тестирование](#тестирование)
+  - [Validator tests](#validator-tests)
+  - [Make dataset](#make-dataset)
+  - [Auth tests](#auth-tests)
+  - [CarStorer tests](#carstorer-tests)
+  - [OrderStorer tests](#orderstorer-tests)
+  - [DriverStorer tests](#driverstorer-tests)
 
 
 ## Описание классов
