@@ -15,8 +15,9 @@ public:
 private:
     std::map<int, void (DriverInterface::*)()> commands;
     int driverId;
-    
+
     bool tryLogInDriver(const std::string &login, const std::string &password);
+
     void getListOfCompletedOrdersByTime();
     void getTotalOrdersCount();
     void getTotalWeightOfTransportedGoods();
@@ -25,7 +26,6 @@ private:
     void changeAddress();
     void changeLogin();
     void changePassword();
-
 };
 
 #endif

@@ -1,19 +1,19 @@
 #include "../include/driverinterface.h"
 
-DriverInterface::DriverInterface() 
+DriverInterface::DriverInterface()
 {
 	driverId = -1;
 
 	commands = {
-        {1, &DriverInterface::getListOfCompletedOrdersByTime},
-        {2, &DriverInterface::getTotalOrdersCount},
-        {3, &DriverInterface::getTotalWeightOfTransportedGoods},
-        {4, &DriverInterface::getMoneyEarnedByTime},
-        {5, &DriverInterface::getMoneyEarned},
-        {6, &DriverInterface::changeAddress},
-        {7, &DriverInterface::changeLogin},
-        {8, &DriverInterface::changePassword},
-    };
+		{1, &DriverInterface::getListOfCompletedOrdersByTime},
+		{2, &DriverInterface::getTotalOrdersCount},
+		{3, &DriverInterface::getTotalWeightOfTransportedGoods},
+		{4, &DriverInterface::getMoneyEarnedByTime},
+		{5, &DriverInterface::getMoneyEarned},
+		{6, &DriverInterface::changeAddress},
+		{7, &DriverInterface::changeLogin},
+		{8, &DriverInterface::changePassword},
+	};
 }
 
 DriverInterface::~DriverInterface() {}
@@ -57,16 +57,16 @@ void DriverInterface::run()
 	int option;
 
 	std::string commandsList = "||\tSelect operation:\n"
-						  "||\t1: <Get list of completed orders by time interval>\n"
-						  "||\t2: <Get count of all completed orders >\n"
-						  "||\t3: <Get total weight of transported goods>\n"
-						  "||\t4: <Get money earned by time interval>\n"
-						  "||\t5: <Get total money earned>\n"
-						  "||\t6: <Change address>\n"
-						  "||\t7: <Change login>\n"
-						  "||\t8: <Change password>\n"
-						  "||\n"
-						  "||\tOr type \"q\" to quit\n";
+							   "||\t1: <Get list of completed orders by time interval>\n"
+							   "||\t2: <Get count of all completed orders >\n"
+							   "||\t3: <Get total weight of transported goods>\n"
+							   "||\t4: <Get money earned by time interval>\n"
+							   "||\t5: <Get total money earned>\n"
+							   "||\t6: <Change address>\n"
+							   "||\t7: <Change login>\n"
+							   "||\t8: <Change password>\n"
+							   "||\n"
+							   "||\tOr type \"q\" to quit\n";
 
 	std::string invalidInputError = "||\tYour input is not valid. Try again\n";
 
@@ -76,8 +76,10 @@ void DriverInterface::run()
 		std::cin >> input;
 		trim(input);
 
-		if (input.empty()) {std::cout<<"Blank\n";}
-
+		if (input.empty())
+		{
+			std::cout << "Blank\n";
+		}
 
 		if (tryQuit(input))
 		{
@@ -94,11 +96,14 @@ void DriverInterface::run()
 
 			if (it != commands.end())
 			{
-				try {
-				(this->*(it->second))();
+				try
+				{
+					(this->*(it->second))();
 				}
-				catch (const std::exception& e) {
-    				std::cout << "\033[31m" << "Exception: " << e.what() << "\033[0m" << std::endl;
+				catch (const std::exception &e)
+				{
+					std::cout << "\033[31m"
+							  << "Exception: " << e.what() << "\033[0m" << std::endl;
 				}
 			}
 			else
@@ -131,7 +136,7 @@ void DriverInterface::getListOfCompletedOrdersByTime()
 
 	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driverId, startDate, endDate));
 
-	for (Order order : orders) 
+	for (Order order : orders)
 	{
 		std::cout << order.toString();
 	}

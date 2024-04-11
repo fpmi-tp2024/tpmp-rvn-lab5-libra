@@ -1,5 +1,5 @@
 admine_login='admin'
-admine_password='totallySecuredPassword'
+admine_password='admin'
 commission_fees=20
 NUMBER_PLATE_REGEX='^[0-9]{4}[A-Z]{2}-[1-7]$'
 BRAND_REGEX='^[A-Za-z -]{1,}$'
