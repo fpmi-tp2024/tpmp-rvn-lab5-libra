@@ -38,3 +38,15 @@ long DatabaseHelper::dateToSec(int year, int month, int day)
 
     return std::mktime(&t);
 }
+
+std::string DatabaseHelper::secToDate(long sec)
+{
+    std::tm *t = std::localtime(&sec);
+    if (t == nullptr)
+    {
+        std::cerr << "Error: unable to make time using localtime\n";
+        return "";
+    }
+
+    return std::to_string(t->tm_mday) + "." + std::to_string(t->tm_mon + 1) + "." + std::to_string(t->tm_year + 1900);
+}

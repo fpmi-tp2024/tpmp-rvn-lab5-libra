@@ -12,14 +12,14 @@ Order::Order(int id, long date, int driverId, const std::string &carNumber, int 
 }
 
 Order::Order(sqlite3_stmt *statement)
-{
-    date = sqlite3_column_int64(statement, 0);
-    driverId = sqlite3_column_int(statement, 1);
-    carNumber = std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2)));
-    mileage = sqlite3_column_int(statement, 3);
-    cargoWeight = sqlite3_column_int(statement, 4);
-    cost = sqlite3_column_int(statement, 5);
-}
+    : Order(
+          sqlite3_column_int(statement, 0),
+          sqlite3_column_int64(statement, 1),
+          sqlite3_column_int(statement, 2),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 3))),
+          sqlite3_column_int(statement, 4),
+          sqlite3_column_int(statement, 5),
+          sqlite3_column_int(statement, 6)) {}
 
 int Order::getId() const
 {
@@ -68,8 +68,9 @@ void Order::setDriverId(int driverId)
 
 void Order::setID(int id)
 {
-    if (this->id != -1){
-        throw std::invalid_argument("Invalid id value.");
+    if (this->id != -1)
+    {
+        throw std::invalid_argument("Id is already set.");
     }
     this->id = id;
 }
