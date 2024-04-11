@@ -37,8 +37,8 @@ void AdminInterface::run()
 
 	while (!tryLogInAdmin(login, password))
 	{
-		std::cout << "||\tUsername or password are not valid. Try again\n";
-		std::cout << "||\tIf you want to quit, type \"q\". Otherwise - anyhting else\n";
+		std::cout << "\033[31m" << "||\tUsername or password are not valid. Try again\n";
+		std::cout << "||\tIf you want to quit, type \"q\". Otherwise - anything else\n" << "\033[0m";
 		std::cin >> quitStr;
 		trim(quitStr);
 		if (tryQuit(quitStr))
@@ -53,7 +53,7 @@ void AdminInterface::run()
 		trim(password);
 	}
 
-	std::cout << "||\tSuccessfully logged in\n";
+	std::cout << "\033[32m" << std::endl << "||\tSuccessfully logged in\n" << "\033[0m";
 
 	std::string input;
 	int option;
@@ -97,7 +97,12 @@ void AdminInterface::run()
 
 			if (it != commands.end())
 			{
+				try {
 				(this->*(it->second))();
+				}
+				catch (const std::exception& e) {
+    				std::cout << "\033[31m" << "Exception: " << e.what() << "\033[0m" << std::endl;
+				}
 			}
 			else
 			{
@@ -123,7 +128,7 @@ void AdminInterface::getTotalOrdersByDriver()
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
-	std::cout << "||\t" << orderStorer.getTotalNumberOfOrders(driverId) << "\n";
+	std::cout << "\033[32m||\tTotal number of completed orders:" << orderStorer.getTotalNumberOfOrders(driverId) << "\033[0m\n";
 }
 
 void AdminInterface::getTotalWeightByDriver()
@@ -135,7 +140,7 @@ void AdminInterface::getTotalWeightByDriver()
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
-	std::cout << "||\t" << orderStorer.getTotalCargoMass(driverId) << "\n";
+	std::cout << "\033[32m||\tTotal weight delivered by driver " <<driver.getLogin()<<" : "<< orderStorer.getTotalCargoMass(driverId) << "\033[0m\n\n";
 }
 
 void AdminInterface::getTotalMoneyByDriver()
@@ -147,7 +152,7 @@ void AdminInterface::getTotalMoneyByDriver()
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
-	std::cout << "||\t" << orderStorer.getTotalMoney(driverId) << "\n";
+	std::cout << "\033[32m||\tEarned money by " <<driver.getLogin()<<" : "<< orderStorer.getTotalMoney(driverId) << "\033[0m\n";
 }
 
 void AdminInterface::getTotalMileageAndWeightByCar()
@@ -159,7 +164,7 @@ void AdminInterface::getTotalMileageAndWeightByCar()
 
 	std::pair<int, int> mileageAndWeight = carStorer.getCarTotalMileageAndMass(carNumber);
 	
-	std::cout << "||\tMileage: " << mileageAndWeight.first << " ; Cargo weight: " << mileageAndWeight.second << "\n";
+	std::cout << "\033[32m||\tMileage: " << mileageAndWeight.first << " ; Cargo weight: " << mileageAndWeight.second << "\033[0m\n";
 }
 
 void AdminInterface::getOrdersListByDriver()
@@ -173,14 +178,14 @@ void AdminInterface::getOrdersListByDriver()
 	
 	for (Order order : orders)
 	{
-		std::cout << order.toString();
+		std::cout << "\033[32m" << order.toString() << "\033[0m";
 	}
 }
 
 void AdminInterface::getAllInfoByDriverWithLeastOrders()
 {
 	std::pair<Driver, double> worstDriverWithMoney = driverStorer.getDriverWithMinimumTripsAndMoney();
-	std::cout << worstDriverWithMoney.first.toString() << "||\tMoney earned: " << worstDriverWithMoney.second << "\n";
+	std::cout << "\033[32m" << worstDriverWithMoney.first.toString() << "||\tMoney earned: " << worstDriverWithMoney.second << "\033[0m\n";
 }
 
 void AdminInterface::getMoneyByEachDriver()
@@ -189,18 +194,17 @@ void AdminInterface::getMoneyByEachDriver()
 
 	for (Driver driver : drivers)
 	{
-		std::cout << "||\tDriver " << driver.getName() << " earned " << orderStorer.getTotalMoney(driver.getId()) << " money\n";
+		std::cout << "\033[32m||\tDriver " << driver.getLogin() << " earned " << orderStorer.getTotalMoney(driver.getId()) << " money\033[0m\n";
 	}
 }
 
 void AdminInterface::getAllInfoByCarWithHighestMileage()
 {
-	std::cout << carStorer.getCarWithMaximumMileage().toString();
+	std::cout << "\033[32mInfo about car with highest mileage:\n"<<carStorer.getCarWithMaximumMileage().toString()<<"\033[0m\n";
 }
 
 void AdminInterface::addDriver()
 {
-	int id;
     std::string login;
     std::string name;
     std::string category;
@@ -210,8 +214,6 @@ void AdminInterface::addDriver()
     std::string address;
 	std::string password;
 
-	std::cout << "||\tEnter id: ";
-	std::cin >> id;
 	std::cout << "||\tEnter login: ";
 	std::cin >> login;
 	std::cout << "||\tEnter name: ";
@@ -228,8 +230,9 @@ void AdminInterface::addDriver()
 	std::cout << "||\tEnter password: ";
 	std::cin >> password;
 
-	Driver driver = Driver(id, login, name, category, startWorkDate, birthYear, address);
+	Driver driver = Driver(-1,login, name, category, startWorkDate, birthYear, address);
 	driverStorer.addDriver(driver, password);
+	std::cout << "\033[32mDriver successfully added\033[0m" << std::endl;
 	// TODO: something with password hash
 }
 
@@ -254,11 +257,11 @@ void AdminInterface::addCar()
 
 	Car car = Car(number, brand, model, purchaseMileage, carryingCapacity);
 	carStorer.addCar(car);
+	std::cout << "\033[32mCar successfully added\033[0m" << std::endl;
 }
 
 void AdminInterface::addOrder()
 {
-	int id;
     long date;
 	int day, month, year;
     int driverId;
@@ -267,11 +270,8 @@ void AdminInterface::addOrder()
     int cargoWeight;
     int cost;
 
-	std::cout << "||\tEnter id: ";
-	std::cin >> id;
 	std::cout << "||\tEnter date(DD MM YYYY): ";
 	std::cin >> day >> month >> year;
-	date = DatabaseHelper::dateToSec(year, month, day);
 	std::cout << "||\tEnter driverId: ";
 	std::cin >> driverId;
 	std::cout << "||\tEnter carNumber: ";
@@ -283,6 +283,13 @@ void AdminInterface::addOrder()
 	std::cout << "||\tEnter cost: ";
 	std::cin >> cost;
 
-	Order order = Order(id, date, driverId, carNumber, mileage, cargoWeight, cost);
+	date = DatabaseHelper::dateToSec(year, month, day);
+	Car car = carStorer.getCarByNumber(carNumber);
+	if (car.getCarryingCapacity()< cargoWeight){
+		std::cout << "\033[32mIt's impossible to deliver cargo with weight "<<cargoWeight<<" by car with carrying capacity "<<car.getCarryingCapacity()<<"\033[0m"<<std::endl;
+		return;
+	}
+	Order order = Order(-1,date, driverId, carNumber, mileage, cargoWeight, cost);
 	orderStorer.addOrder(order);
+	std::cout << "\033[32mOrder successfully added\033[0m" << std::endl;
 }

@@ -22,6 +22,11 @@ bool DatabaseHelper::isTableEmpty(sqlite3 *db, const std::string &tableName)
 
 long DatabaseHelper::dateToSec(int year, int month, int day)
 {
+    if (year < 1900 || year > 9999 || month < 1 || month > 12 || day < 1 || day > 31)
+    {
+        throw std::invalid_argument("Invalid date.Check input information");
+    }
+
     std::tm t = {};
     t.tm_mon = month - 1;
     t.tm_year = year - 1900;

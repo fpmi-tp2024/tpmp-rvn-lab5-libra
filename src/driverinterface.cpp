@@ -94,7 +94,12 @@ void DriverInterface::run()
 
 			if (it != commands.end())
 			{
+				try {
 				(this->*(it->second))();
+				}
+				catch (const std::exception& e) {
+    				std::cout << "\033[31m" << "Exception: " << e.what() << "\033[0m" << std::endl;
+				}
 			}
 			else
 			{
