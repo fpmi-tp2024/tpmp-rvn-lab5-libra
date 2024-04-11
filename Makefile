@@ -1,7 +1,8 @@
 compiler = g++
-flags = 
+flags = -Wno-deprecated-declarations
 # sudo apt-get install libsqlite3-dev
-LDFLAGS = -lsqlite3
+# sudo apt-get install libssl-dev
+LDFLAGS = -lsqlite3 -lcrypto
 
 OBJ_DIR = obj
 BIN_DIR = bin

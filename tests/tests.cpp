@@ -5,6 +5,7 @@
 #include "../include/driverstorer.h"
 #include "../include/orderstorer.h"
 #include "../config/config.hpp"
+#include "../include/auth.h"
 
 TEST_CASE("Validator tests", "[Validator]")
 {
@@ -110,9 +111,21 @@ TEST_CASE("Validator tests", "[Validator]")
 
 TEST_CASE("Make dataset")
 {
+    Auth auth("data/test.db");
     CarStorer carStorer("data/test.db");
     DriverStorer driverStorer("data/test.db");
     OrderStorer orderStorer("data/test.db");
+
+    SECTION("Add users")
+    {
+        auth.addUser("ivanov_ivan", "12345", UserType::DRIVER);
+        auth.addUser("johnsmith", "qwerty", UserType::DRIVER);
+        auth.addUser("petrov_petr", "password", UserType::DRIVER);
+        auth.addUser("sidorov_sidr", "word", UserType::DRIVER);
+        auth.addUser("smith_john", "1234", UserType::DRIVER);
+
+        REQUIRE_THROWS_WITH(auth.addUser("ivanov_ivan", "12345", UserType::DRIVER), "User with login 'ivanov_ivan' already exists.");
+    }
 
     SECTION("Add drivers")
     {
@@ -191,6 +204,58 @@ TEST_CASE("Make dataset")
         REQUIRE(order11.getId() == 11);
         REQUIRE(order12.getId() == 12);
         REQUIRE(order13.getId() == 13);
+    }
+}
+
+TEST_CASE("Auth tests", "[Auth]")
+{
+    Auth auth("data/test.db");
+
+    SECTION("userExists")
+    {
+        REQUIRE(auth.userExists("ivanov_ivan"));
+        REQUIRE(auth.userExists("johnsmith"));
+        REQUIRE(auth.userExists("petrov_petr"));
+        REQUIRE(auth.userExists("sidorov_sidr"));
+        REQUIRE(auth.userExists("smith_john"));
+
+        REQUIRE_FALSE(auth.userExists("ivanov"));
+        REQUIRE_FALSE(auth.userExists("john"));
+        REQUIRE_FALSE(auth.userExists("petrov"));
+        REQUIRE_FALSE(auth.userExists("sidorov"));
+        REQUIRE_FALSE(auth.userExists("smith"));
+    }
+
+    SECTION("checkPassword")
+    {
+        REQUIRE(auth.checkPassword("ivanov_ivan", "12345") == UserType::DRIVER);
+        REQUIRE(auth.checkPassword("johnsmith", "qwerty") == UserType::DRIVER);
+        REQUIRE(auth.checkPassword("petrov_petr", "password") == UserType::DRIVER);
+        REQUIRE(auth.checkPassword("sidorov_sidr", "word") == UserType::DRIVER);
+        REQUIRE(auth.checkPassword("smith_john", "1234") == UserType::DRIVER);
+
+        REQUIRE_THROWS_WITH(auth.checkPassword("ivanov_ivan", "1234"), "Invalid login or password");
+        REQUIRE_THROWS_WITH(auth.checkPassword("johnsmith", "qwerty1"), "Invalid login or password");
+        REQUIRE_THROWS_WITH(auth.checkPassword("petrov_petr", "password1"), "Invalid login or password");
+        REQUIRE_THROWS_WITH(auth.checkPassword("sidorov_sidr", "word1"), "Invalid login or password");
+        REQUIRE_THROWS_WITH(auth.checkPassword("smith_john", "12345"), "Invalid login or password");
+
+        REQUIRE_THROWS_WITH(auth.checkPassword("ivanov_ivan1", "12345"), "Invalid login or password");
+        REQUIRE_THROWS_WITH(auth.checkPassword("johnsmith1", "qwerty"), "Invalid login or password");
+        REQUIRE_THROWS_WITH(auth.checkPassword("petrov_petr1", "password"), "Invalid login or password");
+        REQUIRE_THROWS_WITH(auth.checkPassword("sidorov_sidr1", "word"), "Invalid login or password");
+        REQUIRE_THROWS_WITH(auth.checkPassword("smith_john1", "1234"), "Invalid login or password");
+    }
+
+    SECTION("removeUser")
+    {
+        auth.deleteUser("ivanov_ivan");
+
+        REQUIRE_FALSE(auth.userExists("ivanov_ivan"));
+
+        auth.addUser("ivanov_ivan", "12345", UserType::DRIVER);
+
+        REQUIRE_THROWS_WITH(auth.deleteUser("ivanov_ivan1"), "User with login 'ivanov_ivan1' does not exist.");
     }
 }
 
