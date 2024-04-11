@@ -8,13 +8,13 @@ AdminInterface::AdminInterface()
 		{2, &AdminInterface::getTotalWeightByDriver},
 		{3, &AdminInterface::getTotalMoneyByDriver},
 		{4, &AdminInterface::getTotalMileageAndWeightByCar},
-		{6, &AdminInterface::getOrdersListByDriver},
-		{7, &AdminInterface::getAllInfoByDriverWithLeastOrders},
-		{8, &AdminInterface::getMoneyByEachDriver},
-		{9, &AdminInterface::getAllInfoByCarWithHighestMileage},
-		{10, &AdminInterface::addDriver},
-		{11, &AdminInterface::addCar},
-		{12, &AdminInterface::addOrder},
+		{5, &AdminInterface::getOrdersListByDriver},
+		{6, &AdminInterface::getAllInfoByDriverWithLeastOrders},
+		{7, &AdminInterface::getMoneyByEachDriver},
+		{8, &AdminInterface::getAllInfoByCarWithHighestMileage},
+		{9, &AdminInterface::addDriver},
+		{10, &AdminInterface::addCar},
+		{11, &AdminInterface::addOrder},
 	};
 }
 
@@ -29,26 +29,26 @@ void AdminInterface::run()
 	std::cout << "||\tYou selected Admin account\n";
 	std::cout << "||\tEnter Username and Password to proceed\n";
 	std::cout << "||\tUsername: ";
-	std::getline(std::cin, login);
+	std::cin >> login;
 	std::cout << "||\tPassword: ";
-	std::getline(std::cin, password);
+	std::cin >> password;
 	trim(login);
 	trim(password);
 
 	while (!tryLogInAdmin(login, password))
 	{
 		std::cout << "||\tUsername or password are not valid. Try again\n";
-		std::cout << "||\tIf you want to quit, type \"q\"\n";
-		std::getline(std::cin, quitStr);
+		std::cout << "||\tIf you want to quit, type \"q\". Otherwise - anyhting else\n";
+		std::cin >> quitStr;
 		trim(quitStr);
 		if (tryQuit(quitStr))
 		{
 			return;
 		}
 		std::cout << "||\tUsername: ";
-		std::getline(std::cin, login);
+		std::cin >> login;
 		std::cout << "||\tPassword: ";
-		std::getline(std::cin, password);
+		std::cin >> password;
 		trim(login);
 		trim(password);
 	}
@@ -79,7 +79,7 @@ void AdminInterface::run()
 	{
 		std::cout << commandsList;
 
-		std::getline(std::cin, input);
+		std::cin >> input;
 		trim(input);
 
 		if (tryQuit(input))
@@ -97,7 +97,7 @@ void AdminInterface::run()
 
 			if (it != commands.end())
 			{
-				it->second;
+				(this->*(it->second))();
 			}
 			else
 			{
@@ -171,6 +171,10 @@ void AdminInterface::getOrdersListByDriver()
 
 	std::vector<Order> orders = driverStorer.getOrdersByDriverAndPeriod(driverId, 0, LONG_MAX); //TODO: Maxim -- fix time intervals
 	
+	for (Order order : orders)
+	{
+		std::cout << order.toString();
+	}
 }
 
 void AdminInterface::getAllInfoByDriverWithLeastOrders()

@@ -17,7 +17,7 @@ void MenuInterface::run()
 	std::cout << "||\t2: Driver\n";
 	std::cout << "||\n";
 	std::cout << "||\tOr type \"q\" to quit\n";
-	std::getline(std::cin, input);
+	std::cin >> input;
 	trim(input);
 
 	while (!tryParseString(input, option) || (option != 1 && option != 2))
@@ -28,7 +28,7 @@ void MenuInterface::run()
 		}
 
 		std::cout << "||\tYour input is not valid. Try again\n";
-		std::getline(std::cin, input);
+		std::cin >> input;
 		trim(input);
 	}
 

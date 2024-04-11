@@ -27,26 +27,26 @@ void DriverInterface::run()
 	std::cout << "||\tYou selected Driver account\n";
 	std::cout << "||\tEnter Username and Password to proceed\n";
 	std::cout << "||\tUsername: ";
-	std::getline(std::cin, login);
+	std::cin >> login;
 	std::cout << "||\tPassword: ";
-	std::getline(std::cin, password);
+	std::cin >> password;
 	trim(login);
 	trim(password);
 
 	while (!tryLogInDriver(login, password))
 	{
 		std::cout << "||\tUsername or password are not valid. Try again\n";
-		std::cout << "||\tIf you want to quit, type \"q\"\n";
-		std::getline(std::cin, quitStr);
+		std::cout << "||\tIf you want to quit, type \"q\". Otherwise - anyhting else\n";
+		std::cin >> quitStr;
 		trim(quitStr);
 		if (tryQuit(quitStr))
 		{
 			return;
 		}
 		std::cout << "||\tUsername: ";
-		std::getline(std::cin, login);
+		std::cin >> login;
 		std::cout << "||\tPassword: ";
-		std::getline(std::cin, password);
+		std::cin >> password;
 		trim(login);
 		trim(password);
 	}
@@ -73,9 +73,11 @@ void DriverInterface::run()
 	while (true)
 	{
 		std::cout << commandsList;
-
-		std::getline(std::cin, input);
+		std::cin >> input;
 		trim(input);
+
+		if (input.empty()) {std::cout<<"Blank\n";}
+
 
 		if (tryQuit(input))
 		{
@@ -92,7 +94,7 @@ void DriverInterface::run()
 
 			if (it != commands.end())
 			{
-				it->second;
+				(this->*(it->second))();
 			}
 			else
 			{
