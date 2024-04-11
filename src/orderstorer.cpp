@@ -24,8 +24,8 @@ OrderStorer::OrderStorer(const std::string &dbName)
         "CREATE TABLE IF NOT EXISTS Orders ("
         "id integer NOT NULL PRIMARY KEY AUTOINCREMENT,"
         "date integer NOT NULL DEFAULT (strftime('%s', 'now')),"
-        "driver_id integer NOT NULL REFERENCES Drivers(id) ON DELETE RESTRICT, "
-        "car_number varchar(10) NOT NULL REFERENCES Cars(number) ON DELETE RESTRICT, "
+        "driver_id integer NOT NULL REFERENCES Drivers(id) ON UPDATE CASCADE ON DELETE RESTRICT, "
+        "car_number varchar(10) NOT NULL REFERENCES Cars(number) ON UPDATE CASCADE ON DELETE RESTRICT, "
         "mileage integer NOT NULL,"
         "cargo_weight integer NOT NULL,"
         "cost integer NOT NULL"
@@ -40,6 +40,8 @@ OrderStorer::OrderStorer(const std::string &dbName)
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
+
+    sqlite3_exec(db, "PRAGMA foreign_keys = ON;", nullptr, nullptr, nullptr);
 }
 
 void OrderStorer::addOrder(Order &order)

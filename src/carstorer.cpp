@@ -32,6 +32,8 @@ CarStorer::CarStorer(const std::string &dbName)
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
+
+    sqlite3_exec(db, "PRAGMA foreign_keys = ON;", nullptr, nullptr, nullptr);
 }
 
 std::pair<int, int> CarStorer::getCarTotalMileageAndMass(std::string carNumber)
@@ -65,7 +67,7 @@ int CarStorer::callbackForTotalMileageAndMass(void *data, int colCount, char **c
     return 0;
 }
 
-//#TODO возможно стоит возвращать вектор
+// #TODO возможно стоит возвращать вектор
 Car CarStorer::getCarWithMaximumMileage()
 {
     Car result = Car();
@@ -123,9 +125,11 @@ void CarStorer::updateCar(std::string carNumber, const Car &car)
 {
     std::string SQLQuery =
         "UPDATE Cars SET brand = '" + car.getBrand() + "',"
-        "model='" + car.getModel() + 
+                                                       "model='" +
+        car.getModel() +
         "',capacity='" + std::to_string(car.getCarryingCapacity()) + "',"
-        "purchase_mileage='" + std::to_string(car.getPurchaseMileage()) + "'WHERE number='" + carNumber + "';";
+                                                                     "purchase_mileage='" +
+        std::to_string(car.getPurchaseMileage()) + "'WHERE number='" + carNumber + "';";
 
     char *err_msg = nullptr;
 
@@ -187,10 +191,11 @@ Car CarStorer::getCarByNumber(std::string carNumber)
         if (sqlite3_step(stmt) == SQLITE_ROW)
         {
             result = Car(stmt);
-        }else{
+        }
+        else
+        {
             std::string error_message = "There are no car with number: " + carNumber;
             throw std::runtime_error(error_message);
-        
         }
     }
     else

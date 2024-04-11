@@ -18,6 +18,8 @@ Auth::Auth(const std::string &db_name)
     {
         throw std::runtime_error("Cannot create table users: " + std::string(err_msg));
     }
+
+    sqlite3_exec(db, "PRAGMA foreign_keys = ON;", nullptr, nullptr, nullptr);
 }
 
 Auth::~Auth()
@@ -47,6 +49,11 @@ bool Auth::userExists(const std::string &login)
 
 UserType Auth::checkPassword(const std::string &login, const std::string &password)
 {
+    if (!userExists(login))
+    {
+        throw std::runtime_error("User with login '" + login + "' does not exist.");
+    }
+
     unsigned char hash[SHA256_DIGEST_LENGTH];
     SHA256_CTX ctx;
     SHA256_Init(&ctx);
@@ -75,6 +82,48 @@ UserType Auth::checkPassword(const std::string &login, const std::string &passwo
     sqlite3_finalize(stmt);
 
     return static_cast<UserType>(user_type);
+}
+
+void Auth::changePassword(const std::string &login, const std::string &oldPassword, const std::string &newPassword)
+{
+    checkPassword(login, oldPassword);
+
+    unsigned char hash[SHA256_DIGEST_LENGTH];
+    SHA256_CTX ctx;
+
+    SHA256_Init(&ctx);
+    SHA256_Update(&ctx, newPassword.c_str(), newPassword.length());
+    SHA256_Final(hash, &ctx);
+
+    std::string query = "UPDATE Users SET password='";
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    {
+        query += std::to_string((int)hash[i]) + ".";
+    }
+    query += "' WHERE login='" + login + "';";
+
+    char *err_msg = nullptr;
+    if (sqlite3_exec(db, query.c_str(), nullptr, nullptr, &err_msg) != SQLITE_OK)
+    {
+        throw std::runtime_error("Cannot change password: " + std::string(err_msg));
+    }
+}
+
+void Auth::changeLogin(const std::string &oldLogin, const std::string &newLogin, const std::string &password)
+{
+    checkPassword(oldLogin, password);
+
+    if (userExists(newLogin))
+    {
+        throw std::runtime_error("User with login '" + newLogin + "' already exists.");
+    }
+
+    std::string query = "UPDATE Users SET login='" + newLogin + "' WHERE login='" + oldLogin + "';";
+    char *err_msg = nullptr;
+    if (sqlite3_exec(db, query.c_str(), nullptr, nullptr, &err_msg) != SQLITE_OK)
+    {
+        throw std::runtime_error("Cannot change login: " + std::string(err_msg));
+    }
 }
 
 void Auth::addUser(const std::string &login, const std::string &password, UserType user_type)

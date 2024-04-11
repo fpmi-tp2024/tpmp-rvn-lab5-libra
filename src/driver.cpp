@@ -14,11 +14,11 @@ Driver::Driver(sqlite3_stmt *statement)
     : Driver(
           sqlite3_column_int(statement, 0),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 1))),
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 2))),
           std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 3))),
-          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 4))),
+          sqlite3_column_int(statement, 4),
           sqlite3_column_int(statement, 5),
-          sqlite3_column_int(statement, 6),
-          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 7)))) {}
+          std::string(reinterpret_cast<const char *>(sqlite3_column_text(statement, 6)))) {}
 
 int Driver::getId() const
 {

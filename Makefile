@@ -17,6 +17,9 @@ TEST_OBJ_FILES = $(filter-out $(OBJ_DIR)/main.o,$(OBJ_FILES))
 TARGET = $(BIN_DIR)/program
 TEST_TARGET = $(BIN_DIR)/tests
 
+PARK_DB = data/park.db
+TEST_DB = data/test.db
+
 all: $(TARGET) $(TEST_TARGET)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
@@ -31,16 +34,24 @@ $(BIN_DIR)/tests: $(TEST_DIR)/tests.cpp $(TEST_OBJ_FILES) | $(BIN_DIR)
 $(OBJ_DIR) $(BIN_DIR):
 	mkdir -p $@
 
+park_db:
+	touch $(PARK_DB)
+	sqlite3 $(PARK_DB) < data/park_struct.sql
+
+test_db:
+	rm -f data/test.db
+	touch $(TEST_DB)
+	sqlite3 $(TEST_DB) < data/park_struct.sql
+
 build: $(TARGET)
 
-test: $(TEST_TARGET)
-	rm -f data/test.db	
+test: $(TEST_TARGET) test_db
 	./$(TEST_TARGET)
 
-run: build test
+run: build test park_db
 	./$(TARGET)
 
 clean:
 	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*
 
-.PHONY: all clean run test build
+.PHONY: all clean run test build park_db test_db
