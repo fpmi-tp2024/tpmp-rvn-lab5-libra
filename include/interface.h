@@ -28,7 +28,7 @@ protected:
         while(!(std::cin >> number)) {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout << "Invalid input. Please enter a number: ";
+            std::cout << "\033[31mInvalid input. Please enter a number:\033[0m ";
         }
     return number;
     }

@@ -29,6 +29,9 @@ private:
     void addDriver();
     void addCar();
     void addOrder();
+    void getListOfDrivers();
+    void getListOfCars();
+    void getListOfOrders();
 };
 
 #endif

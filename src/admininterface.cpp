@@ -16,6 +16,9 @@ AdminInterface::AdminInterface()
 		{9, &AdminInterface::addDriver},
 		{10, &AdminInterface::addCar},
 		{11, &AdminInterface::addOrder},
+		{12, &AdminInterface::getListOfDrivers},
+		{13, &AdminInterface::getListOfCars},
+		{14, &AdminInterface::getListOfOrders},
 	};
 }
 
@@ -59,6 +62,9 @@ void AdminInterface::run()
 							   "||\t9: <Add driver>\n"
 							   "||\t10: <Add car>\n"
 							   "||\t11: <Add order>\n"
+							   "||\t12: <Get list of drivers>\n"
+							   "||\t13: <Get list of cars>\n"
+							   "||\t14: <Get list of orders>\n"
 							   "||\n"
 							   "||\tOr type \"q\" to quit\n";
 
@@ -247,7 +253,7 @@ void AdminInterface::addDriver()
 	{
 		std::string quitStr;
 
-		std::cout << "||\tEnter login: ";
+		std::cout << "||\tEnter loaddDrivergin: ";
 		std::cin >> login;
 
 		if (!Validator::isValidLogin(login))
@@ -306,7 +312,7 @@ void AdminInterface::addDriver()
 		day = getNumberInput("||\tEnter day:");
 		month = getNumberInput("||\tEnter month:");
 		year = getNumberInput("||\tEnter year:");
-		birthYear = getNumberInput("||\tEnter birth year: \n");
+		birthYear = getNumberInput("||\tEnter birth year:");
 		std::cout << "||\tEnter address: ";
 		std::cin >> address;
 
@@ -423,5 +429,38 @@ void AdminInterface::addOrder()
 	{
 		std::cout << "\033[31m"
 				  << "||\t Exeption: " << e.what() << "\033[0m" << std::endl;
+	}
+}
+
+void AdminInterface::getListOfDrivers()
+{
+	std::vector<Driver> drivers = driverStorer.getDrivers();
+
+	for (Driver driver : drivers)
+	{
+		std::cout << "\033[32m" << driver.toString() << "||\n"
+				  << "\033[0m";
+	}
+}
+
+void AdminInterface::getListOfCars()
+{
+	std::vector<Car> cars = carStorer.getAllCars();
+
+	for (Car car : cars)
+	{
+		std::cout << "\033[32m" << car.toString() << "||\n"
+				  << "\033[0m";
+	}
+}
+
+void AdminInterface::getListOfOrders()
+{
+	std::vector<Order> orders = orderStorer.getAllOrders();
+
+	for (Order order : orders)
+	{
+		std::cout << "\033[32m" << order.toString() << "||\n"
+				  << "\033[0m";
 	}
 }
