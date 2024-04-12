@@ -19,7 +19,7 @@ DriverStorer::DriverStorer(const std::string &dbName)
         "login text NOT NULL REFERENCES Users(login) ON UPDATE CASCADE ON DELETE CASCADE,"
         "name varchar(30) NOT NULL,"
         "category varchar(5) NOT NULL,"
-        "start_work_date text NOT NULL DEFAULT (strftime('%d-%m-%Y', 'now')),"
+        "start_work_date INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),"
         "birth_year integer NOT NULL,"
         "address text NOT NULL"
         ");";
