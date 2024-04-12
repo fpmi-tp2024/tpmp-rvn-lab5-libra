@@ -224,13 +224,71 @@ void DriverInterface::changeAddress()
 
 void DriverInterface::changeLogin()
 {
-	// TODO: LEV
+	std::string newLogin;
+	std::string password;
+
+	std::cout << "||\tEnter password\n";
+	std::cin >> password;
+	std::cout << "||\tEnter new login\n";
+	std::cin >> newLogin;
+
+	trim(newLogin);
+
+	if (Validator::isValidLogin(newLogin))
+	{
+		try
+		{
+			auth.changeLogin(driver.getLogin(), newLogin, password);
+
+			driver = driverStorer.getDriverByLogin(newLogin);
+
+			std::cout << "\033[32m"
+					  << "||\tLogin successfully updated\n"
+					  << "\033[0m";
+		}
+		catch (const std::exception &e)
+		{
+			std::cout << "\033[31m"
+					  << "||\t" << e.what() << '\n'
+					  << "\033[0m";
+		}
+	}
+	else
+	{
+		std::cout << "\033[31m"
+				  << "||\tLogin is not valid\n"
+				  << "\033[0m";
+	}
 }
 
 void DriverInterface::changePassword()
 {
-	// TODO: LEV
+	std::string oldPassword;
+	std::string newPassword;
+
+	std::cout << "||\tEnter old password\n";
+	std::cin >> oldPassword;
+	std::cout << "||\tEnter new password\n";
+	std::cin >> newPassword;
+
+	trim(oldPassword);
+	trim(newPassword);
+
+	try
+	{
+		auth.changePassword(driver.getLogin(), oldPassword, newPassword);
+		std::cout << "\033[32m"
+				  << "||\tPassword successfully updated\n"
+				  << "\033[0m";
+	}
+	catch (const std::exception &e)
+	{
+		std::cout << "\033[31m"
+				  << "||\t" << e.what() << '\n'
+				  << "\033[0m";
+	}
 }
+
 void DriverInterface::printDriverInfo()
 {
 	std::cout << driver.toString() << "\n";
