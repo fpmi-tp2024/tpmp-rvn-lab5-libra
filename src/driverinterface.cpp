@@ -19,7 +19,9 @@ DriverInterface::~DriverInterface() {}
 
 void DriverInterface::run()
 {
-	std::cout << "||\tYou selected Driver account\n";
+	std::cout << "\033[32m"
+			  << "||\tYou selected Driver account\n"
+			  << "\033[0m";
 
 	while (!authorize())
 	{

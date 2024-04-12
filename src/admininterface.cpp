@@ -22,7 +22,9 @@ AdminInterface::~AdminInterface() {}
 
 void AdminInterface::run()
 {
-	std::cout << "||\tYou selected Admin account\n";
+	std::cout << "\033[32m"
+			  << "||\tYou selected Admin account\n"
+			  << "\033[0m";
 
 	while (!authorize())
 	{
@@ -59,7 +61,7 @@ void AdminInterface::run()
 							   "||\n"
 							   "||\tOr type \"q\" to quit\n";
 
-	std::string invalidInputError = "||\tYour input is not valid. Try again\n";
+	std::string invalidInputError = "\033[31m||\tYour input is not valid. Try again\n\033[0m";
 
 	while (true)
 	{
