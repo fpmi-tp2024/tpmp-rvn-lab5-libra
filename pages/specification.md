@@ -22,7 +22,16 @@
 ![deployment](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6ed8aa7117b954beda18f5ad4e92710aa1b4f257/UML%20diagrams/deployment.png?raw=true)
 
 ## Диаграмма последовательности
-![sequence](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6ed8aa7117b954beda18f5ad4e92710aa1b4f257/UML%20diagrams/sequence.png?raw=true)
+![sequence driver 1](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6e23d0a3fbe97988a71c9511adcf1ea3391edd42/UML%20diagrams/seqdrive1.png?raw=true)
+
+
+![sequence driver 2](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6e23d0a3fbe97988a71c9511adcf1ea3391edd42/UML%20diagrams/seqdrive2.png?raw=true)
+
+
+![sequence admin 1](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6e23d0a3fbe97988a71c9511adcf1ea3391edd42/UML%20diagrams/seqadmin1.png?raw=true)
+
+
+![sequence admin 2](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6e23d0a3fbe97988a71c9511adcf1ea3391edd42/UML%20diagrams/seqadmin2.png?raw=true)
 
 ## Диаграмма деятельности
 ![activity](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/a101751dc5ac1489e504554108564eb9c822f9f7/UML%20diagrams/activity4.png?raw=true)
