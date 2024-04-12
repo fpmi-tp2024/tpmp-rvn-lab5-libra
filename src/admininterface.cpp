@@ -149,24 +149,24 @@ void AdminInterface::getTotalOrdersByDriver()
 {
 	int driverId;
 
-	std::cout << "||\tEnter driver id\n";
+	std::cout << "||\tEnter driver id: \n";
 	std::cin >> driverId;
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
-	std::cout << "\033[32m||\tTotal number of completed orders:" << orderStorer.getTotalNumberOfOrders(driverId) << "\033[0m\n";
+	std::cout << "\033[32m||\tTotal number of completed orders: " << orderStorer.getTotalNumberOfOrders(driverId) << "\033[0m\n";
 }
 
 void AdminInterface::getTotalWeightByDriver()
 {
 	int driverId;
 
-	std::cout << "||\tEnter driver id\n";
+	std::cout << "||\tEnter driver id: \n";
 	std::cin >> driverId;
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
-	std::cout << "\033[32m||\tTotal weight delivered by driver " << driver.getLogin() << " : " << orderStorer.getTotalCargoMass(driverId) << "\033[0m\n";
+	std::cout << "\033[32m||\tTotal weight delivered by driver " << driver.getLogin() << ": " << orderStorer.getTotalCargoMass(driverId) << "\033[0m\n";
 }
 
 void AdminInterface::getTotalMoneyByDriver()
@@ -178,7 +178,7 @@ void AdminInterface::getTotalMoneyByDriver()
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
-	std::cout << "\033[32m||\tEarned money by " << driver.getLogin() << " : " << orderStorer.getTotalMoney(driverId) << "\033[0m\n";
+	std::cout << "\033[32m||\tEarned money by " << driver.getLogin() << ": " << orderStorer.getTotalMoney(driverId) << "\033[0m\n";
 }
 
 void AdminInterface::getTotalMileageAndWeightByCar()
@@ -190,21 +190,22 @@ void AdminInterface::getTotalMileageAndWeightByCar()
 
 	std::pair<int, int> mileageAndWeight = carStorer.getCarTotalMileageAndMass(carNumber);
 
-	std::cout << "\033[32m||\tMileage: " << mileageAndWeight.first << " ; Cargo weight: " << mileageAndWeight.second << "\033[0m\n";
+	std::cout << "\033[32m||\tMileage: " << mileageAndWeight.first << "; Cargo weight: " << mileageAndWeight.second << "\033[0m\n";
 }
 
 void AdminInterface::getOrdersListByDriver()
 {
 	int driverId;
 
-	std::cout << "||\tEnter driver id\n";
+	std::cout << "||\tEnter driver id: \n";
 	std::cin >> driverId;
 
 	std::vector<Order> orders = driverStorer.getOrdersByDriverAndPeriod(driverId);
 
 	for (Order order : orders)
 	{
-		std::cout << "\033[32m" << order.toString() << "\033[0m";
+		std::cout << "\033[32m" << order.toString() << "||\n"
+				  << "\033[0m";
 	}
 }
 
@@ -226,7 +227,8 @@ void AdminInterface::getMoneyByEachDriver()
 
 void AdminInterface::getAllInfoByCarWithHighestMileage()
 {
-	std::cout << "\033[32mInfo about car with highest mileage:\n"
+	std::cout << "\033[32m"
+			  << "||\tInfo about car with highest mileage:\n"
 			  << carStorer.getCarWithMaximumMileage().toString() << "\033[0m";
 }
 
@@ -361,9 +363,20 @@ void AdminInterface::addCar()
 	std::cout << "||\tEnter carrying capacity: ";
 	std::cin >> carryingCapacity;
 
-	Car car = Car(number, brand, model, purchaseMileage, carryingCapacity);
-	carStorer.addCar(car);
-	std::cout << "\033[32mCar successfully added\033[0m" << std::endl;
+	try
+	{
+		Car car = Car(number, brand, model, purchaseMileage, carryingCapacity);
+		carStorer.addCar(car);
+
+		std::cout << "\033[32m"
+				  << "||\tCar successfully added"
+				  << "\033[0m" << std::endl;
+	}
+	catch (const std::exception &e)
+	{
+		std::cout << "\033[31m"
+				  << "||\t Exeption: " << e.what() << "\033[0m" << std::endl;
+	}
 }
 
 void AdminInterface::addOrder()
@@ -393,10 +406,24 @@ void AdminInterface::addOrder()
 	Car car = carStorer.getCarByNumber(carNumber);
 	if (car.getCarryingCapacity() < cargoWeight)
 	{
-		std::cout << "\033[32mIt's impossible to deliver cargo with weight " << cargoWeight << " by car with carrying capacity " << car.getCarryingCapacity() << "\033[0m" << std::endl;
+		std::cout << "\033[32m"
+				  << "||\tIt's impossible to deliver cargo with weight " << cargoWeight << " by car with carrying capacity " << car.getCarryingCapacity()
+				  << "\033[0m" << std::endl;
 		return;
 	}
-	Order order = Order(-1, date, driverId, carNumber, mileage, cargoWeight, cost);
-	orderStorer.addOrder(order);
-	std::cout << "\033[32mOrder successfully added\033[0m" << std::endl;
+
+	try
+	{
+		Order order = Order(-1, date, driverId, carNumber, mileage, cargoWeight, cost);
+		orderStorer.addOrder(order);
+
+		std::cout << "\033[32m"
+				  << "||\tOrder successfully added!"
+				  << "\033[0m" << std::endl;
+	}
+	catch (const std::exception &e)
+	{
+		std::cout << "\033[31m"
+				  << "||\t Exeption: " << e.what() << "\033[0m" << std::endl;
+	}
 }
