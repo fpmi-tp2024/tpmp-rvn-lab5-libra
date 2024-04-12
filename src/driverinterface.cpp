@@ -56,7 +56,7 @@ void DriverInterface::run()
 							   "||\n"
 							   "||\tOr type \"q\" to quit\n";
 
-	std::string invalidInputError = "||\tYour input is not valid. Try again\n";
+	std::string invalidInputError = "\033[31m||\tYour input is not valid. Try again\n\033[0m";
 
 	while (true)
 	{
