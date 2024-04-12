@@ -13,7 +13,7 @@
 ![use_case](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6ed8aa7117b954beda18f5ad4e92710aa1b4f257/UML%20diagrams/use_case.png)
 
 ## Диаграмма компонентов
-![component](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/dce7303fd3647ee3aeaa65781a67de3fdf925929/UML%20diagrams/component.png)
+![component](UML_diagrams/component.png)
 
 ## Диаграмма размещения
 ![deployment](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6ed8aa7117b954beda18f5ad4e92710aa1b4f257/UML%20diagrams/deployment.png)
