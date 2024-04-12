@@ -237,7 +237,130 @@ void AdminInterface::getAllInfoByCarWithHighestMileage()
 
 void AdminInterface::addDriver()
 {
-	// TODO: Lev
+	std::string login;
+	std::string password;
+	std::string name;
+	std::string category;
+	int day, month, year;
+	int birthYear;
+	std::string address;
+
+	while (true)
+	{
+		std::string quitStr;
+
+		std::cout << "||\tEnter login: ";
+		std::cin >> login;
+
+		if (!Validator::isValidLogin(login))
+		{
+			std::cout << "\033[31m"
+					  << "||\tLogin is not valid\n"
+					  << "||\tLogin should contain only letters, digits or _\n"
+					  << "\033[0m";
+			continue;
+		}
+
+		if (auth.userExists(login))
+		{
+			std::cout << "\033[31m"
+					  << "||\tUser with login " << login << " already exists\n"
+					  << "\033[0m";
+
+			std::cout << "\033[31m"
+					  << "||\tIf you want to quit, type \"q\". Otherwise - anything else\n"
+					  << "\033[0m";
+
+			std::cin >> quitStr;
+
+			trim(quitStr);
+			if (tryQuit(quitStr))
+			{
+				return;
+			}
+
+			continue;
+		}
+
+		std::cout << "||\tEnter password: ";
+		std::cin >> password;
+
+		if (password.empty())
+		{
+			std::cout << "\033[31m"
+					  << "||\tPassword is empty\n"
+					  << "\033[0m";
+			continue;
+		}
+
+		break;
+
+		// try
+		// {
+		// 	auth.addUser(login, password, UserType::DRIVER);
+
+		// 	std::cout << "\033[32m"
+		// 			  << "||\tUser successfully added!\n"
+		// 			  << "\033[0m";
+		// 	break;
+		// }
+		// catch (const std::exception &e)
+		// {
+		// 	std::cout << "\033[31m" << e.what() << '\n'
+		// 			  << "\033[0m";
+		// 	return;
+		// }
+	}
+
+	while (true)
+	{
+		std::string quitStr;
+
+		std::cout << "||\tEnter name: ";
+		std::cin >> name;
+		std::cout << "||\tEnter category: ";
+		std::cin >> category;
+		std::cout << "||\tEnter start work date(DD MM YYYY): ";
+		std::cin >> day >> month >> year;
+		std::cout << "||\tEnter birth year: ";
+		std::cin >> birthYear;
+		std::cout << "||\tEnter address: ";
+		std::cin >> address;
+
+		try
+		{
+			Driver driver = Driver(-1, login, name, category, DatabaseHelper::dateToSec(year, month, day), birthYear, address);
+
+			auth.addUser(login, password, UserType::DRIVER);
+			driverStorer.addDriver(driver);
+
+			std::cout << "\033[32m"
+					  << "||\tDriver successfully added!\n"
+					  << "\033[0m";
+
+			return;
+		}
+		catch (const std::exception &e)
+		{
+			std::cout << "\033[31m"
+					  << "||\t" << e.what() << '\n'
+					  << "\033[0m";
+
+			std::cout << "\033[31m"
+					  << "||\tIf you want to quit, type \"q\". Otherwise - anything else\n"
+					  << "\033[0m";
+
+			std::cin >> quitStr;
+
+			trim(quitStr);
+			if (tryQuit(quitStr))
+			{
+				return;
+			}
+
+			continue;
+		}
+	}
 }
 
 void AdminInterface::addCar()
