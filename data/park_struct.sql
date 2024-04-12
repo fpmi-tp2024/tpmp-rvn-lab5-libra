@@ -1,0 +1,30 @@
+CREATE TABLE IF NOT EXISTS Users (
+    login TEXT PRIMARY KEY,
+    password TEXT NOT NULL,
+    user_type TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS Drivers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    login TEXT NOT NULL REFERENCES Users(login) ON UPDATE CASCADE ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    start_work_date TEXT NOT NULL DEFAULT (strftime('%d-%m-%Y', 'now')),
+    birth_year INTEGER NOT NULL,
+    address TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS Cars (
+    number TEXT PRIMARY KEY,
+    brand TEXT NOT NULL,
+    model TEXT NOT NULL,
+    capacity INTEGER NOT NULL,
+    purchase_mileage INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS Orders (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT NOT NULL DEFAULT (strftime('%s', 'now')),
+    driver_id INTEGER NOT NULL REFERENCES Drivers(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+    car_number TEXT NOT NULL REFERENCES Cars(number) ON UPDATE CASCADE ON DELETE RESTRICT,
+    mileage INTEGER NOT NULL,
+    cargo_weight INTEGER NOT NULL,
+    cost INTEGER NOT NULL
+);

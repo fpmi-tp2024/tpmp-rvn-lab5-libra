@@ -16,49 +16,35 @@ AdminInterface::AdminInterface()
 		{10, &AdminInterface::addCar},
 		{11, &AdminInterface::addOrder},
 	};
+
+	if (!auth.userExists("admin"))
+	{
+		auth.addUser("admin", "admin", UserType::ADMIN);
+	}
 }
 
 AdminInterface::~AdminInterface() {}
 
 void AdminInterface::run()
 {
-	std::string login;
-	std::string password;
-	std::string quitStr;
-
 	std::cout << "||\tYou selected Admin account\n";
-	std::cout << "||\tEnter Username and Password to proceed\n";
-	std::cout << "||\tUsername: ";
-	std::cin >> login;
-	std::cout << "||\tPassword: ";
-	std::cin >> password;
-	trim(login);
-	trim(password);
 
-	while (!tryLogInAdmin(login, password))
+	while (!authorize())
 	{
+		std::string quitStr;
+
 		std::cout << "\033[31m"
-				  << "||\tUsername or password are not valid. Try again\n";
-		std::cout << "||\tIf you want to quit, type \"q\". Otherwise - anything else\n"
+				  << "||\tIf you want to quit, type \"q\". Otherwise - anything else\n"
 				  << "\033[0m";
 
 		std::cin >> quitStr;
+
 		trim(quitStr);
 		if (tryQuit(quitStr))
 		{
 			return;
 		}
-		std::cout << "||\tUsername: ";
-		std::cin >> login;
-		std::cout << "||\tPassword: ";
-		std::cin >> password;
-		trim(login);
-		trim(password);
 	}
-
-	std::cout << "\033[32m" << std::endl
-			  << "||\tSuccessfully logged in\n"
-			  << "\033[0m";
 
 	std::string input;
 	int option;
@@ -125,10 +111,43 @@ void AdminInterface::run()
 	}
 }
 
-bool AdminInterface::tryLogInAdmin(const std::string &login, const std::string &password)
+bool AdminInterface::authorize()
 {
-	return Config::getString("admine_login") == login &&
-		   Config::getString("admine_password") == password;
+	std::string login;
+	std::string password;
+
+	std::cout << "||\tEnter login: ";
+	std::cin >> login;
+	std::cout << "||\tEnter password: ";
+	std::cin >> password;
+
+	trim(login);
+	trim(password);
+
+	try
+	{
+		UserType type = auth.checkPassword(login, password);
+
+		if (type == UserType::ADMIN)
+		{
+			std::cout << "\033[32m"
+					  << "||\tSuccessfully logged in\n"
+					  << "\033[0m";
+			return true;
+		}
+		else
+		{
+			std::cout << "\033[	31m"
+					  << "||\tUsername or password are not valid. Try again\n"
+					  << "\033[0m";
+			return false;
+		}
+	}
+	catch (const std::exception &e)
+	{
+		std::cout << "\033[	31m" << e.what() << "\033[0m" << std::endl;
+		return false;
+	}
 }
 
 void AdminInterface::getTotalOrdersByDriver()
@@ -218,34 +237,7 @@ void AdminInterface::getAllInfoByCarWithHighestMileage()
 
 void AdminInterface::addDriver()
 {
-	std::string login;
-	std::string name;
-	std::string category;
-	long startWorkDate;
-	int day, month, year;
-	int birthYear;
-	std::string address;
-	std::string password;
-
-	std::cout << "||\tEnter login: ";
-	std::cin >> login;
-	std::cout << "||\tEnter name: ";
-	std::cin >> name;
-	std::cout << "||\tEnter category: ";
-	std::cin >> category;
-	std::cout << "||\tEnter date of registration(DD MM YYYY): ";
-	std::cin >> day >> month >> year;
-	startWorkDate = DatabaseHelper::dateToSec(year, month, day);
-	std::cout << "||\tEnter birth year: ";
-	std::cin >> birthYear;
-	std::cout << "||\tEnter address: ";
-	std::cin >> address;
-	std::cout << "||\tEnter password: ";
-	std::cin >> password;
-
-	Driver driver = Driver(-1, login, name, category, startWorkDate, birthYear, address);
-	driverStorer.addDriver(driver, password);
-	std::cout << "\033[32mDriver successfully added\033[0m" << std::endl;
+	// TODO: Lev
 }
 
 void AdminInterface::addCar()

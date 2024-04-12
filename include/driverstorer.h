@@ -22,9 +22,6 @@ public:
     // Получить водителя по его логину
     Driver getDriverByLogin(const std::string &login);
 
-    // Получить водителя по его логину и паролю
-    Driver getDriverByLoginAndPassword(const std::string &login, const std::string &password);
-
     // Получить перечень выполненных заказов водителем за указанный период
     std::vector<Order> getOrdersByDriverAndPeriod(int driverId, long startDate = -1, long endDate = -1);
 
@@ -37,14 +34,8 @@ public:
     // Обновить адрес водителя
     void updateAddress(int driverId, const std::string &address);
 
-    // Обновить логин водителя
-    void updateLogin(int driverId, const std::string &login);
-
-    // Обновить пароль водителя
-    void updatePassword(int driverId, const std::string &password);
-
     // Добавить нового водителя
-    void addDriver(Driver &driver, std::string passwordHash);
+    void addDriver(Driver &driver);
 
     // Удалить водителя
     void removeDriver(int driverId);

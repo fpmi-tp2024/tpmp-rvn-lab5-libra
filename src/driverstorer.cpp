@@ -16,8 +16,7 @@ DriverStorer::DriverStorer(const std::string &dbName)
     std::string SQLQuery =
         "CREATE TABLE IF NOT EXISTS Drivers ("
         "id integer NOT NULL PRIMARY KEY AUTOINCREMENT,"
-        "login text NOT NULL UNIQUE,"
-        "password_hash text NOT NULL,"
+        "login text NOT NULL REFERENCES Users(login) ON UPDATE CASCADE ON DELETE CASCADE,"
         "name varchar(30) NOT NULL,"
         "category varchar(5) NOT NULL,"
         "start_work_date text NOT NULL DEFAULT (strftime('%d-%m-%Y', 'now')),"
@@ -34,6 +33,8 @@ DriverStorer::DriverStorer(const std::string &dbName)
         sqlite3_close(db);
         throw std::runtime_error(error_message);
     }
+
+    sqlite3_exec(db, "PRAGMA foreign_keys = ON;", nullptr, nullptr, nullptr);
 }
 
 std::pair<Driver, double> DriverStorer::getDriverWithMinimumTripsAndMoney()
@@ -101,49 +102,13 @@ void DriverStorer::updateAddress(int driverId, const std::string &address)
     }
 }
 
-void DriverStorer::updateLogin(int driverId, const std::string &login)
-{
-    if (!Validator::isValidLogin(login))
-    {
-        throw std::runtime_error("Invalid login");
-    }
-
-    char *err_msg = nullptr;
-    std::string SQLQuery = "UPDATE Drivers SET login = '" + login + "' WHERE id = " + std::to_string(driverId) + ";";
-
-    int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
-    if (result != SQLITE_OK)
-    {
-        std::string error_message = "Can't update login: " + std::string(err_msg);
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        throw std::runtime_error(error_message);
-    }
-}
-
-void DriverStorer::updatePassword(int driverId, const std::string &password)
-{
-    // #TODO : возможно стоит добавить хеширование пароля
-    char *err_msg = nullptr;
-    std::string SQLQuery = "UPDATE Drivers SET password_hash = '" + password + "' WHERE id = " + std::to_string(driverId) + ";";
-
-    int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
-    if (result != SQLITE_OK)
-    {
-        std::string error_message = "Can't update password: " + std::string(err_msg);
-        sqlite3_free(err_msg);
-        sqlite3_close(db);
-        throw std::runtime_error(error_message);
-    }
-}
-
-void DriverStorer::addDriver(Driver &driver, std::string passwordHash)
+void DriverStorer::addDriver(Driver &driver)
 {
     char *err_msg = nullptr;
     std::string SQLQuery =
-        "INSERT INTO Drivers(login,name,category,start_work_date,birth_year,address,password_hash) "
+        "INSERT INTO Drivers(login,name,category,start_work_date,birth_year,address) "
         "VALUES('" +
-        driver.getLogin() + "','" + driver.getName() + "','" + driver.getCategory() + "'," + std::to_string(driver.getStartWorkDate()) + "," + std::to_string(driver.getBirthYear()) + ",'" + driver.getAddress() + "','" + passwordHash + "');";
+        driver.getLogin() + "','" + driver.getName() + "','" + driver.getCategory() + "'," + std::to_string(driver.getStartWorkDate()) + "," + std::to_string(driver.getBirthYear()) + ",'" + driver.getAddress() + "');";
 
     int result = sqlite3_exec(this->db, SQLQuery.c_str(), 0, 0, &err_msg);
     if (result != SQLITE_OK)
@@ -275,32 +240,6 @@ Driver DriverStorer::getDriverByLogin(const std::string &login)
     {
         sqlite3_finalize(stmt);
         throw std::runtime_error("Can't get driver by login");
-    }
-
-    Driver driver(stmt);
-    sqlite3_finalize(stmt);
-
-    return driver;
-}
-
-Driver DriverStorer::getDriverByLoginAndPassword(const std::string &login, const std::string &password)
-{
-    char *err_msg = nullptr;
-    std::string SQLQuery = "SELECT * FROM Drivers WHERE login = '" + login + "' AND password_hash = '" + password + "';";
-
-    sqlite3_stmt *stmt;
-    int res = sqlite3_prepare_v2(this->db, SQLQuery.c_str(), -1, &stmt, nullptr);
-    if (res != SQLITE_OK)
-    {
-        std::string error_message = "Can't prepare statement: " + std::string(sqlite3_errmsg(db));
-        sqlite3_close(db);
-        throw std::runtime_error(error_message);
-    }
-
-    if (sqlite3_step(stmt) != SQLITE_ROW)
-    {
-        sqlite3_finalize(stmt);
-        throw std::runtime_error("Can't get driver by login and password");
     }
 
     Driver driver(stmt);
