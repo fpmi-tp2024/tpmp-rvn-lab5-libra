@@ -14,9 +14,9 @@ public:
 
 private:
     std::map<int, void (DriverInterface::*)()> commands;
-    int driverId;
+    Driver *driver;
 
-    bool tryLogInDriver(const std::string &login, const std::string &password);
+    bool authorize();
 
     void getListOfCompletedOrdersByTime();
     void getTotalOrdersCount();

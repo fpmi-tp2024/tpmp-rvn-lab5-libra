@@ -16,7 +16,7 @@ public:
 private:
     std::map<int, void (AdminInterface::*)()> commands;
 
-    bool tryLogInAdmin(const std::string &login, const std::string &password);
+    bool authorize();
 
     void getTotalOrdersByDriver();
     void getTotalWeightByDriver();

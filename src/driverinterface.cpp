@@ -2,8 +2,6 @@
 
 DriverInterface::DriverInterface()
 {
-	driverId = -1;
-
 	commands = {
 		{1, &DriverInterface::getListOfCompletedOrdersByTime},
 		{2, &DriverInterface::getTotalOrdersCount},
@@ -20,38 +18,24 @@ DriverInterface::~DriverInterface() {}
 
 void DriverInterface::run()
 {
-	std::string login;
-	std::string password;
-	std::string quitStr;
-
 	std::cout << "||\tYou selected Driver account\n";
-	std::cout << "||\tEnter Username and Password to proceed\n";
-	std::cout << "||\tUsername: ";
-	std::cin >> login;
-	std::cout << "||\tPassword: ";
-	std::cin >> password;
-	trim(login);
-	trim(password);
 
-	while (!tryLogInDriver(login, password))
+	while (!authorize())
 	{
-		std::cout << "||\tUsername or password are not valid. Try again\n";
-		std::cout << "||\tIf you want to quit, type \"q\". Otherwise - anyhting else\n";
+		std::string quitStr;
+
+		std::cout << "\033[31m"
+				  << "||\tIf you want to quit, type \"q\". Otherwise - anything else\n"
+				  << "\033[0m";
+
 		std::cin >> quitStr;
+
 		trim(quitStr);
 		if (tryQuit(quitStr))
 		{
 			return;
 		}
-		std::cout << "||\tUsername: ";
-		std::cin >> login;
-		std::cout << "||\tPassword: ";
-		std::cin >> password;
-		trim(login);
-		trim(password);
 	}
-
-	std::cout << "||\tSuccessfully logged in\n";
 
 	std::string input;
 	int option;
@@ -114,10 +98,47 @@ void DriverInterface::run()
 	}
 }
 
-bool DriverInterface::tryLogInDriver(const std::string &login, const std::string &password)
+bool DriverInterface::authorize()
 {
-	driverId = driverStorer.getDriverByLoginAndPassword(login, password).getId();
-	return true;
+	std::string login;
+	std::string password;
+
+	std::cout << "||\tEnter login: ";
+	std::cin >> login;
+	std::cout << "||\tEnter password: ";
+	std::cin >> password;
+
+	trim(login);
+	trim(password);
+
+	try
+	{
+		UserType type = auth.checkPassword(login, password);
+
+		if (type == UserType::DRIVER)
+		{
+			std::cout << "\033[32m"
+					  << "||\tSuccessfully logged in\n"
+					  << "\033[0m";
+
+			Driver temp = driverStorer.getDriverByLogin(login);
+			driver = &temp;
+
+			return true;
+		}
+		else
+		{
+			std::cout << "\033[	31m"
+					  << "||\tUsername or password are not valid. Try again\n"
+					  << "\033[0m";
+			return false;
+		}
+	}
+	catch (const std::exception &e)
+	{
+		std::cout << "\033[	31m" << e.what() << "\033[0m" << std::endl;
+		return false;
+	}
 }
 
 void DriverInterface::getListOfCompletedOrdersByTime()
@@ -134,7 +155,7 @@ void DriverInterface::getListOfCompletedOrdersByTime()
 	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
 	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
 
-	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driverId, startDate, endDate));
+	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driver->getId(), startDate, endDate));
 
 	for (Order order : orders)
 	{
@@ -144,12 +165,12 @@ void DriverInterface::getListOfCompletedOrdersByTime()
 
 void DriverInterface::getTotalOrdersCount()
 {
-	std::cout << "||\t" << orderStorer.getTotalNumberOfOrders(driverId) << "\n";
+	std::cout << "||\t" << orderStorer.getTotalNumberOfOrders(driver->getId()) << "\n";
 }
 
 void DriverInterface::getTotalWeightOfTransportedGoods()
 {
-	std::cout << "||\t" << orderStorer.getTotalCargoMass(driverId) << "\n";
+	std::cout << "||\t" << orderStorer.getTotalCargoMass(driver->getId()) << "\n";
 }
 
 void DriverInterface::getMoneyEarnedByTime()
@@ -166,12 +187,12 @@ void DriverInterface::getMoneyEarnedByTime()
 	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
 	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
 
-	std::cout << "||\t" << orderStorer.getTotalMoney(driverId, startDate, endDate) << "\n";
+	std::cout << "||\t" << orderStorer.getTotalMoney(driver->getId(), startDate, endDate) << "\n";
 }
 
 void DriverInterface::getMoneyEarned()
 {
-	std::cout << "||\t" << orderStorer.getTotalMoney(driverId) << "\n";
+	std::cout << "||\t" << orderStorer.getTotalMoney(driver->getId()) << "\n";
 }
 
 void DriverInterface::changeAddress()
@@ -181,25 +202,15 @@ void DriverInterface::changeAddress()
 	std::cout << "||\tEnter new address\n";
 	std::cin >> newAddress;
 
-	driverStorer.updatePassword(driverId, newAddress);
+	driverStorer.updateAddress(driver->getId(), newAddress);
 }
 
 void DriverInterface::changeLogin()
 {
-	std::string newLogin;
-
-	std::cout << "||\tEnter new login\n";
-	std::cin >> newLogin;
-
-	driverStorer.updatePassword(driverId, newLogin);
+	// TODO: LEV
 }
 
 void DriverInterface::changePassword()
 {
-	std::string newPassword;
-
-	std::cout << "||\tEnter new password\n";
-	std::cin >> newPassword;
-
-	driverStorer.updatePassword(driverId, newPassword);
+	// TODO: LEV
 }
