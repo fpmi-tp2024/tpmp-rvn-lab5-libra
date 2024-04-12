@@ -24,4 +24,7 @@
 ## Диаграмма последовательности
 ![sequence](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6ed8aa7117b954beda18f5ad4e92710aa1b4f257/UML%20diagrams/sequence.png?raw=true)
 
+## Диаграмма деятельности
+![activity](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/a101751dc5ac1489e504554108564eb9c822f9f7/UML%20diagrams/activity4.png?raw=true)
+
 
