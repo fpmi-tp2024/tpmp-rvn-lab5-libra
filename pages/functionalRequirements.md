@@ -1,10 +1,11 @@
 # Функциональные требования
 
 [Home](../index.md)    
-[Функциональные требования](functionalRequirements.md)  
-[Диаграммы UML](diagramUML.md)  
-[Схема базы данных](databaseSchema.md)  
-[Презентация проекта](projectPresentation.md) 
+[Функциональные требования](../pages/functionalRequirements.md)  
+[Спецификация](../pages/specification.md)  
+[Дополнительная спецификация](../pages/dopSpecification.md)   
+[Схема базы данных](../pages/databaseSchema.md)  
+[Презентация проекта](../pages/projectPresentation.md)          
 
 # Функциональные требования
 
