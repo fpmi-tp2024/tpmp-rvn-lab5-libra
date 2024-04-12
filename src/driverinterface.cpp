@@ -11,6 +11,7 @@ DriverInterface::DriverInterface()
 		{6, &DriverInterface::changeAddress},
 		{7, &DriverInterface::changeLogin},
 		{8, &DriverInterface::changePassword},
+		{9, &DriverInterface::printDriverInfo},
 	};
 }
 
@@ -49,6 +50,7 @@ void DriverInterface::run()
 							   "||\t6: <Change address>\n"
 							   "||\t7: <Change login>\n"
 							   "||\t8: <Change password>\n"
+							   "||\t9: <Print my info>\n"
 							   "||\n"
 							   "||\tOr type \"q\" to quit\n";
 
@@ -121,8 +123,7 @@ bool DriverInterface::authorize()
 					  << "||\tSuccessfully logged in\n"
 					  << "\033[0m";
 
-			Driver temp = driverStorer.getDriverByLogin(login);
-			driver = &temp;
+			driver = driverStorer.getDriverByLogin(login);
 
 			return true;
 		}
@@ -155,7 +156,7 @@ void DriverInterface::getListOfCompletedOrdersByTime()
 	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
 	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
 
-	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driver->getId(), startDate, endDate));
+	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driver.getId(), startDate, endDate));
 
 	std::cout << "\033[32m";
 	for (Order order : orders)
@@ -167,12 +168,12 @@ void DriverInterface::getListOfCompletedOrdersByTime()
 
 void DriverInterface::getTotalOrdersCount()
 {
-	std::cout << "||\t" << orderStorer.getTotalNumberOfOrders(driver->getId()) << "\n";
+	std::cout << "||\t" << orderStorer.getTotalNumberOfOrders(driver.getId()) << "\n";
 }
 
 void DriverInterface::getTotalWeightOfTransportedGoods()
 {
-	std::cout << "||\t" << orderStorer.getTotalCargoMass(driver->getId()) << "\n";
+	std::cout << "||\t" << orderStorer.getTotalCargoMass(driver.getId()) << "\n";
 }
 
 void DriverInterface::getMoneyEarnedByTime()
@@ -189,12 +190,12 @@ void DriverInterface::getMoneyEarnedByTime()
 	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
 	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
 
-	std::cout << "||\t" << orderStorer.getTotalMoney(driver->getId(), startDate, endDate) << "\n";
+	std::cout << "||\t" << orderStorer.getTotalMoney(driver.getId(), startDate, endDate) << "\n";
 }
 
 void DriverInterface::getMoneyEarned()
 {
-	std::cout << "||\t" << orderStorer.getTotalMoney(driver->getId()) << "\n";
+	std::cout << "||\t" << orderStorer.getTotalMoney(driver.getId()) << "\n";
 }
 
 void DriverInterface::changeAddress()
@@ -204,7 +205,21 @@ void DriverInterface::changeAddress()
 	std::cout << "||\tEnter new address\n";
 	std::cin >> newAddress;
 
-	driverStorer.updateAddress(driver->getId(), newAddress);
+	trim(newAddress);
+
+	if (Validator::isValidAddress(newAddress))
+	{
+		driverStorer.updateAddress(driver.getId(), newAddress);
+		std::cout << "\033[32m"
+				  << "||\tAddress successfully updated\n"
+				  << "\033[0m";
+	}
+	else
+	{
+		std::cout << "\033[31m"
+				  << "||\tAddress is not valid\n"
+				  << "\033[0m";
+	}
 }
 
 void DriverInterface::changeLogin()
@@ -215,4 +230,8 @@ void DriverInterface::changeLogin()
 void DriverInterface::changePassword()
 {
 	// TODO: LEV
+}
+void DriverInterface::printDriverInfo()
+{
+	std::cout << driver.toString() << "\n";
 }

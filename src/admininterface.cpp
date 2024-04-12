@@ -294,22 +294,6 @@ void AdminInterface::addDriver()
 		}
 
 		break;
-
-		// try
-		// {
-		// 	auth.addUser(login, password, UserType::DRIVER);
-
-		// 	std::cout << "\033[32m"
-		// 			  << "||\tUser successfully added!\n"
-		// 			  << "\033[0m";
-		// 	break;
-		// }
-		// catch (const std::exception &e)
-		// {
-		// 	std::cout << "\033[31m" << e.what() << '\n'
-		// 			  << "\033[0m";
-		// 	return;
-		// }
 	}
 
 	while (true)
