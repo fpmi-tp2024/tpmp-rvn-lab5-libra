@@ -12,5 +12,7 @@
 Схема базы данных:
 ![image]
 
-Ссылка на sql-файл:
+Ссылка на sql-файл: 
+
+[https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/a905cae4076dbfafebf209059a9607efdae640e5/data/park_struct.sql]
 
