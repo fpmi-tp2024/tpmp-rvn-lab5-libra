@@ -10,7 +10,7 @@
 # Схема базы данных
 
 Схема базы данных:
-![image]
+![Data base schema](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/11fb2e29ee11e9300ff6107bee260a60590c1cfe/UML%20diagrams/dbShema.jpg?raw=true)
 
 Ссылка на sql-файл: 
 
