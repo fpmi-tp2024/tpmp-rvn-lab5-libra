@@ -1,9 +1,13 @@
 # Автопарк
 
 - [Описание классов](#описание-классов)
+  - [Auth](#auth)
   - [Car](#car)
+  - [CarStorer](#carstorer)
   - [Order](#order)
+  - [OrderStorer](#orderstorer)
   - [Driver](#driver)
+  - [DriverStorer](#driverstorer)
   - [Config](#config)
   - [Validator](#validator)
 - [Использование](#использование)
@@ -18,6 +22,23 @@
 
 
 ## Описание классов
+
+### Auth
+
+Класс `Auth` предоставляет методы для аутентификации пользователей. Он использует базу данных SQLite для хранения информации о пользователях. Класс `Auth` использует библиотеку `openssl` для хеширования паролей пользователей.
+
+Класс `Auth` содержит следующие методы:
+
+- `Auth(const std::string &db_name)`: конструктор, создающий объект `Auth` и открывающий базу данных с именем `db_name`. Если база данных не существует, она будет создана.
+- `~Auth()`: деструктор, закрывающий базу данных.
+- `bool userExists(const std::string &login)`: метод, проверяющий, существует ли пользователь с логином `login` в базе данных.
+- `UserType checkPassword(const std::string &login, const std::string &password)`: метод, проверяющий, совпадает ли пароль `password` с паролем пользователя с логином `login` в базе данных. Если логин или пароль неверны, метод выбрасывает исключение `std::runtime_error`. Если логин и пароль верны, метод возвращает тип пользователя (`UserType::ADMIN` или `UserType::DRIVER`).
+- `void changePassword(const std::string &login, const std::string &oldPassword, const std::string &newPassword)`: метод, изменяющий пароль пользователя с логином `login` в базе данных. Метод проверяет, что старый пароль `oldPassword` совпадает с паролем пользователя в базе данных, а новый пароль `newPassword` не является пустым. Если проверка пройдена успешно, метод изменяет пароль пользователя в базе данных.
+- `void changeLogin(const std::string &oldLogin, const std::string &newLogin, const std::string &password)`: метод, изменяющий логин пользователя в базе данных. Метод проверяет, что старый логин `oldLogin` существует в базе данных, а новый логин `newLogin` не существует и не является пустым. Если проверка пройдена успешно, метод изменяет логин пользователя в базе данных.
+- `void addUser(const std::string &login, const std::string &password, UserType user_type)`: метод, добавляющий нового пользователя в базу данных. Метод проверяет, что логин `login` не существует в базе данных, пароль `password` не является пустым, и тип пользователя `user_type` является допустимым значением перечисления `UserType`. Если проверка пройдена успешно, метод добавляет нового пользователя в базу данных.
+- `void deleteUser(const std::string &login)`: метод, удаляющий пользователя с логином `login` из базы данных. Если пользователь с таким логином не существует, метод выбрасывает исключение `std::runtime_error`.
+
+Класс `Auth` использует хеширование паролей с помощью библиотеки `openssl`. В частности, метод `checkPassword` хеширует пароль `password` с помощью функции `SHA256` и сравнивает полученный хеш с хешем пароля пользователя в базе данных. Методы `changePassword` и `addUser` также хешируют пароли перед сохранением их в базе данных.
 
 ### Car
 
@@ -47,6 +68,21 @@
 - `setMileage(int purchaseMileage)`: устанавливает пробег автомобиля на момент покупки.
 - `setCarryingCapacity(int carryingCapacity)`: устанавливает грузоподъемность автомобиля.
 - `toString()`: возвращает строковое представление объекта Car.
+
+### CarStorer
+
+Класс `CarStorer` предоставляет методы для работы с таблицей `Cars` в базе данных SQLite. Он содержит следующие методы:
+
+- `CarStorer(const std::string &dbName)`: конструктор, создающий объект `CarStorer` и открывающий базу данных с именем `dbName`. Если база данных не существует, она будет создана.
+- `std::pair<int, int> getCarTotalMileageAndMass(std::string carNumber)`: метод, возвращающий пару `std::pair<int, int>`, содержащую общий пробег и общую массу груза для автомобиля с номером `carNumber`.
+- `int callbackForTotalMileageAndMass(void *data, int colCount, char **columns, char **colNames)`: статический метод, используемый в качестве callback-функции для `sqlite3_exec`. Он преобразует данные из результирующего набора в пару `std::pair<int, int>`.
+- `Car getCarWithMaximumMileage()`: метод, возвращающий объект `Car`, соответствующий автомобилю с максимальным пробегом.
+- `std::vector<Car> getAllCars()`: метод, возвращающий вектор `std::vector<Car>`, содержащий все автомобили из таблицы `Cars`.
+- `void updateCar(std::string carNumber, const Car &car)`: метод, обновляющий данные автомобиля с номером `carNumber` в таблице `Cars`.
+- `void addCar(const Car &car)`: метод, добавляющий новый автомобиль в таблицу `Cars`.
+- `void removeCar(std::string carNumber)`: метод, удаляющий автомобиль с номером `carNumber` из таблицы `Cars`.
+- `~CarStorer()`: деструктор, закрывающий базу данных.
+- `Car getCarByNumber(std::string carNumber)`: метод, возвращающий объект `Car`, соответствующий автомобилю с номером `carNumber`.
  
 ### Order
 
@@ -83,6 +119,22 @@
 - `setCost(int cost)`: устанавливает стоимость заказа.
 - `toString()`: возвращает строковое представление объекта `Order`.
 
+### OrderStorer
+
+Класс `OrderStorer` представляет хранилище заказов и предоставляет методы для работы с ними. Он использует SQLite для хранения данных.
+
+Класс содержит следующие методы:
+
+- `OrderStorer(const std::string &dbName)`: конструктор, создающий объект `OrderStorer` и подключающийся к базе данных с именем `dbName`. Если база данных не существует, она будет создана.
+- `addOrder(Order &order)`: добавляет новый заказ в базу данных.
+- `~OrderStorer()`: деструктор, закрывающий подключение к базе данных.
+- `getTotalNumberOfOrders(const int driverID)`: возвращает общее количество заказов для водителя с идентификатором `driverID`.
+- `getTotalCargoMass(const int driverID)`: возвращает общую массу груза для водителя с идентификатором `driverID`.
+- `getTotalMoney(const int driverID, long start, long end)`: возвращает общую стоимость заказов для водителя с идентификатором `driverID` в указанном диапазоне дат.
+- `removeOrder(int orderId)`: удаляет заказ с идентификатором `orderId` из базы данных.
+- `getOrderById(int orderId)`: возвращает заказ с идентификатором `orderId` из базы данных.
+- `getAllOrders()`: возвращает все заказы из базы данных.
+
 ### Driver
 
 Класс `Driver` представляет водителя и содержит следующие поля:
@@ -113,6 +165,21 @@
 - `setCategory(const std::string &category)`: устанавливает категорию водительских прав.
 - `setAddress(const std::string &address)`: устанавливает адрес водителя.
 - `toString()`: возвращает строковое представление объекта `Driver`.
+
+### DriverStorer
+
+Класс `DriverStorer` предоставляет методы для работы с водителями и их заказами в базе данных SQLite. Класс содержит следующие методы:
+
+- `DriverStorer(const std::string &dbName)`: конструктор, создающий объект `DriverStorer` и открывающий базу данных с именем `dbName`.
+- `getDriverById(const int driverId)`: возвращает объект `Driver` с указанным идентификатором.
+- `getDriverByLogin(const std::string &login)`: возвращает объект `Driver` с указанным логином.
+- `getOrdersByDriverAndPeriod(int driverId, long startDate = -1, long endDate = -1)`: возвращает вектор объектов `Order`, выполненных водителем с указанным идентификатором в указанный период. Если `startDate` и `endDate` не указаны, то возвращаются все заказы водителя.
+- `getDriverWithMinimumTripsAndMoney()`: возвращает пару объектов `Driver` и `double`, где `Driver` - водитель, выполнивший наименьшее количество заказов, а `double` - сумма денег, полученных этим водителем.
+- `getDrivers()`: возвращает вектор объектов `Driver`, содержащий всех водителей в базе данных.
+- `updateAddress(int driverId, const std::string &address)`: обновляет адрес водителя с указанным идентификатором.
+- `addDriver(Driver &driver)`: добавляет нового водителя в базу данных.
+- `removeDriver(int driverId)`: удаляет водителя с указанным идентификатором из базы данных.
+- `~DriverStorer()`: деструктор, закрывающий базу данных.
 
 ### Config
 

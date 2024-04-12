@@ -16,11 +16,6 @@ AdminInterface::AdminInterface()
 		{10, &AdminInterface::addCar},
 		{11, &AdminInterface::addOrder},
 	};
-
-	if (!auth.userExists("admin"))
-	{
-		auth.addUser("admin", "admin", UserType::ADMIN);
-	}
 }
 
 AdminInterface::~AdminInterface() {}
