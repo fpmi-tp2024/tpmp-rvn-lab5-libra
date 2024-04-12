@@ -1,4 +1,5 @@
 #include "../include/driver.h"
+#include "../include/databaseHelper.h"
 #include <iostream>
 
 Driver::Driver(int id, const std::string &login, const std::string &name, const std::string &category, const long &startWorkDate,
@@ -119,7 +120,7 @@ std::string Driver::toString() const
     ss << "||\tName: " << name << "\n";
     ss << "||\tLogin: " << login << "\n";
     ss << "||\tCategory: " << category << "\n";
-    ss << "||\tStart work date: " << startWorkDate << "\n";
+    ss << "||\tStart work date: " << DatabaseHelper::secToDate(startWorkDate) << "\n";
     ss << "||\tBirth year: " << birthYear << "\n";
     ss << "||\tAddress: " << address << "\n";
     return ss.str();

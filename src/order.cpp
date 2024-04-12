@@ -1,4 +1,5 @@
 #include "../include/order.h"
+#include "../include/databaseHelper.h"
 
 Order::Order(int id, long date, int driverId, const std::string &carNumber, int mileage, int cargoWeight, int cost)
     : id(id)
@@ -127,7 +128,7 @@ std::string Order::toString() const
 {
     std::stringstream ss;
     ss << "||\tOrder ID: " << id << std::endl;
-    ss << "||\tDate: " << date << std::endl;
+    ss << "||\tDate: " << DatabaseHelper::secToDate(date) << std::endl;
     ss << "||\tDriver ID: " << driverId << std::endl;
     ss << "||\tCar number: " << carNumber << std::endl;
     ss << "||\tMileage: " << mileage << std::endl;

@@ -22,6 +22,11 @@ bool DatabaseHelper::isTableEmpty(sqlite3 *db, const std::string &tableName)
 
 long DatabaseHelper::dateToSec(int year, int month, int day)
 {
+    if (year < 1900 || year > 9999 || month < 1 || month > 12 || day < 1 || day > 31)
+    {
+        throw std::invalid_argument("Invalid date.Check input information");
+    }
+
     std::tm t = {};
     t.tm_mon = month - 1;
     t.tm_year = year - 1900;
@@ -37,4 +42,16 @@ long DatabaseHelper::dateToSec(int year, int month, int day)
     }
 
     return std::mktime(&t);
+}
+
+std::string DatabaseHelper::secToDate(long sec)
+{
+    std::tm *t = std::localtime(&sec);
+    if (t == nullptr)
+    {
+        std::cerr << "Error: unable to make time using localtime\n";
+        return "";
+    }
+
+    return std::to_string(t->tm_mday) + "." + std::to_string(t->tm_mon + 1) + "." + std::to_string(t->tm_year + 1900);
 }
