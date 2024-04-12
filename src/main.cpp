@@ -22,12 +22,14 @@ void addTestData()
     auth.addUser("sidorov_sidr", "word", UserType::DRIVER);
     auth.addUser("smith_john", "1234", UserType::DRIVER);
 
-    Driver driver1(-1, "ivanov_ivan", "Ivan Ivanov", "A", 0, 1990, "Moscow, Lenina st., 15");
-    Driver driver2(-1, "johnsmith", "John Smith", "BE", 0, 1995, "New York, 10th Avenue, 30");
-    Driver driver3(-1, "petrov_petr", "Petr Petrov", "C", 0, 1985, "London, Oxford st., 5");
-    Driver driver4(-1, "sidorov_sidr", "Sidor Sidorov", "D", 0, 1980, "Paris, Champs-Elysees st., 10");
-    Driver driver5(-1, "smith_john", "John Smith", "A", 0, 1990, "Berlin, Alexanderplatz st., 20");
+    Driver driver0(-1, "login", "name", "A", DatabaseHelper::dateToSec(1990, 1, 1), 1990, "Minsk");
+    Driver driver1(-1, "ivanov_ivan", "Ivan Ivanov", "A", DatabaseHelper::dateToSec(1990, 1, 1), 1990, "Moscow, Lenina st., 15");
+    Driver driver2(-1, "johnsmith", "John Smith", "BE", DatabaseHelper::dateToSec(1990, 1, 1), 1995, "New York, 10th Avenue, 30");
+    Driver driver3(-1, "petrov_petr", "Petr Petrov", "C", DatabaseHelper::dateToSec(1990, 1, 1), 1985, "London, Oxford st., 5");
+    Driver driver4(-1, "sidorov_sidr", "Sidor Sidorov", "D", DatabaseHelper::dateToSec(1990, 1, 1), 1980, "Paris, Champs-Elysees st., 10");
+    Driver driver5(-1, "smith_john", "John Smith", "A", DatabaseHelper::dateToSec(1990, 1, 1), 1990, "Berlin, Alexanderplatz st., 20");
 
+    driverStorer.addDriver(driver0);
     driverStorer.addDriver(driver1);
     driverStorer.addDriver(driver2);
     driverStorer.addDriver(driver3);
