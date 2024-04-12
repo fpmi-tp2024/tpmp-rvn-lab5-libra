@@ -36,7 +36,7 @@ void addTestData()
     driverStorer.addDriver(driver4);
     driverStorer.addDriver(driver5);
 
-    carStorer.addCar(Car("1234AB-7", "Volvo", "XC90", 2500, 10000));
+    carStorer.addCar(Car("1234AB-7", "Volvo", "XC90", 2500,10000));
     carStorer.addCar(Car("5678KM-2", "BMW", "X5", 3000, 20000));
     carStorer.addCar(Car("9101HB-3", "Audi", "Q7", 35000, 30000));
     carStorer.addCar(Car("1213PP-4", "Mercedes", "GLE", 4000, 40000));

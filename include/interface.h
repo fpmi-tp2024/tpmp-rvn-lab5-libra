@@ -12,6 +12,7 @@
 #include "../include/driver.h"
 #include "../include/order.h"
 #include "../include/car.h"
+#include<limits>
 
 class Interface
 {
@@ -20,6 +21,17 @@ protected:
     DriverStorer driverStorer = DriverStorer("data/park.db");
     CarStorer carStorer = CarStorer("data/park.db");
     OrderStorer orderStorer = OrderStorer("data/park.db");
+
+    int getNumberInput(const std::string& message){
+	    int number;
+        std::cout << message;
+        while(!(std::cin >> number)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Please enter a number: ";
+        }
+    return number;
+    }
 
 public:
     virtual void run() = 0;

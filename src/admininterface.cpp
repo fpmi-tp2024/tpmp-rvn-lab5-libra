@@ -1,5 +1,6 @@
 #include "../include/admininterface.h"
 #include "../config/config.hpp"
+#include<limits>
 
 AdminInterface::AdminInterface()
 {
@@ -151,8 +152,7 @@ void AdminInterface::getTotalOrdersByDriver()
 {
 	int driverId;
 
-	std::cout << "||\tEnter driver id: \n";
-	std::cin >> driverId;
+	driverId=getNumberInput("||\tEnter driver id: \n");
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
@@ -163,8 +163,7 @@ void AdminInterface::getTotalWeightByDriver()
 {
 	int driverId;
 
-	std::cout << "||\tEnter driver id: \n";
-	std::cin >> driverId;
+	driverId=getNumberInput("||\tEnter driver id: \n");
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
@@ -175,8 +174,7 @@ void AdminInterface::getTotalMoneyByDriver()
 {
 	int driverId;
 
-	std::cout << "||\tEnter driver id\n";
-	std::cin >> driverId;
+	driverId=getNumberInput("||\tEnter driver id: \n");
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
@@ -190,6 +188,8 @@ void AdminInterface::getTotalMileageAndWeightByCar()
 	std::cout << "||\tEnter car number\n";
 	std::cin >> carNumber;
 
+	carStorer.getCarByNumber(carNumber);
+
 	std::pair<int, int> mileageAndWeight = carStorer.getCarTotalMileageAndMass(carNumber);
 
 	std::cout << "\033[32m||\tMileage: " << mileageAndWeight.first << "; Cargo weight: " << mileageAndWeight.second << "\033[0m\n";
@@ -199,8 +199,7 @@ void AdminInterface::getOrdersListByDriver()
 {
 	int driverId;
 
-	std::cout << "||\tEnter driver id: \n";
-	std::cin >> driverId;
+	driverId=getNumberInput("||\tEnter driver id: \n");
 
 	std::vector<Order> orders = driverStorer.getOrdersByDriverAndPeriod(driverId);
 
@@ -303,10 +302,11 @@ void AdminInterface::addDriver()
 		std::cin >> name;
 		std::cout << "||\tEnter category: ";
 		std::cin >> category;
-		std::cout << "||\tEnter start work date(DD MM YYYY): ";
-		std::cin >> day >> month >> year;
-		std::cout << "||\tEnter birth year: ";
-		std::cin >> birthYear;
+		std::cout << "||\tEnter start work date:\n";
+		day = getNumberInput("||\tEnter day:");
+		month = getNumberInput("||\tEnter month:");
+		year = getNumberInput("||\tEnter year:");
+		birthYear = getNumberInput("||\tEnter birth year: \n");
 		std::cout << "||\tEnter address: ";
 		std::cin >> address;
 
@@ -360,14 +360,12 @@ void AdminInterface::addCar()
 	std::cin >> brand;
 	std::cout << "||\tEnter model: ";
 	std::cin >> model;
-	std::cout << "||\tEnter mileage: ";
-	std::cin >> purchaseMileage;
-	std::cout << "||\tEnter carrying capacity: ";
-	std::cin >> carryingCapacity;
+	purchaseMileage = getNumberInput("||\tEnter purchase mileage: ");
+	carryingCapacity = getNumberInput("||\tEnter carrying capacity: ");
 
 	try
 	{
-		Car car = Car(number, brand, model, purchaseMileage, carryingCapacity);
+		Car car = Car(number, brand, model,carryingCapacity,purchaseMileage);
 		carStorer.addCar(car);
 
 		std::cout << "\033[32m"
@@ -391,18 +389,16 @@ void AdminInterface::addOrder()
 	int cargoWeight;
 	int cost;
 
-	std::cout << "||\tEnter date(DD MM YYYY): ";
-	std::cin >> day >> month >> year;
-	std::cout << "||\tEnter driverId: ";
-	std::cin >> driverId;
+	std::cout << "||\tEnter date:\n";
+	day = getNumberInput("||\tEnter day:");
+	month = getNumberInput("||\tEnter month:");
+	year = getNumberInput("||\tEnter year:");
+    driverId = getNumberInput("||\tEnter driver id: ");
 	std::cout << "||\tEnter carNumber: ";
 	std::cin >> carNumber;
-	std::cout << "||\tEnter mileage: ";
-	std::cin >> mileage;
-	std::cout << "||\tEnter cargoWeight: ";
-	std::cin >> cargoWeight;
-	std::cout << "||\tEnter cost: ";
-	std::cin >> cost;
+	mileage = getNumberInput("||\tEnter mileage: ");
+	cargoWeight = getNumberInput("||\tEnter cargo weight: ");
+	cost = getNumberInput("||\tEnter cost: ");
 
 	date = DatabaseHelper::dateToSec(year, month, day);
 	Car car = carStorer.getCarByNumber(carNumber);
