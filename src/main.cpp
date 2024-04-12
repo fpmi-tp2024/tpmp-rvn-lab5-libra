@@ -1,7 +1,12 @@
-#include "../include/park.h"
+#include "../include/menuinterface.h"
+#include <iostream>
+#include <vector>
 
 int main()
 {
-	std::cout << sum(1, 2) << std::endl;
-	return 0;
+    MenuInterface menuInterface;
+
+    menuInterface.run();
+
+    return 0;
 }

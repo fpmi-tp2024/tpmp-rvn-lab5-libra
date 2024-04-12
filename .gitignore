@@ -8,11 +8,15 @@ cmake-build-*/
 # IntelliJ
 out/
 
+# VSCODE
+.vscode/
+
 ### C++ template
 # Prerequisites
 *.d
 
 # Compiled Object files
+obj/
 *.slo
 *.lo
 *.o
@@ -38,7 +42,9 @@ out/
 *.lib
 
 # Executables
+bin/
 *.exe
 *.out
 *.app
+
 
