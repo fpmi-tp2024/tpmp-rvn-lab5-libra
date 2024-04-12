@@ -87,6 +87,11 @@ void AdminInterface::run()
 		std::cin >> input;
 		trim(input);
 
+		if (input.empty())
+		{
+			std::cout << "Blank\n";
+		}
+
 		if (tryQuit(input))
 		{
 			return;
@@ -147,7 +152,7 @@ void AdminInterface::getTotalWeightByDriver()
 
 	Driver driver = driverStorer.getDriverById(driverId);
 
-	std::cout << "\033[32m||\tTotal weight delivered by driver " << driver.getLogin() << " : " << orderStorer.getTotalCargoMass(driverId) << "\033[0m\n\n";
+	std::cout << "\033[32m||\tTotal weight delivered by driver " << driver.getLogin() << " : " << orderStorer.getTotalCargoMass(driverId) << "\033[0m\n";
 }
 
 void AdminInterface::getTotalMoneyByDriver()
@@ -181,7 +186,7 @@ void AdminInterface::getOrdersListByDriver()
 	std::cout << "||\tEnter driver id\n";
 	std::cin >> driverId;
 
-	std::vector<Order> orders = driverStorer.getOrdersByDriverAndPeriod(driverId, 0, LONG_MAX); // TODO: Maxim -- fix time intervals
+	std::vector<Order> orders = driverStorer.getOrdersByDriverAndPeriod(driverId);
 
 	for (Order order : orders)
 	{
@@ -208,7 +213,7 @@ void AdminInterface::getMoneyByEachDriver()
 void AdminInterface::getAllInfoByCarWithHighestMileage()
 {
 	std::cout << "\033[32mInfo about car with highest mileage:\n"
-			  << carStorer.getCarWithMaximumMileage().toString() << "\033[0m\n";
+			  << carStorer.getCarWithMaximumMileage().toString() << "\033[0m";
 }
 
 void AdminInterface::addDriver()
@@ -241,7 +246,6 @@ void AdminInterface::addDriver()
 	Driver driver = Driver(-1, login, name, category, startWorkDate, birthYear, address);
 	driverStorer.addDriver(driver, password);
 	std::cout << "\033[32mDriver successfully added\033[0m" << std::endl;
-	// TODO: something with password hash
 }
 
 void AdminInterface::addCar()

@@ -33,10 +33,21 @@ void DriverInterface::run()
 	trim(login);
 	trim(password);
 
-	while (!tryLogInDriver(login, password))
+	bool isLogged;
+
+	try 
 	{
-		std::cout << "||\tUsername or password are not valid. Try again\n";
-		std::cout << "||\tIf you want to quit, type \"q\". Otherwise - anyhting else\n";
+		isLogged = tryLogInDriver(login, password);
+	}
+	catch (const std::exception &e)
+	{
+		std::cout << "\033[31m" << "Exception: " << e.what() << "\033[0m" << std::endl;
+	}
+
+	while (!isLogged)
+	{
+		std::cout << "\033[31m||\tUsername or password are not valid. Try again\n"
+				  << "||\tIf you want to quit, type \"q\". Otherwise - anything else\n\033[0m";
 		std::cin >> quitStr;
 		trim(quitStr);
 		if (tryQuit(quitStr))
@@ -49,9 +60,17 @@ void DriverInterface::run()
 		std::cin >> password;
 		trim(login);
 		trim(password);
+		try 
+		{
+			isLogged = tryLogInDriver(login, password);
+		}
+		catch (const std::exception &e)
+		{
+			std::cout << "\033[31m" << "Exception: " << e.what() << "\033[0m" << std::endl;
+		}
 	}
 
-	std::cout << "||\tSuccessfully logged in\n";
+	std::cout << "\033[32m||\tSuccessfully logged in\n\033[0m";
 
 	std::string input;
 	int option;
@@ -136,20 +155,22 @@ void DriverInterface::getListOfCompletedOrdersByTime()
 
 	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driverId, startDate, endDate));
 
+	std::cout << "\033[32m";
 	for (Order order : orders)
 	{
 		std::cout << order.toString();
 	}
+	std::cout << "\033[0m";
 }
 
 void DriverInterface::getTotalOrdersCount()
 {
-	std::cout << "||\t" << orderStorer.getTotalNumberOfOrders(driverId) << "\n";
+	std::cout << "\033[32m||\t" << orderStorer.getTotalNumberOfOrders(driverId) << "\n\033[0m";
 }
 
 void DriverInterface::getTotalWeightOfTransportedGoods()
 {
-	std::cout << "||\t" << orderStorer.getTotalCargoMass(driverId) << "\n";
+	std::cout << "\033[32m||\t" << orderStorer.getTotalCargoMass(driverId) << "\n\033[0m";
 }
 
 void DriverInterface::getMoneyEarnedByTime()
@@ -166,12 +187,12 @@ void DriverInterface::getMoneyEarnedByTime()
 	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
 	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
 
-	std::cout << "||\t" << orderStorer.getTotalMoney(driverId, startDate, endDate) << "\n";
+	std::cout << "\033[32m||\t" << orderStorer.getTotalMoney(driverId, startDate, endDate) << "\n\033[0m";
 }
 
 void DriverInterface::getMoneyEarned()
 {
-	std::cout << "||\t" << orderStorer.getTotalMoney(driverId) << "\n";
+	std::cout << "\033[32m||\t" << orderStorer.getTotalMoney(driverId) << "\n\033[0m";
 }
 
 void DriverInterface::changeAddress()
