@@ -10,10 +10,10 @@
 
 # Диаграммы UML
 ## Диаграмма вариантов использования
-![use_case](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6ed8aa7117b954beda18f5ad4e92710aa1b4f257/UML%20diagrams/use_case.png)
+![use_case](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6ed8aa7117b954beda18f5ad4e92710aa1b4f257/UML%20diagrams/use_case.png?raw=true)
 
 ## Диаграмма компонентов
-![component](UML_diagrams/component.png)
+![component](/UML_diagrams/component.png?raw=true)
 
 ## Диаграмма размещения
 ![deployment](https://github.com/fpmi-tp2024/tpmp-rvn-lab5-libra/blob/6ed8aa7117b954beda18f5ad4e92710aa1b4f257/UML%20diagrams/deployment.png)
