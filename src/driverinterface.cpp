@@ -56,7 +56,7 @@ void DriverInterface::run()
 							   "||\n"
 							   "||\tOr type \"q\" to quit\n";
 
-	std::string invalidInputError = "\033[31m||\tYour input is not valid. Try again\n\033[0m";
+	std::string invalidInputError = "||\tYour input is not valid. Try again\n";
 
 	while (true)
 	{
@@ -150,24 +150,36 @@ void DriverInterface::getListOfCompletedOrdersByTime()
 	int endDay, endMonth, endYear;
 
 	std::cout << "||\tEnter start date: DD MM YYYY\n";
-	std::cin >> startDay >> startMonth >> startYear;
+	startDay = getNumberInput("||\tEnter day:");
+	startMonth = getNumberInput("||\tEnter month:");
+	startYear = getNumberInput("||\tEnter year:");
 
 	std::cout << "||\tEnter end date: DD MM YYYY\n";
-	std::cin >> endDay >> endMonth >> endYear;
+	endDay = getNumberInput("||\tEnter day:");
+	endMonth = getNumberInput("||\tEnter month:");
+	endYear = getNumberInput("||\tEnter year:");
 
 	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
 	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
 
+
 	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driver.getId(), startDate, endDate));
 
-	std::cout << "\033[32m"
-			  << "||\tList of completed orders:\n";
-	for (Order order : orders)
-	{
-		std::cout << order.toString();
-		std::cout << "||\n";
+	if(orders.size()!=0){
+		std::cout << "\033[32m"
+				  << "||\tList of completed orders:\n";
+		for (Order order : orders)
+		{
+			std::cout << order.toString();
+			std::cout << "||\n";
+		}
+		std::cout << "\033[0m";
+	}else{
+		std::cout << "\033[31m"
+				  << "||\tNo orders found\n"
+				  << "\033[0m";
+	
 	}
-	std::cout << "\033[0m";
 }
 
 void DriverInterface::getTotalOrdersCount()
@@ -192,10 +204,14 @@ void DriverInterface::getMoneyEarnedByTime()
 	int endDay, endMonth, endYear;
 
 	std::cout << "||\tEnter start date: DD MM YYYY\n";
-	std::cin >> startDay >> startMonth >> startYear;
+	startDay = getNumberInput("||\tEnter day:");
+	startMonth = getNumberInput("||\tEnter month:");
+	startYear = getNumberInput("||\tEnter year:");
 
 	std::cout << "||\tEnter end date: DD MM YYYY\n";
-	std::cin >> endDay >> endMonth >> endYear;
+	endDay = getNumberInput("||\tEnter day:");
+	endMonth = getNumberInput("||\tEnter month:");
+	endYear = getNumberInput("||\tEnter year:");
 
 	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
 	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
