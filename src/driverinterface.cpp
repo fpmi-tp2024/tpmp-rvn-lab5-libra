@@ -11,6 +11,7 @@ DriverInterface::DriverInterface()
 		{6, &DriverInterface::changeAddress},
 		{7, &DriverInterface::changeLogin},
 		{8, &DriverInterface::changePassword},
+		{9, &DriverInterface::printDriverInfo},
 	};
 }
 
@@ -18,7 +19,9 @@ DriverInterface::~DriverInterface() {}
 
 void DriverInterface::run()
 {
-	std::cout << "||\tYou selected Driver account\n";
+	std::cout << "\033[32m"
+			  << "||\tYou selected Driver account\n"
+			  << "\033[0m";
 
 	while (!authorize())
 	{
@@ -42,13 +45,14 @@ void DriverInterface::run()
 
 	std::string commandsList = "||\tSelect operation:\n"
 							   "||\t1: <Get list of completed orders by time interval>\n"
-							   "||\t2: <Get count of all completed orders >\n"
+							   "||\t2: <Get count of all completed orders>\n"
 							   "||\t3: <Get total weight of transported goods>\n"
 							   "||\t4: <Get money earned by time interval>\n"
 							   "||\t5: <Get total money earned>\n"
 							   "||\t6: <Change address>\n"
 							   "||\t7: <Change login>\n"
 							   "||\t8: <Change password>\n"
+							   "||\t9: <Print my info>\n"
 							   "||\n"
 							   "||\tOr type \"q\" to quit\n";
 
@@ -121,8 +125,7 @@ bool DriverInterface::authorize()
 					  << "||\tSuccessfully logged in\n"
 					  << "\033[0m";
 
-			Driver temp = driverStorer.getDriverByLogin(login);
-			driver = &temp;
+			driver = driverStorer.getDriverByLogin(login);
 
 			return true;
 		}
@@ -147,30 +150,52 @@ void DriverInterface::getListOfCompletedOrdersByTime()
 	int endDay, endMonth, endYear;
 
 	std::cout << "||\tEnter start date: DD MM YYYY\n";
-	std::cin >> startDay >> startMonth >> startYear;
+	startDay = getNumberInput("||\tEnter day:");
+	startMonth = getNumberInput("||\tEnter month:");
+	startYear = getNumberInput("||\tEnter year:");
 
 	std::cout << "||\tEnter end date: DD MM YYYY\n";
-	std::cin >> endDay >> endMonth >> endYear;
+	endDay = getNumberInput("||\tEnter day:");
+	endMonth = getNumberInput("||\tEnter month:");
+	endYear = getNumberInput("||\tEnter year:");
 
 	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
 	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
 
-	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driver->getId(), startDate, endDate));
 
-	for (Order order : orders)
-	{
-		std::cout << order.toString();
+	std::vector<Order> orders(driverStorer.getOrdersByDriverAndPeriod(driver.getId(), startDate, endDate));
+
+	if(orders.size()!=0){
+		std::cout << "\033[32m"
+				  << "||\tList of completed orders:\n";
+		for (Order order : orders)
+		{
+			std::cout << order.toString();
+			std::cout << "||\n";
+		}
+		std::cout << "\033[0m";
+	}else{
+		std::cout << "\033[31m"
+				  << "||\tNo orders found\n"
+				  << "\033[0m";
+	
 	}
 }
 
 void DriverInterface::getTotalOrdersCount()
 {
-	std::cout << "||\t" << orderStorer.getTotalNumberOfOrders(driver->getId()) << "\n";
+	std::cout << "\033[32m"
+			  << "||\tTotal number of orders: "
+			  << orderStorer.getTotalNumberOfOrders(driver.getId()) << "\n"
+			  << "\033[0m";
 }
 
 void DriverInterface::getTotalWeightOfTransportedGoods()
 {
-	std::cout << "||\t" << orderStorer.getTotalCargoMass(driver->getId()) << "\n";
+	std::cout << "\033[32m"
+			  << "||\tTotal weight of transported goods: "
+			  << orderStorer.getTotalCargoMass(driver.getId()) << "\n"
+			  << "\033[0m";
 }
 
 void DriverInterface::getMoneyEarnedByTime()
@@ -179,20 +204,29 @@ void DriverInterface::getMoneyEarnedByTime()
 	int endDay, endMonth, endYear;
 
 	std::cout << "||\tEnter start date: DD MM YYYY\n";
-	std::cin >> startDay >> startMonth >> startYear;
+	startDay = getNumberInput("||\tEnter day:");
+	startMonth = getNumberInput("||\tEnter month:");
+	startYear = getNumberInput("||\tEnter year:");
 
 	std::cout << "||\tEnter end date: DD MM YYYY\n";
-	std::cin >> endDay >> endMonth >> endYear;
+	endDay = getNumberInput("||\tEnter day:");
+	endMonth = getNumberInput("||\tEnter month:");
+	endYear = getNumberInput("||\tEnter year:");
 
 	long startDate = DatabaseHelper::dateToSec(startYear, startMonth, startDay);
 	long endDate = DatabaseHelper::dateToSec(endYear, endMonth, endDay);
 
-	std::cout << "||\t" << orderStorer.getTotalMoney(driver->getId(), startDate, endDate) << "\n";
+	std::cout << "\033[32m"
+			  << "||\tEarned money: " << orderStorer.getTotalMoney(driver.getId(), startDate, endDate) << "\n"
+			  << "\033[0m";
 }
 
 void DriverInterface::getMoneyEarned()
 {
-	std::cout << "||\t" << orderStorer.getTotalMoney(driver->getId()) << "\n";
+
+	std::cout << "\033[32m"
+			  << "||\tTotal money earned: " << orderStorer.getTotalMoney(driver.getId()) << "\n"
+			  << "\033[0m";
 }
 
 void DriverInterface::changeAddress()
@@ -202,15 +236,92 @@ void DriverInterface::changeAddress()
 	std::cout << "||\tEnter new address\n";
 	std::cin >> newAddress;
 
-	driverStorer.updateAddress(driver->getId(), newAddress);
+	trim(newAddress);
+
+	if (Validator::isValidAddress(newAddress))
+	{
+		driverStorer.updateAddress(driver.getId(), newAddress);
+		std::cout << "\033[32m"
+				  << "||\tAddress successfully updated\n"
+				  << "\033[0m";
+	}
+	else
+	{
+		std::cout << "\033[31m"
+				  << "||\tAddress is not valid\n"
+				  << "\033[0m";
+	}
 }
 
 void DriverInterface::changeLogin()
 {
-	// TODO: LEV
+	std::string newLogin;
+	std::string password;
+
+	std::cout << "||\tEnter password\n";
+	std::cin >> password;
+	std::cout << "||\tEnter new login\n";
+	std::cin >> newLogin;
+
+	trim(newLogin);
+
+	if (Validator::isValidLogin(newLogin))
+	{
+		try
+		{
+			auth.changeLogin(driver.getLogin(), newLogin, password);
+
+			driver = driverStorer.getDriverByLogin(newLogin);
+
+			std::cout << "\033[32m"
+					  << "||\tLogin successfully updated\n"
+					  << "\033[0m";
+		}
+		catch (const std::exception &e)
+		{
+			std::cout << "\033[31m"
+					  << "||\t" << e.what() << '\n'
+					  << "\033[0m";
+		}
+	}
+	else
+	{
+		std::cout << "\033[31m"
+				  << "||\tLogin is not valid\n"
+				  << "\033[0m";
+	}
 }
 
 void DriverInterface::changePassword()
 {
-	// TODO: LEV
+	std::string oldPassword;
+	std::string newPassword;
+
+	std::cout << "||\tEnter old password\n";
+	std::cin >> oldPassword;
+	std::cout << "||\tEnter new password\n";
+	std::cin >> newPassword;
+
+	trim(oldPassword);
+	trim(newPassword);
+
+	try
+	{
+		auth.changePassword(driver.getLogin(), oldPassword, newPassword);
+		std::cout << "\033[32m"
+				  << "||\tPassword successfully updated\n"
+				  << "\033[0m";
+	}
+	catch (const std::exception &e)
+	{
+		std::cout << "\033[31m"
+				  << "||\t" << e.what() << '\n'
+				  << "\033[0m";
+	}
+}
+
+void DriverInterface::printDriverInfo()
+{
+	std::cout << "\033[32m" << driver.toString()
+			  << "\033[0m";
 }

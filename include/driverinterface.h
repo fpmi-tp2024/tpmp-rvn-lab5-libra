@@ -14,7 +14,7 @@ public:
 
 private:
     std::map<int, void (DriverInterface::*)()> commands;
-    Driver *driver;
+    Driver driver;
 
     bool authorize();
 
@@ -26,6 +26,7 @@ private:
     void changeAddress();
     void changeLogin();
     void changePassword();
+    void printDriverInfo();
 };
 
 #endif

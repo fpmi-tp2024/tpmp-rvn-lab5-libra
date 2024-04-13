@@ -645,6 +645,16 @@ TEST_CASE("DriverStorer tests", "[DriverStorer]")
         REQUIRE(result[1].getMileage() == 300);
         REQUIRE(result[1].getCargoWeight() == 200);
         REQUIRE(result[1].getCost() == 3000);
+
+        result = driverStorer.getOrdersByDriverAndPeriod(1, DatabaseHelper::dateToSec(1999, 1, 1),
+                                                         DatabaseHelper::dateToSec(2024, 1, 1));
+
+        REQUIRE(result.size() == 4);
+
+        result = driverStorer.getOrdersByDriverAndPeriod(2, DatabaseHelper::dateToSec(1950, 1, 1),
+                                                         DatabaseHelper::dateToSec(2050, 1, 1));
+
+        REQUIRE(result.size() == 3);
     }
 
     SECTION("getDrivers")

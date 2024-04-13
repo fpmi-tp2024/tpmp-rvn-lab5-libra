@@ -46,7 +46,7 @@ long DatabaseHelper::dateToSec(int year, int month, int day)
 
 std::string DatabaseHelper::secToDate(long sec)
 {
-    std::tm *t = std::localtime(&sec);
+    std::tm *t = std::localtime((const time_t*)&sec);
     if (t == nullptr)
     {
         std::cerr << "Error: unable to make time using localtime\n";

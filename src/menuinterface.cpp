@@ -27,7 +27,7 @@ void MenuInterface::run()
 			return;
 		}
 
-		std::cout << "||\tYour input is not valid. Try again\n";
+		std::cout << "\033[31m||\tYour input is not valid. Try again\n\033[0m";
 		std::cin >> input;
 		trim(input);
 	}

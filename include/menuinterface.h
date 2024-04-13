@@ -2,6 +2,7 @@
 #define MENUINTERFACE_H
 
 #include "../include/interface.h"
+#include <limits>
 
 class MenuInterface : Interface
 {
